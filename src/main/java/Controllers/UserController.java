@@ -10,16 +10,16 @@ import Boundary.UserId;
 
 @RestController
 public class UserController {
-	public UserController() {}
 
 	@RequestMapping(
 			path = {"/2023b.noy.tsafrir/users/login/{superapp}/{email}"},
 			method = {RequestMethod.GET},
 			produces = {MediaType.APPLICATION_JSON_VALUE})
 	
-	public UserBoundary login(@PathVariable("superapp")String superapp , @PathVariable("email") String email) {
+	public UserBoundary login(
+			@PathVariable("superapp")String superapp , 
+			@PathVariable("email") String email) {
 		UserId user = new UserId(superapp,email);
 		return new UserBoundary(user, "Role", "Name", "Avatar");
 	}
-
 }
