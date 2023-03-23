@@ -58,7 +58,6 @@ public class AnotherController {
 		message.setCreatedOn(new Date());
 		return message;
 	}
-		
 }
 
 
