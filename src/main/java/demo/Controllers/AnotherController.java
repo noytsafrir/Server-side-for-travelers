@@ -53,7 +53,8 @@ public class AnotherController {
 			method = {RequestMethod.POST},
 			produces = {MediaType.APPLICATION_JSON_VALUE},
 			consumes = {MediaType.APPLICATION_JSON_VALUE})
-	public Message createMessage(@RequestBody Message message) {
+	public Message createMessage(
+			@RequestBody Message message) {
 		message.setId((long)42);
 		message.setCreatedOn(new Date());
 		return message;

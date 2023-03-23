@@ -1,4 +1,4 @@
-package Boundary;
+package Boundary.User;
 
 public class UserBoundary {
 
