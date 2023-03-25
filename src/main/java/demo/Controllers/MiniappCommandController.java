@@ -23,7 +23,6 @@ public class MiniappCommandController {
 	public Object invokeCommand(
 			@PathVariable("miniAppName")String miniApp, 
 			@RequestBody MiniAppCommandBoundary command) {
-
 			command.setCommandID(new MiniAppCommandID("2023b.noy.tsafrir", miniApp, "1"));
 			command.setInvocationTimestamp(new Date());
 			
