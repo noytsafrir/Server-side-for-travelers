@@ -3,8 +3,6 @@ package boundaries.object;
 import java.util.Date;
 import java.util.HashMap;
 
-import boundaries.user.UserAction;
-
 public class ObjectBoundary {
 		private ObjectId objectId;
 		private String type;
@@ -12,13 +10,13 @@ public class ObjectBoundary {
 		private Boolean active;
 		private Date creationTimestamp;
 		private Location location;
-		private UserAction createdBy;
+		private CreatedBy createdBy;
 		private HashMap<String,Object> objectDetails;
 		
 		public ObjectBoundary() {}
 		
 		public ObjectBoundary(ObjectId objectId, String type, String alias, Boolean active, Date creationTimestamp,
-				Location location, UserAction createdBy, HashMap<String,Object> objectDetails) {
+				Location location, CreatedBy createdBy, HashMap<String,Object> objectDetails) {
 			this.objectId = objectId;
 			this.type = type;
 			this.alias = alias;
@@ -77,11 +75,11 @@ public class ObjectBoundary {
 			this.location = location;
 		}
 
-		public UserAction getCreatedBy() {
+		public CreatedBy getCreatedBy() {
 			return createdBy;
 		}
 
-		public void setCreatedBy(UserAction createdBy) {
+		public void setCreatedBy(CreatedBy createdBy) {
 			this.createdBy = createdBy;
 		}
 
