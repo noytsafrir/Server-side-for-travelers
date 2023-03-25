@@ -3,27 +3,25 @@ package boundaries.command;
 import boundaries.user.UserId;
 
 public class InvocationUser {
-
-	private UserId userID;
+	private UserId userId;
 	
 	public InvocationUser() {}
 
-	public InvocationUser(UserId userID) {
-		super();
-		this.userID = userID;
+	public InvocationUser(UserId userId) {
+		this.userId = userId;
 	}
 
-	public UserId getUserID() {
-		return userID;
+	public UserId getUserId() {
+		return userId;
 	}
 
-	public void setUserID(UserId userID) {
-		this.userID = userID;
+	public void setUserId(UserId userId) {
+		this.userId = userId;
 	}
 
 	@Override
 	public String toString() {
-		return "InvocationUser [userID=" + userID + "]";
+		return "CreatedBy [userId=" + userId + "]";
 	}
 	
 }
