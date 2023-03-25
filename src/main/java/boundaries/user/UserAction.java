@@ -1,13 +1,11 @@
-package boundaries.object;
+package boundaries.user;
 
-import boundaries.user.UserId;
-
-public class CreatedBy {
+public class UserAction {
 	private UserId userId;
 	
-	public CreatedBy() {}
+	public UserAction() {}
 
-	public CreatedBy(UserId userId) {
+	public UserAction(UserId userId) {
 		super();
 		this.userId = userId;
 	}

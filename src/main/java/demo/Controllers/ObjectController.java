@@ -11,10 +11,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import boundaries.object.CreatedBy;
 import boundaries.object.Location;
 import boundaries.object.ObjectBoundary;
 import boundaries.object.ObjectId;
+import boundaries.user.UserAction;
 import boundaries.user.UserId;
 
 @RestController
@@ -67,7 +67,7 @@ public class ObjectController {
 		object.setActive(true);
 		object.setCreationTimestamp(new Date());
 		object.setLocation(new Location(1.1,2.2));
-		object.setCreatedBy(new CreatedBy(userId));
+		object.setCreatedBy(new UserAction(userId));
 		object.setObjectDetails(details);
 		return object;
 	}
@@ -91,7 +91,7 @@ public class ObjectController {
 		object1.setActive(true);
 		object1.setCreationTimestamp(new Date());
 		object1.setLocation(new Location(1.1,2.2));
-		object1.setCreatedBy(new CreatedBy(new UserId("2023b.noy.tsafrir", "bobo@gmail.com")));
+		object1.setCreatedBy(new UserAction(new UserId("2023b.noy.tsafrir", "bobo@gmail.com")));
 		object1.setObjectDetails(details1);
 		
 		ObjectBoundary object2 = new ObjectBoundary();
@@ -106,7 +106,7 @@ public class ObjectController {
 		object2.setActive(false);
 		object2.setCreationTimestamp(new Date());
 		object2.setLocation(new Location(1.2345,5.215));
-		object2.setCreatedBy(new CreatedBy(new UserId("2023b.noy.tsafrir", "kokoMaroko@gmail.com")));
+		object2.setCreatedBy(new UserAction(new UserId("2023b.noy.tsafrir", "kokoMaroko@gmail.com")));
 		object2.setObjectDetails(details2);
 		
 		ObjectBoundary object3 = new ObjectBoundary();
@@ -121,7 +121,7 @@ public class ObjectController {
 		object3.setActive(true);
 		object3.setCreationTimestamp(new Date());
 		object3.setLocation(new Location(5.265,4.111));
-		object3.setCreatedBy(new CreatedBy(new UserId("2023b.noy.tsafrir", "Stitch@gmail.com")));
+		object3.setCreatedBy(new UserAction(new UserId("2023b.noy.tsafrir", "Stitch@gmail.com")));
 		object3.setObjectDetails(details3);
 	
 		allObjects.add(object1);
