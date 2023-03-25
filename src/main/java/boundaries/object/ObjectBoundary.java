@@ -1,4 +1,4 @@
-package Boundary.Objects;
+package boundaries.object;
 
 import java.util.Date;
 import java.util.HashMap;

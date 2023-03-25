@@ -7,9 +7,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import Boundary.User.NewUserBoundary;
-import Boundary.User.UserBoundary;
-import Boundary.User.UserId;
+import boundaries.user.NewUserBoundary;
+import boundaries.user.UserBoundary;
+import boundaries.user.UserId;
 
 @RestController
 public class UserController {

@@ -1,6 +1,6 @@
-package Boundary.Objects;
+package boundaries.object;
 
-import Boundary.User.UserId;
+import boundaries.user.UserId;
 
 public class CreatedBy {
 	private UserId userId;

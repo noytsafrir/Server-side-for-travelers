@@ -1,4 +1,4 @@
-package Boundary.Objects;
+package boundaries.object;
 
 public class Location {
 	

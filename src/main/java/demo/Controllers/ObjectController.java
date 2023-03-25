@@ -11,11 +11,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import Boundary.Objects.CreatedBy;
-import Boundary.Objects.Location;
-import Boundary.Objects.ObjectBoundary;
-import Boundary.Objects.ObjectId;
-import Boundary.User.UserId;
+import boundaries.object.CreatedBy;
+import boundaries.object.Location;
+import boundaries.object.ObjectBoundary;
+import boundaries.object.ObjectId;
+import boundaries.user.UserId;
 
 @RestController
 public class ObjectController {
