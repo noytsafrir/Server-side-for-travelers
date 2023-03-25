@@ -3,20 +3,22 @@ package boundaries.command;
 import java.util.Date;
 import java.util.Map;
 
+import boundaries.user.UserAction;
+
 public class MiniAppCommandBoundary {
 
 	private MiniAppCommandID commandID;
 	private String command;
 	private TargetObject targetObject;
 	private Date invocationTimestamp;
-	private InvocationUser invokedBy;
+	private UserAction invokedBy;
     private Map<String, Object> commandAttributes;
 
 	
 	public MiniAppCommandBoundary() {}
 
 	public MiniAppCommandBoundary(MiniAppCommandID commandID, String command, TargetObject targetObject,
-			Date invocationTimestamp, InvocationUser invokedBy, Map<String, Object> commandAttributes) {
+			Date invocationTimestamp, UserAction invokedBy, Map<String, Object> commandAttributes) {
 		this.commandID = commandID;
 		this.command = command;
 		this.targetObject = targetObject;
@@ -66,12 +68,12 @@ public class MiniAppCommandBoundary {
 	}
 
 
-	public InvocationUser getInvokedBy() {
+	public UserAction getInvokedBy() {
 		return invokedBy;
 	}
 
 
-	public void setInvokedBy(InvocationUser invokedBy) {
+	public void setInvokedBy(UserAction invokedBy) {
 		this.invokedBy = invokedBy;
 	}
 
