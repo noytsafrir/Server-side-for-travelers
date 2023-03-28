@@ -77,7 +77,7 @@ public class ObjectController {
 			path = {"/2023b.noy.tsafrir/objects"},
 			method = {RequestMethod.GET},
 			produces = {MediaType.APPLICATION_JSON_VALUE})
-	public ArrayList<ObjectBoundary> getAllObjects(){
+	public ObjectBoundary[] getAllObjects(){
 		ArrayList<ObjectBoundary> allObjects = new ArrayList<ObjectBoundary>();
 		ObjectBoundary object1 = new ObjectBoundary();
 		HashMap<String,Object> details1 = new HashMap<String, Object>();
@@ -128,10 +128,7 @@ public class ObjectController {
 		allObjects.add(object2);
 		allObjects.add(object3);
 		
-		return allObjects;
+		return allObjects.toArray(new ObjectBoundary[0]);
 	}
-	
 
-	
-	
 }

@@ -3,7 +3,6 @@ package superapp.Controllers;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.UUID;
 
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -49,7 +48,7 @@ public class AdminController {
 			path = {"/2023b.noy.tsafrir/admin/users"},
 			method = {RequestMethod.GET},
 			produces = {MediaType.APPLICATION_JSON_VALUE})
-	public ArrayList<UserBoundary> getAllUsers () {
+	public UserBoundary[] getAllUsers () {
 		ArrayList<UserBoundary> userList = new ArrayList<UserBoundary>();
         // Create 3 UserBoundary objects
         for (int i = 1; i < 4; i++) {
@@ -60,7 +59,7 @@ public class AdminController {
             user.setAvatar("https://example.com/avatar" + i);
             userList.add(user);
         }
-		return userList;
+		return userList.toArray(new UserBoundary[0]);
 	}
 	
 	
@@ -68,7 +67,7 @@ public class AdminController {
 			path = {"/2023b.noy.tsafrir/admin/miniapp"},
 			method = {RequestMethod.GET},
 			produces = {MediaType.APPLICATION_JSON_VALUE})
-	public ArrayList<MiniAppCommandBoundary> getAllMiniappsCommandsHistory () {
+	public MiniAppCommandBoundary[] getAllMiniappsCommandsHistory () {
 		ArrayList<MiniAppCommandBoundary> commands = new ArrayList<MiniAppCommandBoundary>();
 
 		// create first MiniAppCommandBoundary object
@@ -104,14 +103,14 @@ public class AdminController {
 		command3.getCommandAttributes().put("field", "name");
 		command3.getCommandAttributes().put("value", "John Doe");
 		commands.add(command3);
-	return commands;
+	return commands.toArray(new MiniAppCommandBoundary[0]);
 	}
 	
 	@RequestMapping(
 			path = {"/2023b.noy.tsafrir/admin/miniapp/{miniAppName}"},
 			method = {RequestMethod.GET},
 			produces = {MediaType.APPLICATION_JSON_VALUE})
-	public ArrayList<MiniAppCommandBoundary> getSpecificMiniappCommandsHistory (
+	public MiniAppCommandBoundary[] getSpecificMiniappCommandsHistory (
 			@PathVariable("miniAppName")String miniAppName) {
 		ArrayList<MiniAppCommandBoundary> commands = new ArrayList<MiniAppCommandBoundary>();
 
@@ -126,6 +125,6 @@ public class AdminController {
 		command1.getCommandAttributes().put("temperture", 17);
 		commands.add(command1);
 
-	return commands;
+	return commands.toArray(new MiniAppCommandBoundary[0]);
 	}
 }
