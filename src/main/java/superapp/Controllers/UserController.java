@@ -1,5 +1,6 @@
 package superapp.Controllers;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -10,9 +11,17 @@ import org.springframework.web.bind.annotation.RestController;
 import superapp.boundaries.user.NewUserBoundary;
 import superapp.boundaries.user.UserBoundary;
 import superapp.boundaries.user.UserId;
+import superapp.logic.UsersService;
 
 @RestController
 public class UserController {
+	private UsersService users;
+	
+	@Autowired
+	public void setUsers(UsersService users) {
+		this.users = users;
+	}
+	
 
 	@RequestMapping(
 			path = {"/2023b.noy.tsafrir/users/login/{superapp}/{email}"},
@@ -20,12 +29,11 @@ public class UserController {
 			produces = {MediaType.APPLICATION_JSON_VALUE})
 	public UserBoundary login(
 			@PathVariable("superapp")String superapp , 
-			@PathVariable("email") String email) {
-		UserId user = new UserId(superapp,email);
-		return new UserBoundary(user, "Role", "Name", "Avatar");
+			@PathVariable("email") String email) {		
+		return this.users.login(superapp, email);
 	}
 	
-	
+
 	@RequestMapping(
 			path = {"/2023b.noy.tsafrir/users/{superapp}/{userEmail}"},
 			method = {RequestMethod.PUT},
@@ -34,9 +42,7 @@ public class UserController {
 			@PathVariable("superapp")String superapp , 
 			@PathVariable("userEmail") String userEmail,
 			@RequestBody UserBoundary update) {
-			System.err.println("superapp: "+ superapp);
-			System.err.println("userEmail: "+ userEmail);
-			System.err.println("update: "+ update);
+		this.users.updateUser(superapp, userEmail, update);
 	}
 	
 	@RequestMapping(
@@ -46,12 +52,14 @@ public class UserController {
 			consumes = {MediaType.APPLICATION_JSON_VALUE})
 	public UserBoundary createNewUser(
 			@RequestBody NewUserBoundary newUser) {
+		
+		//TODO: check if this is the right logic
 			UserBoundary user = new UserBoundary();
 			UserId userId = new UserId("2023b.noy.tsafrir", newUser.getEmail());
 			user.setUserId(userId);
 			user.setRole(newUser.getRole());
 			user.setUsername(newUser.getUsername());
 			user.setAvatar(newUser.getAvatar());
-			return user;
+			return this.users.createUser(user);
 	}
 }

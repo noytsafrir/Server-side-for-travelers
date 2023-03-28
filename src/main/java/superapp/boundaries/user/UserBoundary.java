@@ -15,7 +15,6 @@ public class UserBoundary {
 		this.username = username;
 		this.avatar = avatar;
 	}
-	
 
 	public UserId getUserId() {
 		return userId;

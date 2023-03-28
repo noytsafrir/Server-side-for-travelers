@@ -11,7 +11,7 @@ public class UserEntity {
 	@Id
 	private String superapp;
 	@Id
-	private String name;
+	private String email;
 	
 	private String role;
 	private String username;
@@ -25,11 +25,11 @@ public class UserEntity {
 	public void setSuperapp(String superapp) {
 		this.superapp = superapp;
 	}
-	public String getName() {
-		return name;
+	public String getEmail() {
+		return email;
 	}
-	public void setName(String name) {
-		this.name = name;
+	public void setEmail(String email) {
+		this.email = email;
 	}
 	public String getRole() {
 		return role;
@@ -54,7 +54,7 @@ public class UserEntity {
 	
 	@Override
 	public String toString() {
-		return "UserEntity [superapp=" + superapp + ", name=" + name + ", role=" + role + ", username=" + username
+		return "UserEntity [superapp=" + superapp + ", name=" + email + ", role=" + role + ", username=" + username
 				+ ", avatar=" + avatar + "]";
 	}
 	
