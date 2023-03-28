@@ -1,4 +1,4 @@
-package demo.Controllers;
+package superapp.Controllers;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -11,13 +11,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import boundaries.command.InvocationUser;
-import boundaries.command.MiniAppCommandBoundary;
-import boundaries.command.MiniAppCommandID;
-import boundaries.command.TargetObject;
-import boundaries.object.ObjectId;
-import boundaries.user.UserBoundary;
-import boundaries.user.UserId;
+import superapp.boundaries.command.InvocationUser;
+import superapp.boundaries.command.MiniAppCommandBoundary;
+import superapp.boundaries.command.MiniAppCommandID;
+import superapp.boundaries.command.TargetObject;
+import superapp.boundaries.object.ObjectId;
+import superapp.boundaries.user.UserBoundary;
+import superapp.boundaries.user.UserId;
 
 @RestController
 public class AdminController {
@@ -107,7 +107,6 @@ public class AdminController {
 	return commands;
 	}
 	
-	
 	@RequestMapping(
 			path = {"/2023b.noy.tsafrir/admin/miniapp/{miniAppName}"},
 			method = {RequestMethod.GET},
@@ -129,9 +128,4 @@ public class AdminController {
 
 	return commands;
 	}
-	
-	
-	
-	
-	
 }

@@ -1,6 +1,6 @@
-package boundaries.command;
+package superapp.boundaries.command;
 
-import boundaries.object.ObjectId;
+import superapp.boundaries.object.ObjectId;
 
 public class TargetObject {
 

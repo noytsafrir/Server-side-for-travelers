@@ -1,4 +1,4 @@
-package demo.Controllers;
+package superapp.Controllers;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -11,11 +11,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import boundaries.object.Location;
-import boundaries.object.ObjectBoundary;
-import boundaries.object.ObjectId;
-import boundaries.object.CreatedBy;
-import boundaries.user.UserId;
+import superapp.boundaries.object.CreatedBy;
+import superapp.boundaries.object.Location;
+import superapp.boundaries.object.ObjectBoundary;
+import superapp.boundaries.object.ObjectId;
+import superapp.boundaries.user.UserId;
 
 @RestController
 public class ObjectController {

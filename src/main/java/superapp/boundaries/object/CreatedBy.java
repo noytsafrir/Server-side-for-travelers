@@ -1,13 +1,13 @@
-package boundaries.command;
+package superapp.boundaries.object;
 
-import boundaries.user.UserId;
+import superapp.boundaries.user.UserId;
 
-public class InvocationUser {
+public class CreatedBy {
 	private UserId userId;
 	
-	public InvocationUser() {}
+	public CreatedBy() {}
 
-	public InvocationUser(UserId userId) {
+	public CreatedBy(UserId userId) {
 		this.userId = userId;
 	}
 

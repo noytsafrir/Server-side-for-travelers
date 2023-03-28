@@ -1,4 +1,4 @@
-package boundaries.command;
+package superapp.boundaries.command;
 
 public class MiniAppCommandID {
 

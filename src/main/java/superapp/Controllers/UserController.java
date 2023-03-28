@@ -1,4 +1,4 @@
-package demo.Controllers;
+package superapp.Controllers;
 
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -7,9 +7,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import boundaries.user.NewUserBoundary;
-import boundaries.user.UserBoundary;
-import boundaries.user.UserId;
+import superapp.boundaries.user.NewUserBoundary;
+import superapp.boundaries.user.UserBoundary;
+import superapp.boundaries.user.UserId;
 
 @RestController
 public class UserController {

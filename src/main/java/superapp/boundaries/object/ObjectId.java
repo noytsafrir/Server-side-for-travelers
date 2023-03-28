@@ -1,4 +1,4 @@
-package boundaries.object;
+package superapp.boundaries.object;
 
 public class ObjectId {
 	private String superapp;

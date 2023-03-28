@@ -1,26 +1,27 @@
-package boundaries.user;
+package superapp.boundaries.user;
 
-public class NewUserBoundary {
+public class UserBoundary {
 
-	private String email;
+	private UserId userId;
 	private String role;
 	private String username;
 	private String avatar;
 	
-	public NewUserBoundary() {}
-
-	public NewUserBoundary(String email, String role, String username, String avatar) {
-		this.email = email;
+	public UserBoundary() {}
+	
+	public UserBoundary(UserId userId, String role, String username, String avatar) {
+		this.userId = userId;
 		this.role = role;
 		this.username = username;
 		this.avatar = avatar;
 	}
+	
 
-	public String getEmail() {
-		return email;
+	public UserId getUserId() {
+		return userId;
 	}
-	public void setEmail(String email) {
-		this.email = email;
+	public void setUserId(UserId userId) {
+		this.userId = userId;
 	}
 	public String getRole() {
 		return role;
@@ -40,10 +41,14 @@ public class NewUserBoundary {
 	public void setAvatar(String avatar) {
 		this.avatar = avatar;
 	}
+
+	
 	@Override
 	public String toString() {
-		return "NewUserBoundary [email=" + email + ", role=" + role + ", username=" + username + ", avatar=" + avatar
+		return "UserBoundary [userId=" + userId + ", role=" + role + ", username=" + username + ", avatar=" + avatar
 				+ "]";
 	}
-
+	
+	
+	
 }

@@ -1,4 +1,4 @@
-package boundaries.user;
+package superapp.boundaries.user;
 
 public class UserId {
 	private String superapp;

@@ -1,4 +1,4 @@
-package demo.Controllers;
+package superapp.Controllers;
 import java.util.Date;
 
 import org.springframework.http.MediaType;
@@ -8,8 +8,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import boundaries.command.MiniAppCommandBoundary;
-import boundaries.command.MiniAppCommandID;
+import superapp.boundaries.command.MiniAppCommandBoundary;
+import superapp.boundaries.command.MiniAppCommandID;
 
 
 @RestController
