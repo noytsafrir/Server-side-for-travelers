@@ -31,7 +31,6 @@ public class ObjectController {
 		System.err.println("superapp: "+ superapp);
 		System.err.println("internalObjectId: "+ internalObjectId);
 		System.err.println("update: "+ update);
-
 	}
 
 	@RequestMapping(
