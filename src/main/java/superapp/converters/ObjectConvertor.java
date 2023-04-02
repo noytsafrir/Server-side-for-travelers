@@ -1,8 +1,5 @@
 package superapp.converters;
 
-import java.util.Date;
-import java.util.HashMap;
-
 import superapp.boundaries.object.CreatedBy;
 import superapp.boundaries.object.Location;
 import superapp.boundaries.object.ObjectBoundary;

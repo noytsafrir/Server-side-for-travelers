@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.HashMap;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
 import superapp.boundaries.object.CreatedBy;
 import superapp.boundaries.object.Location;
 import superapp.boundaries.object.ObjectId;
