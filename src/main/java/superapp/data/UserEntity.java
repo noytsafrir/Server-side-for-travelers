@@ -13,6 +13,10 @@ public class UserEntity {
 	@Id
 	private String email;
 	
+	//create 1 pk that will be concatenating (supperapp_email)
+	//@Id
+	//private String id;
+	
 	private String role;
 	private String username;
 	private String avatar;

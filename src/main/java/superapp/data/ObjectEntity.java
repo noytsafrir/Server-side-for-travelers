@@ -1,32 +1,33 @@
 package superapp.data;
 
 import java.util.Date;
-import java.util.HashMap;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Lob;
 import jakarta.persistence.Table;
+import jakarta.persistence.Temporal;
+import jakarta.persistence.TemporalType;
 import superapp.boundaries.object.CreatedBy;
 import superapp.boundaries.object.Location;
 import superapp.boundaries.object.ObjectId;
 
 @Entity
-@Table(name= "Object")
-
+@Table(name= "Objects")
 public class ObjectEntity {
 	
-	
+	@Id
 	private ObjectId objectId;
 	private String type;
 	private String alias;
-	private Boolean active;
+	private boolean active;
 	private Date creationTimestamp;
 	private Location location;
 	private CreatedBy createdBy;
-	private HashMap<String,Object> objectDetails;
+	private String objectDetails;
+//	private HashMap<String,Object> objectDetails;
 	
-	public ObjectEntity() {
-		super();
-	}
+	public ObjectEntity() {}
 
 	public ObjectId getObjectId() {
 		return objectId;
@@ -52,14 +53,15 @@ public class ObjectEntity {
 		this.alias = alias;
 	}
 
-	public Boolean getActive() {
+	public boolean getActive() {
 		return active;
 	}
 
-	public void setActive(Boolean active) {
+	public void setActive(boolean active) {
 		this.active = active;
 	}
 
+	@Temporal(TemporalType.TIMESTAMP)
 	public Date getCreationTimestamp() {
 		return creationTimestamp;
 	}
@@ -84,11 +86,20 @@ public class ObjectEntity {
 		this.createdBy = createdBy;
 	}
 
-	public HashMap<String, Object> getObjectDetails() {
+//	public HashMap<String, Object> getObjectDetails() {
+//		return objectDetails;
+//	}
+//
+//	public void setObjectDetails(HashMap<String, Object> objectDetails) {
+//		this.objectDetails = objectDetails;
+//	}
+	
+	@Lob
+	public String getObjectDetails() {
 		return objectDetails;
 	}
 
-	public void setObjectDetails(HashMap<String, Object> objectDetails) {
+	public void setObjectDetails(String objectDetails) {
 		this.objectDetails = objectDetails;
 	}
 
@@ -98,8 +109,5 @@ public class ObjectEntity {
 				+ ", creationTimestamp=" + creationTimestamp + ", location=" + location + ", createdBy=" + createdBy
 				+ ", objectDetails=" + objectDetails + "]";
 	}
-
-
-	
 
 }

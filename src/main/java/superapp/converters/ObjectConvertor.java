@@ -20,7 +20,8 @@ public class ObjectConvertor {
 		entity.setCreationTimestamp(obj.getCreationTimestamp());
 		entity.setLocation(obj.getLocation());
 		entity.setCreatedBy(obj.getCreatedBy());
-		entity.setObjectDetails(obj.getObjectDetails());
+		//to fix it :)
+		//entity.setObjectDetails(obj.getObjectDetails());
 		return entity;
 	}
 	public ObjectBoundary toBoundary(ObjectEntity obj)
@@ -33,7 +34,8 @@ public class ObjectConvertor {
 		boundary.setCreationTimestamp(obj.getCreationTimestamp());
 		boundary.setLocation(obj.getLocation());
 		boundary.setCreatedBy(obj.getCreatedBy());
-		boundary.setObjectDetails(obj.getObjectDetails());
+		//to fix it :)
+		//boundary.setObjectDetails(obj.getObjectDetails());
 		return boundary;
 	}
 	}

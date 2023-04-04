@@ -13,11 +13,11 @@ import superapp.boundaries.user.UserBoundary;
 import superapp.boundaries.user.UserId;
 import superapp.logic.UsersService;
 
-@RestController
+@RestController //create an instance of this class
 public class UserController {
 	private UsersService users;
 	
-	@Autowired
+	@Autowired //when you will make the instance - you should implement this class
 	public void setUsers(UsersService users) {
 		this.users = users;
 	}

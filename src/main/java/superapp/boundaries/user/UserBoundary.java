@@ -41,13 +41,9 @@ public class UserBoundary {
 		this.avatar = avatar;
 	}
 
-	
 	@Override
 	public String toString() {
 		return "UserBoundary [userId=" + userId + ", role=" + role + ", username=" + username + ", avatar=" + avatar
 				+ "]";
 	}
-	
-	
-	
 }

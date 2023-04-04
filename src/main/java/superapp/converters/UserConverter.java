@@ -7,7 +7,7 @@ import superapp.boundaries.user.UserId;
 import superapp.data.UserEntity;
 
 
-@Component
+@Component //create an instance from this class 
 public class UserConverter {
 	public UserBoundary toBoundary(UserEntity entity) {
 		UserBoundary boundary = new UserBoundary();
