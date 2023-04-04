@@ -24,7 +24,7 @@ public class UserController {
 	
 
 	@RequestMapping(
-			path = {"/2023b.noy.tsafrir/users/login/{superapp}/{email}"},
+			path = {"/superapp/users/login/{superapp}/{email}"},
 			method = {RequestMethod.GET},
 			produces = {MediaType.APPLICATION_JSON_VALUE})
 	public UserBoundary login(
@@ -35,7 +35,7 @@ public class UserController {
 	
 
 	@RequestMapping(
-			path = {"/2023b.noy.tsafrir/users/{superapp}/{userEmail}"},
+			path = {"/superapp/users/{superapp}/{userEmail}"},
 			method = {RequestMethod.PUT},
 			consumes = {MediaType.APPLICATION_JSON_VALUE})
 	public void updateUser(
@@ -46,7 +46,7 @@ public class UserController {
 	}
 	
 	@RequestMapping(
-			path = {"/2023b.noy.tsafrir/users"},
+			path = {"/superapp/users"},
 			method = {RequestMethod.POST},
 			produces = {MediaType.APPLICATION_JSON_VALUE},
 			consumes = {MediaType.APPLICATION_JSON_VALUE})

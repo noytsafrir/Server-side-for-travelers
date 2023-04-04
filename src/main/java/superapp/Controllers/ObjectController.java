@@ -21,7 +21,7 @@ import superapp.boundaries.user.UserId;
 public class ObjectController {
 	
 	@RequestMapping(
-			path = {"/2023b.noy.tsafrir/objects/{superapp}/{internalObjectId}"},
+			path = {"/superapp/objects/{superapp}/{internalObjectId}"},
 			method = {RequestMethod.PUT},
 			consumes = {MediaType.APPLICATION_JSON_VALUE})
 	public void updateObject(
@@ -34,7 +34,7 @@ public class ObjectController {
 	}
 
 	@RequestMapping(
-			path = {"/2023b.noy.tsafrir/objects"},
+			path = {"/superapp/objects"},
 			method = {RequestMethod.POST},
 			produces = {MediaType.APPLICATION_JSON_VALUE},
 			consumes = {MediaType.APPLICATION_JSON_VALUE})
@@ -46,7 +46,7 @@ public class ObjectController {
 	}
 	
 	@RequestMapping(
-			path = {"/2023b.noy.tsafrir/objects/{superapp}/{internalObjectId}"},
+			path = {"/superapp/objects/{superapp}/{internalObjectId}"},
 			method = {RequestMethod.GET},
 			produces = {MediaType.APPLICATION_JSON_VALUE})
 	public ObjectBoundary retrieveObject(
@@ -73,7 +73,7 @@ public class ObjectController {
 	
 	
 	@RequestMapping(
-			path = {"/2023b.noy.tsafrir/objects"},
+			path = {"/superapp/objects"},
 			method = {RequestMethod.GET},
 			produces = {MediaType.APPLICATION_JSON_VALUE})
 	public ObjectBoundary[] getAllObjects(){

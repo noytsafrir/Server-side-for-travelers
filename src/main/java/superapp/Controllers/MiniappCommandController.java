@@ -16,7 +16,7 @@ import superapp.boundaries.command.MiniAppCommandID;
 public class MiniappCommandController {
 
 	@RequestMapping(
-			path = {"/2023b.noy.tsafrir/miniapp/{miniAppName}"},
+			path = {"/superapp/miniapp/{miniAppName}"},
 			method = {RequestMethod.POST},
 			produces = {MediaType.APPLICATION_JSON_VALUE},
 			consumes = {MediaType.APPLICATION_JSON_VALUE})

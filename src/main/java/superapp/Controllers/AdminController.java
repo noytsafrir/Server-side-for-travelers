@@ -23,21 +23,21 @@ public class AdminController {
 	
 
 	@RequestMapping(
-			path = "/2023b.noy.tsafrir/admin/users",
+			path = "/superapp/admin/users",
 			method = {RequestMethod.DELETE})
 	public void deleteAllUsers() {
 		System.err.println("all users have been deleted");
 	}
 		
 	@RequestMapping(
-			path = "/2023b.noy.tsafrir/admin/objects",
+			path = "/superapp/admin/objects",
 			method = {RequestMethod.DELETE})
 	public void deleteAllObjects() {
 		System.err.println("all objects have been deleted");
 	}
 	
 	@RequestMapping(
-			path = "/2023b.noy.tsafrir/admin/miniapp",
+			path = "/superapp/admin/miniapp",
 			method = {RequestMethod.DELETE})
 	public void deleteAllCommandsHistory() {
 		System.err.println("all miniapp commands have been deleted");
@@ -45,7 +45,7 @@ public class AdminController {
 	
 	
 	@RequestMapping(
-			path = {"/2023b.noy.tsafrir/admin/users"},
+			path = {"/superapp/admin/users"},
 			method = {RequestMethod.GET},
 			produces = {MediaType.APPLICATION_JSON_VALUE})
 	public UserBoundary[] getAllUsers () {
@@ -64,7 +64,7 @@ public class AdminController {
 	
 	
 	@RequestMapping(
-			path = {"/2023b.noy.tsafrir/admin/miniapp"},
+			path = {"/superapp/admin/miniapp"},
 			method = {RequestMethod.GET},
 			produces = {MediaType.APPLICATION_JSON_VALUE})
 	public MiniAppCommandBoundary[] getAllMiniappsCommandsHistory () {
@@ -107,7 +107,7 @@ public class AdminController {
 	}
 	
 	@RequestMapping(
-			path = {"/2023b.noy.tsafrir/admin/miniapp/{miniAppName}"},
+			path = {"/superapp/admin/miniapp/{miniAppName}"},
 			method = {RequestMethod.GET},
 			produces = {MediaType.APPLICATION_JSON_VALUE})
 	public MiniAppCommandBoundary[] getSpecificMiniappCommandsHistory (
