@@ -25,7 +25,6 @@ public class ObjectEntity {
 	private Location location;
 	private CreatedBy createdBy;
 	private String objectDetails;
-//	private HashMap<String,Object> objectDetails;
 	
 	public ObjectEntity() {}
 
@@ -86,14 +85,6 @@ public class ObjectEntity {
 		this.createdBy = createdBy;
 	}
 
-//	public HashMap<String, Object> getObjectDetails() {
-//		return objectDetails;
-//	}
-//
-//	public void setObjectDetails(HashMap<String, Object> objectDetails) {
-//		this.objectDetails = objectDetails;
-//	}
-	
 	@Lob
 	public String getObjectDetails() {
 		return objectDetails;
