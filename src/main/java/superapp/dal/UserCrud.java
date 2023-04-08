@@ -3,8 +3,8 @@ package superapp.dal;
 import org.springframework.data.repository.CrudRepository;
 
 import superapp.data.UserEntity;
+import superapp.data.UserPrimaryKeyId;
 
-public interface UserCrud extends CrudRepository<UserEntity, String>{
-	//TODO: check what should we do if we have a primary key that contain 2 variables
+public interface UserCrud extends CrudRepository<UserEntity, UserPrimaryKeyId>{
 
 }

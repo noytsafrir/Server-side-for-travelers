@@ -1,13 +1,15 @@
-package superapp.boundaries.user;
+package superapp.data;
 
-public class UserId{
+import java.io.Serializable;
+
+public class UserPrimaryKeyId implements Serializable{
 	private String superapp;
 	private String email;
 	
 	
-	public UserId() {}
+	public UserPrimaryKeyId() {}
 	
-	public UserId(String superapp, String email) {
+	public UserPrimaryKeyId(String superapp, String email) {
 		this.superapp = superapp;
 		this.email = email;
 	}
@@ -32,7 +34,7 @@ public class UserId{
 	
 	@Override
 	public String toString() {
-		return "UserId [superapp=" + superapp + ", email=" + email + "]";
+		return "UserPrimaryKeyId [superapp=" + superapp + ", email=" + email + "]";
 	}
-	
+
 }

@@ -28,27 +28,23 @@ public class UserServiceRDB implements UsersService {
 		this.userConverter = userConverter;
 	}
 
-// ********************************* START NEW FROM CLASS *********************************************** 
 	//have spring inject a configuration to this method
 	@Value("${spring.application.name:defaultValue}")
 	public void setNameFromSpringConfig(String nameFromSpringConfig) {
 		this.nameFromSpringConfig = nameFromSpringConfig;
 	}
 
-
 	@PostConstruct //after its build but before
 	public void init() {
 		System.err.println("********** spring.application.name = "+this.nameFromSpringConfig);
 	}
-	
-	
-// ********************************* END FROM CLASS ****************************************************** 
 
 	
 	@Override
 	@Transactional //will be atomic - part of the transaction 
 	public UserBoundary createUser(UserBoundary user) {
-		// TODO Auto-generated method stub
+
+		
 		return null;
 	}
 	
@@ -76,5 +72,4 @@ public class UserServiceRDB implements UsersService {
 		// TODO Auto-generated method stub
 		
 	}
-
 }

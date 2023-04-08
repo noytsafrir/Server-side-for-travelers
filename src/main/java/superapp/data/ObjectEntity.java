@@ -24,6 +24,7 @@ public class ObjectEntity {
 	private Date creationTimestamp;
 	private Location location;
 	private CreatedBy createdBy;
+	@Lob
 	private String objectDetails;
 	
 	public ObjectEntity() {}
@@ -85,7 +86,6 @@ public class ObjectEntity {
 		this.createdBy = createdBy;
 	}
 
-	@Lob
 	public String getObjectDetails() {
 		return objectDetails;
 	}

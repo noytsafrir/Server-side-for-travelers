@@ -2,20 +2,18 @@ package superapp.data;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.IdClass;
 import jakarta.persistence.Table;
 
 @Entity
 @Table(name= "Users")
+@IdClass(UserPrimaryKeyId.class)
 public class UserEntity {
 	
 	@Id
 	private String superapp;
 	@Id
 	private String email;
-	
-	//create 1 pk that will be concatenating (supperapp_email)
-	//@Id
-	//private String id;
 	
 	private String role;
 	private String username;
@@ -54,14 +52,11 @@ public class UserEntity {
 		this.avatar = avatar;
 	}
 
-
-	
 	@Override
 	public String toString() {
 		return "UserEntity [superapp=" + superapp + ", name=" + email + ", role=" + role + ", username=" + username
 				+ ", avatar=" + avatar + "]";
 	}
-	
 }
 
 
