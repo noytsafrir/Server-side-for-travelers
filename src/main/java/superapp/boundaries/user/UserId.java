@@ -7,6 +7,10 @@ public class UserId{
 	
 	public UserId() {}
 	
+	public UserId(String email) {
+		this.email = email;
+	}
+	
 	public UserId(String superapp, String email) {
 		this.superapp = superapp;
 		this.email = email;

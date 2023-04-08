@@ -12,11 +12,11 @@ import superapp.boundaries.object.CreatedBy;
 import superapp.boundaries.object.Location;
 import superapp.boundaries.object.ObjectId;
 
-@Entity
-@Table(name= "Objects")
+//@Entity
+//@Table(name= "Objects")
 public class ObjectEntity {
 	
-	@Id
+//	@Id
 	private ObjectId objectId;
 	private String type;
 	private String alias;

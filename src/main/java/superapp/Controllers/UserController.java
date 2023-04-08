@@ -21,7 +21,6 @@ public class UserController {
 	public void setUsers(UsersService users) {
 		this.users = users;
 	}
-	
 
 	@RequestMapping(
 			path = {"/superapp/users/login/{superapp}/{email}"},
@@ -52,10 +51,9 @@ public class UserController {
 			consumes = {MediaType.APPLICATION_JSON_VALUE})
 	public UserBoundary createNewUser(
 			@RequestBody NewUserBoundary newUser) {
-		
-		//TODO: check if this is the right logic
+
 			UserBoundary user = new UserBoundary();
-			UserId userId = new UserId("2023b.noy.tsafrir", newUser.getEmail());
+			UserId userId = new UserId(newUser.getEmail());
 			user.setUserId(userId);
 			user.setRole(newUser.getRole());
 			user.setUsername(newUser.getUsername());
