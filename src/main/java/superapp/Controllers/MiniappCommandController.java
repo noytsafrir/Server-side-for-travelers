@@ -1,6 +1,7 @@
 package superapp.Controllers;
-import java.util.Date;
 
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -9,11 +10,21 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import superapp.boundaries.command.MiniAppCommandBoundary;
-import superapp.boundaries.command.MiniAppCommandID;
+
+import superapp.logic.MiniAppCommandService;
 
 
 @RestController
 public class MiniappCommandController {
+	public void setService(MiniAppCommandService service) {
+		this.service = service;
+	}
+
+
+ @Autowired
+	private MiniAppCommandService service;
+		
+	
 
 	@RequestMapping(
 			path = {"/superapp/miniapp/{miniAppName}"},
@@ -23,9 +34,8 @@ public class MiniappCommandController {
 	public Object invokeCommand(
 			@PathVariable("miniAppName")String miniApp, 
 			@RequestBody MiniAppCommandBoundary command) {
-			command.setCommandID(new MiniAppCommandID("2023b.noy.tsafrir", miniApp, "1"));
-			command.setInvocationTimestamp(new Date());
+			return this.service.invokeCommand(command);
 			
-			return command;
+			
 	}
 }

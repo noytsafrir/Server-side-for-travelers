@@ -10,12 +10,12 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import superapp.boundaries.command.MiniAppCommandBoundary;
-import superapp.boundaries.user.UserBoundary;
+
 import superapp.converters.MiniAppCommandConverter;
 import superapp.dal.MiniAppCommandCrud;
 import superapp.data.MiniAppCommandEntity;
 import superapp.data.MiniAppCommandPrimaryKeyId;
-import superapp.data.UserEntity;
+
 
 @Service
 public class MiniAppCommadServiceRDB implements MiniAppCommandService {
@@ -74,10 +74,17 @@ public class MiniAppCommadServiceRDB implements MiniAppCommandService {
 		return rv;
 	}
 
-	// learn how to do this func and to do later
+
 	@Override
 	public List<MiniAppCommandBoundary> getAllMiniAppCommands(String miniAppName) {
-
+		
+		List<MiniAppCommandEntity> entities = this.miniCrud.findAll();
+		List<MiniAppCommandBoundary> rv = new ArrayList<>();
+		for (MiniAppCommandEntity m : entities) {
+			if (m.getMiniapp().equals(miniAppName))
+				rv.add(this.miniConverter.toBoundary(m));
+		}
+		return rv ;
 	}
 
 	@Override

@@ -1,6 +1,12 @@
 package superapp.converters;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.springframework.stereotype.Component;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import superapp.boundaries.command.InvocationUser;
 import superapp.boundaries.command.MiniAppCommandBoundary;
@@ -14,17 +20,26 @@ import superapp.data.MiniAppCommandEntity;
 
 public class MiniAppCommandConverter {
 
+	@SuppressWarnings("unchecked")
 	public MiniAppCommandBoundary toBoundary(MiniAppCommandEntity entity) {
 
 		MiniAppCommandBoundary boundary = new MiniAppCommandBoundary();
 		boundary.setCommand(entity.getCommand());
-		// boundary.setCommandAttributes(null); -- to do getting map atrributes
+		
+	
 		boundary.setTargetObject(new TargetObject(new ObjectId(entity.getSuperapp(), entity.getInternalObjectId())));
 		boundary.setInvokedBy(new InvocationUser(new UserId(entity.getSuperapp(), entity.getEmail())));
 		boundary.setCommandID(new MiniAppCommandID(entity.getSuperapp(), entity.getMiniapp(), entity.getInternalCommandId()));
 		boundary.setInvocationTimestamp(entity.getInvocationTimestamp());
-	
 		
+		 ObjectMapper mapper = new ObjectMapper();
+		    HashMap<String, Object> commandAttributesMap = null;
+		    try {
+		    	commandAttributesMap = (HashMap<String, Object>) mapper.readValue(entity.getCommandAttributes(), Map.class);
+		    } catch (JsonProcessingException e) {
+		        e.printStackTrace();
+		    }
+		boundary.setCommandAttributes(commandAttributesMap);
 		return boundary;
 
 	}
@@ -38,7 +53,15 @@ public class MiniAppCommandConverter {
 		entity.setInternalObjectId(boundary.getTargetObject().getObjectId().getInternalObjectId());
 		entity.setInvocationTimestamp(boundary.getInvocationTimestamp());
 		entity.setEmail(boundary.getInvokedBy().getUserId().getEmail());
-		// entity.setCommandAttributes(boundary.getCommandAttributes());
+		
+		   ObjectMapper mapper = new ObjectMapper();
+		    String commandAttributesString = null;
+		    try {
+		    	commandAttributesString = mapper.writeValueAsString(boundary.getCommandAttributes());
+		    } catch (JsonProcessingException e) {
+		        e.printStackTrace();
+		    }
+		    entity.setCommandAttributes(commandAttributesString);
 		return entity;
 	}
 }
