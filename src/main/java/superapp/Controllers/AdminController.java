@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,23 +18,40 @@ import superapp.boundaries.command.TargetObject;
 import superapp.boundaries.object.ObjectId;
 import superapp.boundaries.user.UserBoundary;
 import superapp.boundaries.user.UserId;
+import superapp.logic.ObjectService;
+import superapp.logic.UsersService;
 
 @RestController
 public class AdminController {
+	
+	private UsersService users;
+	private ObjectService objects;
+	
+	@Autowired 
+	public void setUsers(UsersService users) {
+		this.users = users;
+	}
+
+
+	@Autowired 
+	public void setObjects(ObjectService objects) {
+		this.objects = objects;
+	}
+
 	
 
 	@RequestMapping(
 			path = "/superapp/admin/users",
 			method = {RequestMethod.DELETE})
 	public void deleteAllUsers() {
-		System.err.println("all users have been deleted");
+		this.users.deleteAllUsers();
 	}
 		
 	@RequestMapping(
 			path = "/superapp/admin/objects",
 			method = {RequestMethod.DELETE})
 	public void deleteAllObjects() {
-		System.err.println("all objects have been deleted");
+		this.objects.deleteAllObject();
 	}
 	
 	@RequestMapping(
@@ -49,17 +67,7 @@ public class AdminController {
 			method = {RequestMethod.GET},
 			produces = {MediaType.APPLICATION_JSON_VALUE})
 	public UserBoundary[] getAllUsers () {
-		ArrayList<UserBoundary> userList = new ArrayList<UserBoundary>();
-        // Create 3 UserBoundary objects
-        for (int i = 1; i < 4; i++) {
-            UserBoundary user = new UserBoundary();
-            user.setUserId(new UserId("2023b.noy.tsafrir" + i, "user" + i + "@example.com"));
-            user.setRole("role" + i);
-            user.setUsername("user" + i);
-            user.setAvatar("https://example.com/avatar" + i);
-            userList.add(user);
-        }
-		return userList.toArray(new UserBoundary[0]);
+		return this.users.getAllUsers().toArray(new UserBoundary[0]);
 	}
 	
 	

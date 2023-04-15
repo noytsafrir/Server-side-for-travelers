@@ -9,8 +9,9 @@ import superapp.boundaries.user.UserBoundary;
 public interface ObjectService {
 
 	public ObjectBoundary createObject(ObjectBoundary obej);
-	public ObjectBoundary updateObject(ObjectId id );
-	public List<UserBoundary> getAllObjects();
+	public ObjectBoundary updateObject(String superapp,String internalObjectId , ObjectBoundary update);
+	public List<ObjectBoundary> getAllObjects();
 	public void deleteAllObject();
-	public void deleteObject(ObjectId id );
+
+	public ObjectBoundary getSpecsificObject( String ObjectSuperapp ,String internalObjectId );
 }

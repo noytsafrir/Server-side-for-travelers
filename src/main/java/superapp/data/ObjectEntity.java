@@ -4,37 +4,61 @@ import java.util.Date;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.IdClass;
 import jakarta.persistence.Lob;
 import jakarta.persistence.Table;
-import jakarta.persistence.Temporal;
-import jakarta.persistence.TemporalType;
-import superapp.boundaries.object.CreatedBy;
-import superapp.boundaries.object.Location;
-import superapp.boundaries.object.ObjectId;
 
-//@Entity
-//@Table(name= "Objects")
+
+@Entity
+@Table(name= "Objects")
+
+ @IdClass(ObjectPrimaryKeyId.class)
 public class ObjectEntity {
+	@Id
+	private String superapp;
+	@Id
+	private String internalObjectId;
 	
-//	@Id
-	private ObjectId objectId;
 	private String type;
 	private String alias;
 	private boolean active;
 	private Date creationTimestamp;
-	private Location location;
-	private CreatedBy createdBy;
+	
+	private Double lat;
+	private Double lng;
+	
+	// userID
+	private String email;
+	
 	@Lob
 	private String objectDetails;
 	
 	public ObjectEntity() {}
+	
+	 public String getUserSuperapp() {
+			return userSuperapp;
+		}
 
-	public ObjectId getObjectId() {
-		return objectId;
+		public void setUserSuperapp(String userSuperapp) {
+			this.userSuperapp = userSuperapp;
+		}
+
+		private String userSuperapp;
+
+	public String getSuperapp() {
+		return superapp;
 	}
 
-	public void setObjectId(ObjectId objectId) {
-		this.objectId = objectId;
+	public void setSuperapp(String superapp) {
+		this.superapp = superapp;
+	}
+
+	public String getInternalObjectId() {
+		return internalObjectId;
+	}
+
+	public void setInternalObjectId(String internalObjectId) {
+		this.internalObjectId = internalObjectId;
 	}
 
 	public String getType() {
@@ -61,7 +85,6 @@ public class ObjectEntity {
 		this.active = active;
 	}
 
-	@Temporal(TemporalType.TIMESTAMP)
 	public Date getCreationTimestamp() {
 		return creationTimestamp;
 	}
@@ -70,20 +93,28 @@ public class ObjectEntity {
 		this.creationTimestamp = creationTimestamp;
 	}
 
-	public Location getLocation() {
-		return location;
+	public Double getLat() {
+		return lat;
 	}
 
-	public void setLocation(Location location) {
-		this.location = location;
+	public void setLat(Double lat) {
+		this.lat = lat;
 	}
 
-	public CreatedBy getCreatedBy() {
-		return createdBy;
+	public Double getLng() {
+		return lng;
 	}
 
-	public void setCreatedBy(CreatedBy createdBy) {
-		this.createdBy = createdBy;
+	public void setLng(Double lng) {
+		this.lng = lng;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
 	}
 
 	public String getObjectDetails() {
@@ -94,11 +125,30 @@ public class ObjectEntity {
 		this.objectDetails = objectDetails;
 	}
 
-	@Override
-	public String toString() {
-		return "ObjectEntity [objectId=" + objectId + ", type=" + type + ", alias=" + alias + ", active=" + active
-				+ ", creationTimestamp=" + creationTimestamp + ", location=" + location + ", createdBy=" + createdBy
-				+ ", objectDetails=" + objectDetails + "]";
+	public ObjectEntity(String superapp, String internalObjectId, String type, String alias, boolean active,
+			Date creationTimestamp, Double lat, Double lng, String email, String objectDetails,String usersuperapp) {
+		super();
+		this.superapp = superapp;
+		this.internalObjectId = internalObjectId;
+		this.type = type;
+		this.alias = alias;
+		this.active = active;
+		this.creationTimestamp = creationTimestamp;
+		this.lat = lat;
+		this.lng = lng;
+		this.email = email;
+		this.objectDetails = objectDetails;
+		this.userSuperapp =  usersuperapp;
 	}
 
+	@Override
+	public String toString() {
+		return "ObjectEntity [superapp=" + superapp + ", internalObjectId=" + internalObjectId + ", type=" + type
+				+ ", alias=" + alias + ", active=" + active + ", creationTimestamp=" + creationTimestamp + ", lat="
+				+ lat + ", lng=" + lng + ", email=" + email + ", objectDetails=" + objectDetails + ", userSuperapp="
+				+ userSuperapp + "]";
+	}
+
+
+	
 }

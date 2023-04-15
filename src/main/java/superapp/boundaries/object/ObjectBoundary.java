@@ -16,15 +16,22 @@ public class ObjectBoundary {
 		public ObjectBoundary() {}
 		
 		public ObjectBoundary(ObjectId objectId, String type, String alias, Boolean active, Date creationTimestamp,
-				Location location, CreatedBy createdBy, HashMap<String,Object> objectDetails) {
+				Location location, CreatedBy createdBy, HashMap<String, Object> objectDetails) {
+			super();
+			// 1 2 
 			this.objectId = objectId;
+			
 			this.type = type;
 			this.alias = alias;
 			this.active = active;
 			this.creationTimestamp = creationTimestamp;
+			// 2- 6 
 			this.location = location;
+			// 7 -8 
 			this.createdBy = createdBy;
+			// 9 -10
 			this.objectDetails = objectDetails;
+			//11
 		}
 
 		public ObjectId getObjectId() {
@@ -83,7 +90,6 @@ public class ObjectBoundary {
 			this.createdBy = createdBy;
 		}
 
-
 		public HashMap<String, Object> getObjectDetails() {
 			return objectDetails;
 		}
@@ -97,6 +103,6 @@ public class ObjectBoundary {
 			return "ObjectBoundary [objectId=" + objectId + ", type=" + type + ", alias=" + alias + ", active=" + active
 					+ ", creationTimestamp=" + creationTimestamp + ", location=" + location + ", createdBy=" + createdBy
 					+ ", objectDetails=" + objectDetails + "]";
-		} 
-		
+		}
+
 }
