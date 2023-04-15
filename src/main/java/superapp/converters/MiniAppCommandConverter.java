@@ -21,9 +21,10 @@ public class MiniAppCommandConverter {
 		// boundary.setCommandAttributes(null); -- to do getting map atrributes
 		boundary.setTargetObject(new TargetObject(new ObjectId(entity.getSuperapp(), entity.getInternalObjectId())));
 		boundary.setInvokedBy(new InvocationUser(new UserId(entity.getSuperapp(), entity.getEmail())));
-		boundary.setCommandID(
-				new MiniAppCommandID(entity.getSuperapp(), entity.getMiniapp(), entity.getInternalCommandId()));
+		boundary.setCommandID(new MiniAppCommandID(entity.getSuperapp(), entity.getMiniapp(), entity.getInternalCommandId()));
 		boundary.setInvocationTimestamp(entity.getInvocationTimestamp());
+	
+		
 		return boundary;
 
 	}

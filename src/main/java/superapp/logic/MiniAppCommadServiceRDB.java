@@ -37,7 +37,7 @@ public class MiniAppCommadServiceRDB implements MiniAppCommandService {
 	public void setSuperAppName(String superAppName) {
 		this.superAppName = superAppName;
 	}
-
+// to do mini app init && remember to do controller
 	@Override
 	public Object invokeCommand(MiniAppCommandBoundary command) {
 		if (command == null || command.getCommandID() == null || command.getTargetObject() == null

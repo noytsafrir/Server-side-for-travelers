@@ -8,7 +8,6 @@ import jakarta.persistence.IdClass;
 import jakarta.persistence.Lob;
 import jakarta.persistence.Table;
 
-
 // at this part we want to change the attributes for the DB data type
 //e.g. obj to 3 strings like commandID that we replace
 // with the strings : superapp , miniapp & internalCommandId
@@ -33,10 +32,11 @@ public class MiniAppCommandEntity {
 	@Lob // from map to string
 	private String commandAttributes;
 
-	// empty const' 
+	// empty const'
 	public MiniAppCommandEntity() {
 	}
-	// const' 
+
+	// const'
 	public MiniAppCommandEntity(String superapp, String miniapp, String internalCommandId, String command,
 			String internalObjectId, Date invocationTimestamp, String email, String commandAttributes) {
 		super();
@@ -50,7 +50,7 @@ public class MiniAppCommandEntity {
 		this.commandAttributes = commandAttributes;
 	}
 
-	// g & s 
+	// g & s
 	public String getSuperapp() {
 		return superapp;
 	}
@@ -114,7 +114,5 @@ public class MiniAppCommandEntity {
 	public void setCommandAttributes(String commandAttributes) {
 		this.commandAttributes = commandAttributes;
 	}
-
-
 
 }
