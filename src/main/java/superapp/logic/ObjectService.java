@@ -12,5 +12,6 @@ public interface ObjectService {
 	public ObjectBoundary updateObject(String superapp,String internalObjectId , ObjectBoundary update);
 	public List<ObjectBoundary> getAllObjects();
 	public void deleteAllObject();
-	public void deleteObject(ObjectId id );
+
+	public ObjectBoundary getSpecsificObject( String ObjectSuperapp ,String internalObjectId );
 }

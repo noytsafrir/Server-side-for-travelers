@@ -1,6 +1,7 @@
 package superapp.logic;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -64,6 +65,8 @@ public class ObjectServicesRDB implements ObjectService {
 			throw new RuntimeException("could not create a object without all the valid details");
 		
 	obej.getObjectId().setSuperapp(this.superappName);
+	obej.getObjectId().setInternalObjectId(System.currentTimeMillis()+"");
+	obej.setCreationTimestamp(new Date());
 	ObjectPrimaryKeyId id = new ObjectPrimaryKeyId(obej.getObjectId().getSuperapp(), obej.getObjectId().getInternalObjectId());
 	Optional<ObjectEntity> newObject = this.objectCrud.findById(id);
 	if (newObject.isPresent())
@@ -129,14 +132,18 @@ public class ObjectServicesRDB implements ObjectService {
 		
 	}
 
-	@Override
-	public void deleteObject(ObjectId id) {
-		ObjectPrimaryKeyId pkid = new ObjectPrimaryKeyId(id.getSuperapp(), id.getInternalObjectId());
-		ObjectEntity entity = this.objectCrud.findById(pkid)
-				.orElseThrow(()->new RuntimeException("not exsist"));	
-	this.objectCrud.delete(entity);
-		
-		
-	}
 
+
+	@Override
+	public ObjectBoundary getSpecsificObject(String ObjectSuperapp, String internalObjectId) {
+		ObjectPrimaryKeyId pkid = new ObjectPrimaryKeyId(ObjectSuperapp, internalObjectId);
+	Optional<ObjectEntity> entity =this.objectCrud.findById(pkid);
+	if (!entity.isPresent())
+	{
+		throw new RuntimeException("Object not exist");
+	}
+	
+	return this.convertor.toBoundary(entity.get());
+
+}
 }

@@ -14,7 +14,7 @@ public class ObjectBoundary {
 		private HashMap<String,Object> objectDetails;
 		
 		public ObjectBoundary() {}
-
+		
 		public ObjectBoundary(ObjectId objectId, String type, String alias, Boolean active, Date creationTimestamp,
 				Location location, CreatedBy createdBy, HashMap<String, Object> objectDetails) {
 			super();
