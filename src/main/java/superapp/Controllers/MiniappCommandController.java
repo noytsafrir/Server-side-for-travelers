@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import superapp.boundaries.command.MiniAppCommandBoundary;
-
+import superapp.boundaries.command.MiniAppCommandID;
 import superapp.logic.MiniAppCommandService;
 
 
@@ -34,8 +34,9 @@ public class MiniappCommandController {
 	public Object invokeCommand(
 			@PathVariable("miniAppName")String miniApp, 
 			@RequestBody MiniAppCommandBoundary command) {
+			MiniAppCommandID cId = new MiniAppCommandID();
+	        cId.setMiniapp(miniApp);
+	        command.setCommandId(cId);
 			return this.service.invokeCommand(command);
-			
-			
 	}
 }

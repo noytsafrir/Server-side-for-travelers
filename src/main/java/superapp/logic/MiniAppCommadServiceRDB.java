@@ -40,21 +40,21 @@ public class MiniAppCommadServiceRDB implements MiniAppCommandService {
 // to do mini app init && remember to do controller
 	@Override
 	public Object invokeCommand(MiniAppCommandBoundary command) {
-		if (command == null || command.getCommandID() == null || command.getTargetObject() == null
+		if (command == null || command.getCommandId() == null || command.getTargetObject() == null
 				|| command.getCommandAttributes() == null || command.getInvokedBy() == null
-				|| command.getCommand() == null || command.getCommandID().getMiniapp() == null
+				|| command.getCommand() == null || command.getCommandId().getMiniapp() == null
 				|| command.getTargetObject().getObjectId() == null
 				|| command.getTargetObject().getObjectId().getInternalObjectId() == null
 				|| command.getTargetObject().getObjectId().getSuperapp() == null
 				|| command.getInvokedBy().getUserId() == null || command.getInvokedBy().getUserId().getEmail() == null
 				|| command.getInvokedBy().getUserId().getSuperapp() == null) {
-			throw new RuntimeException("could not create a command without all the valid details");
+			throw new RuntimeException("could not create a command without all the valid details:\n" + command + "\n");
 		}
-		command.getCommandID().setSuperapp(superAppName);
+		command.getCommandId().setSuperapp(superAppName);
 		command.setInvocationTimestamp(new Date());
-		command.getCommandID().setInternalCommandId(System.currentTimeMillis() + "");
-		MiniAppCommandPrimaryKeyId id = new MiniAppCommandPrimaryKeyId(command.getCommandID().getSuperapp(),
-				command.getCommandID().getMiniapp(), command.getCommandID().getInternalCommandId());
+		command.getCommandId().setInternalCommandId(System.currentTimeMillis() + "");
+		MiniAppCommandPrimaryKeyId id = new MiniAppCommandPrimaryKeyId(command.getCommandId().getSuperapp(),
+				command.getCommandId().getMiniapp(), command.getCommandId().getInternalCommandId());
 		Optional<MiniAppCommandEntity> entity = miniCrud.findById(id);
 		if (entity.isPresent()) {
 			throw new RuntimeException("command already exists ");

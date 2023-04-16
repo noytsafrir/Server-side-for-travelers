@@ -29,7 +29,7 @@ public class MiniAppCommandConverter {
 	
 		boundary.setTargetObject(new TargetObject(new ObjectId(entity.getSuperapp(), entity.getInternalObjectId())));
 		boundary.setInvokedBy(new InvocationUser(new UserId(entity.getSuperapp(), entity.getEmail())));
-		boundary.setCommandID(new MiniAppCommandID(entity.getSuperapp(), entity.getMiniapp(), entity.getInternalCommandId()));
+		boundary.setCommandId(new MiniAppCommandID(entity.getSuperapp(), entity.getMiniapp(), entity.getInternalCommandId()));
 		boundary.setInvocationTimestamp(entity.getInvocationTimestamp());
 		
 		 ObjectMapper mapper = new ObjectMapper();
@@ -46,9 +46,9 @@ public class MiniAppCommandConverter {
 
 	public MiniAppCommandEntity toEntity(MiniAppCommandBoundary boundary) {
 		MiniAppCommandEntity entity = new MiniAppCommandEntity();
-		entity.setSuperapp(boundary.getCommandID().getSuperapp());
-		entity.setMiniapp(boundary.getCommandID().getMiniapp());
-		entity.setInternalCommandId(boundary.getCommandID().getInternalCommandId());
+		entity.setSuperapp(boundary.getCommandId().getSuperapp());
+		entity.setMiniapp(boundary.getCommandId().getMiniapp());
+		entity.setInternalCommandId(boundary.getCommandId().getInternalCommandId());
 		entity.setCommand(boundary.getCommand());
 		entity.setInternalObjectId(boundary.getTargetObject().getObjectId().getInternalObjectId());
 		entity.setInvocationTimestamp(boundary.getInvocationTimestamp());

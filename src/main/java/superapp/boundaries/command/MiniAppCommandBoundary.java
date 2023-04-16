@@ -5,19 +5,18 @@ import java.util.Map;
 
 public class MiniAppCommandBoundary {
 
-	private MiniAppCommandID commandID;
+	private MiniAppCommandID commandId;
 	private String command;
 	private TargetObject targetObject;
 	private Date invocationTimestamp;
 	private InvocationUser invokedBy;
     private Map<String, Object> commandAttributes;
-
 	
 	public MiniAppCommandBoundary() {}
 
-	public MiniAppCommandBoundary(MiniAppCommandID commandID, String command, TargetObject targetObject,
+	public MiniAppCommandBoundary(MiniAppCommandID commandId, String command, TargetObject targetObject,
 			Date invocationTimestamp, InvocationUser invokedBy, Map<String, Object> commandAttributes) {
-		this.commandID = commandID;
+		this.commandId = commandId;
 		this.command = command;
 		this.targetObject = targetObject;
 		this.invocationTimestamp = invocationTimestamp;
@@ -26,13 +25,13 @@ public class MiniAppCommandBoundary {
 	}
 
 
-	public MiniAppCommandID getCommandID() {
-		return commandID;
+	public MiniAppCommandID getCommandId() {
+		return commandId;
 	}
 
 
-	public void setCommandID(MiniAppCommandID commandID) {
-		this.commandID = commandID;
+	public void setCommandId(MiniAppCommandID commandId) {
+		this.commandId = commandId;
 	}
 
 
@@ -88,7 +87,7 @@ public class MiniAppCommandBoundary {
 
 	@Override
 	public String toString() {
-		return "MiniAppCommandBoundary [commandID=" + commandID + ", command=" + command + ", targetObject="
+		return "MiniAppCommandBoundary [commandID=" + commandId + ", command=" + command + ", targetObject="
 				+ targetObject + ", invocationTimestamp=" + invocationTimestamp + ", invokedBy=" + invokedBy
 				+ ", commandAttributes=" + commandAttributes + "]";
 	}
