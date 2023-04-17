@@ -2,19 +2,21 @@ package superapp.data;
 
 import java.util.Date;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.IdClass;
-import jakarta.persistence.Lob;
-import jakarta.persistence.Table;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
+
+//import jakarta.persistence.Entity;
+//import jakarta.persistence.Id;
+//import jakarta.persistence.IdClass;
+//import jakarta.persistence.Lob;
+//import jakarta.persistence.Table;
 
 // at this part we want to change the attributes for the DB data type
 //e.g. obj to 3 strings like commandID that we replace
 // with the strings : superapp , miniapp & internalCommandId
 
-@Entity
-@Table(name = "MiniAppCommands")
-@IdClass(MiniAppCommandPrimaryKeyId.class) // pk will be defind later
+@Document(collection = "MiniAppCommands")
+//@IdClass(MiniAppCommandPrimaryKeyId.class) // pk will be defind later
 public class MiniAppCommandEntity {
 	// private MiniAppCommandID commandID;
 	@Id
@@ -29,7 +31,7 @@ public class MiniAppCommandEntity {
 	private String internalObjectId;
 	private Date invocationTimestamp;
 	private String email;
-	@Lob // from map to string
+	
 	private String commandAttributes;
 
 	// empty const'

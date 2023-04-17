@@ -104,8 +104,7 @@ public class ObjectServicesRDB implements ObjectService {
 				}
 				// created by ?? 
 				if (update.getObjectDetails() != null) {
-					String ObjectDetialString = this.convertor.MapToString(update.getObjectDetails());
-					existing.setObjectDetails(ObjectDetialString);
+					existing.setObjectDetails(update.getObjectDetails());
 				}
 				// save (UPDATE) entity to database if user was indeed updated
 				this.objectCrud.save(existing);
@@ -131,8 +130,6 @@ public class ObjectServicesRDB implements ObjectService {
 		 this.objectCrud.deleteAll();
 		
 	}
-
-
 
 	@Override
 	public ObjectBoundary getSpecsificObject(String ObjectSuperapp, String internalObjectId) {

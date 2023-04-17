@@ -36,14 +36,14 @@ public class ObjectConvertor {
 		entity.setUserSuperapp(obj.getCreatedBy().getUserId().getSuperapp());
 		
 		// Convert the objectDetails map to a serialized string
-	    ObjectMapper mapper = new ObjectMapper();
-	    String objectDetailsString = null;
-	    try {
-	        objectDetailsString = mapper.writeValueAsString(obj.getObjectDetails());
-	    } catch (JsonProcessingException e) {
-	        e.printStackTrace();
-	    }
-	    entity.setObjectDetails(objectDetailsString);
+//	    ObjectMapper mapper = new ObjectMapper();
+//	    String objectDetailsString = null;
+//	    try {
+//	        objectDetailsString = mapper.writeValueAsString(obj.getObjectDetails());
+//	    } catch (JsonProcessingException e) {
+//	        e.printStackTrace();
+//	    }
+	    entity.setObjectDetails(obj.getObjectDetails());
 		
 		return entity;
 	}
@@ -70,14 +70,14 @@ public class ObjectConvertor {
 	
 		
 		  // Convert the objectDetails string to a Map
-	    ObjectMapper mapper = new ObjectMapper();
-	    HashMap<String, Object> objectDetailsMap = null;
-	    try {
-	        objectDetailsMap = (HashMap<String, Object>) mapper.readValue(obj.getObjectDetails(), Map.class);
-	    } catch (JsonProcessingException e) {
-	        e.printStackTrace();
-	    }
-	    boundary.setObjectDetails(objectDetailsMap);
+//	    ObjectMapper mapper = new ObjectMapper();
+//	    HashMap<String, Object> objectDetailsMap = null;
+//	    try {
+//	        objectDetailsMap = (HashMap<String, Object>) mapper.readValue(obj.getObjectDetails(), Map.class);
+//	    } catch (JsonProcessingException e) {
+//	        e.printStackTrace();
+//	    }
+	    boundary.setObjectDetails(obj.getObjectDetails());
 
 	    return boundary;
 

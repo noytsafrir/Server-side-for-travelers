@@ -1,18 +1,20 @@
 package superapp.data;
 
 import java.util.Date;
+import java.util.Map;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.IdClass;
-import jakarta.persistence.Lob;
-import jakarta.persistence.Table;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
+
+//import jakarta.persistence.Entity;
+//import jakarta.persistence.Id;
+//import jakarta.persistence.IdClass;
+//import jakarta.persistence.Lob;
+//import jakarta.persistence.Table;
 
 
-@Entity
-@Table(name= "Objects")
-
- @IdClass(ObjectPrimaryKeyId.class)
+@Document(collection = "Objects")
+//@IdClass(ObjectPrimaryKeyId.class)
 public class ObjectEntity {
 	@Id
 	private String superapp;
@@ -27,11 +29,9 @@ public class ObjectEntity {
 	private Double lat;
 	private Double lng;
 	
-	// userID
 	private String email;
 	
-	@Lob
-	private String objectDetails;
+	private Map<String,Object> objectDetails;
 	
 	public ObjectEntity() {}
 	
@@ -117,16 +117,16 @@ public class ObjectEntity {
 		this.email = email;
 	}
 
-	public String getObjectDetails() {
+	public Map<String,Object>  getObjectDetails() {
 		return objectDetails;
 	}
 
-	public void setObjectDetails(String objectDetails) {
+	public void setObjectDetails(Map<String,Object>  objectDetails) {
 		this.objectDetails = objectDetails;
 	}
 
 	public ObjectEntity(String superapp, String internalObjectId, String type, String alias, boolean active,
-			Date creationTimestamp, Double lat, Double lng, String email, String objectDetails,String usersuperapp) {
+			Date creationTimestamp, Double lat, Double lng, String email, Map<String,Object>  objectDetails,String usersuperapp) {
 		super();
 		this.superapp = superapp;
 		this.internalObjectId = internalObjectId;

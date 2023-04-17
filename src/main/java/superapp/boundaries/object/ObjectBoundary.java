@@ -1,7 +1,7 @@
 package superapp.boundaries.object;
 
 import java.util.Date;
-import java.util.HashMap;
+import java.util.Map;
 
 public class ObjectBoundary {
 		private ObjectId objectId;
@@ -11,12 +11,12 @@ public class ObjectBoundary {
 		private Date creationTimestamp;
 		private Location location;
 		private CreatedBy createdBy;
-		private HashMap<String,Object> objectDetails;
+		private Map<String,Object> objectDetails;
 		
 		public ObjectBoundary() {}
 		
 		public ObjectBoundary(ObjectId objectId, String type, String alias, Boolean active, Date creationTimestamp,
-				Location location, CreatedBy createdBy, HashMap<String, Object> objectDetails) {
+				Location location, CreatedBy createdBy, Map<String, Object> objectDetails) {
 			super();
 			// 1 2 
 			this.objectId = objectId;
@@ -90,11 +90,11 @@ public class ObjectBoundary {
 			this.createdBy = createdBy;
 		}
 
-		public HashMap<String, Object> getObjectDetails() {
+		public Map<String, Object> getObjectDetails() {
 			return objectDetails;
 		}
 
-		public void setObjectDetails(HashMap<String, Object> objectDetails) {
+		public void setObjectDetails(Map<String, Object> objectDetails) {
 			this.objectDetails = objectDetails;
 		}
 
