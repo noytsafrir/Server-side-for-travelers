@@ -24,7 +24,7 @@ import superapp.data.UserEntity;
 import superapp.data.UserPrimaryKeyId;
 
 @Service //spring create an instance from this class so we can use it
-public class ObjectServicesRDB implements ObjectService {
+public class ObjectServicesRDB implements ObjectServiceBinding {
 	 private ObjectCrud objectCrud;
 	private ObjectConvertor convertor;
 	private String superappName;
@@ -143,4 +143,31 @@ public class ObjectServicesRDB implements ObjectService {
 	return this.convertor.toBoundary(entity.get());
 
 }
+
+	@Override
+	public void bindObjects(ObjectEntity parent, ObjectEntity child) {
+		ObjectPrimaryKeyId parent_pkid = new ObjectPrimaryKeyId(parent.getSuperapp(), parent.getInternalObjectId());
+		ObjectPrimaryKeyId child_pkid = new ObjectPrimaryKeyId(child.getSuperapp(), child.getInternalObjectId());
+		
+		 Optional<ObjectEntity> parentEntity =this.objectCrud.findById(parent_pkid);
+		 Optional<ObjectEntity> childEntity =this.objectCrud.findById(child_pkid);
+		 
+		 // store the id in the parent child bind map 
+		 parentEntity.get().addChild(child_pkid.getInternalObjectId());
+		 childEntity.get().addParent(parent_pkid.getInternalObjectId());
+	}
+
+	@Override
+	public void unbindObjects(ObjectEntity parent, ObjectEntity child) {
+		
+		ObjectPrimaryKeyId parent_pkid = new ObjectPrimaryKeyId(parent.getSuperapp(), parent.getInternalObjectId());
+		ObjectPrimaryKeyId child_pkid = new ObjectPrimaryKeyId(child.getSuperapp(), child.getInternalObjectId());
+		
+		 Optional<ObjectEntity> parentEntity =this.objectCrud.findById(parent_pkid);
+		 Optional<ObjectEntity> childEntity =this.objectCrud.findById(child_pkid);
+		 
+		 // remove the id in the parent child bind map 
+		 childEntity.get().RemoveParent(parent_pkid.getInternalObjectId());
+		 parentEntity.get().RemoveChild(child_pkid.getInternalObjectId());
+	}
 }

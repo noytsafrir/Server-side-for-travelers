@@ -44,6 +44,8 @@ public class ObjectConvertor {
 //	        e.printStackTrace();
 //	    }
 	    entity.setObjectDetails(obj.getObjectDetails());
+	    
+	    entity.setBindings(obj.getBinding());
 		
 		return entity;
 	}
@@ -67,7 +69,7 @@ public class ObjectConvertor {
 		CreatedBy cb = new CreatedBy(uid);
 		
 		boundary.setCreatedBy( cb );
-	
+		
 		
 		  // Convert the objectDetails string to a Map
 //	    ObjectMapper mapper = new ObjectMapper();
@@ -78,10 +80,11 @@ public class ObjectConvertor {
 //	        e.printStackTrace();
 //	    }
 	    boundary.setObjectDetails(obj.getObjectDetails());
-
+	    boundary.setBinding(obj.getBindings());
 	    return boundary;
 
 	}
+	
 	public String MapToString (HashMap<String,Object> objectDetails)
 	{
 		// Convert the objectDetails map to a serialized string

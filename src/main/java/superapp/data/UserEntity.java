@@ -1,12 +1,14 @@
 package superapp.data;
 
-import org.springframework.data.annotation.Id;
+
 import org.springframework.data.mongodb.core.mapping.Document;
 
 //import jakarta.persistence.Entity;
 //import jakarta.persistence.Id;
 //import jakarta.persistence.IdClass;
 //import jakarta.persistence.Table;
+import org.springframework.data.annotation.Id;
+
 
 @Document(collection = "Users")
 //@IdClass(UserPrimaryKeyId.class)

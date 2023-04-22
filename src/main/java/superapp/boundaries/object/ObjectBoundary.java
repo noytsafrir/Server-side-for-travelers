@@ -12,11 +12,14 @@ public class ObjectBoundary {
 		private Location location;
 		private CreatedBy createdBy;
 		private Map<String,Object> objectDetails;
+		private Map<String,String> binding;
 		
+		
+
 		public ObjectBoundary() {}
 		
 		public ObjectBoundary(ObjectId objectId, String type, String alias, Boolean active, Date creationTimestamp,
-				Location location, CreatedBy createdBy, Map<String, Object> objectDetails) {
+				Location location, CreatedBy createdBy, Map<String, Object> objectDetails,Map<String,String> binding) {
 			super();
 			// 1 2 
 			this.objectId = objectId;
@@ -32,6 +35,15 @@ public class ObjectBoundary {
 			// 9 -10
 			this.objectDetails = objectDetails;
 			//11
+			this.binding = binding ; 
+		}
+		
+		public Map<String, String> getBinding() {
+			return binding;
+		}
+
+		public void setBinding(Map<String, String> binding) {
+			this.binding = binding;
 		}
 
 		public ObjectId getObjectId() {
@@ -102,7 +114,9 @@ public class ObjectBoundary {
 		public String toString() {
 			return "ObjectBoundary [objectId=" + objectId + ", type=" + type + ", alias=" + alias + ", active=" + active
 					+ ", creationTimestamp=" + creationTimestamp + ", location=" + location + ", createdBy=" + createdBy
-					+ ", objectDetails=" + objectDetails + "]";
+					+ ", objectDetails=" + objectDetails + ", binding=" + binding + "]";
 		}
+
+	
 
 }

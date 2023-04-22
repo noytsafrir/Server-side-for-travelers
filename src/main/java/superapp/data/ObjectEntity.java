@@ -20,30 +20,42 @@ public class ObjectEntity {
 	private String superapp;
 	@Id
 	private String internalObjectId;
-	
+
 	private String type;
 	private String alias;
 	private boolean active;
 	private Date creationTimestamp;
-	
+
 	private Double lat;
 	private Double lng;
-	
+
 	private String email;
-	
+
 	private Map<String,Object> objectDetails;
-	
+
+	// this map will be for children and parents of the object
+	private Map<String,String> bindings ;
+
 	public ObjectEntity() {}
-	
-	 public String getUserSuperapp() {
-			return userSuperapp;
-		}
 
-		public void setUserSuperapp(String userSuperapp) {
-			this.userSuperapp = userSuperapp;
-		}
+	public Map<String, String> getBindings() {
+		return bindings;
+	}
 
-		private String userSuperapp;
+	public void setBindings(Map<String, String> bindings) {
+		this.bindings = bindings;
+	}
+
+
+	public String getUserSuperapp() {
+		return userSuperapp;
+	}
+
+	public void setUserSuperapp(String userSuperapp) {
+		this.userSuperapp = userSuperapp;
+	}
+
+	private String userSuperapp;
 
 	public String getSuperapp() {
 		return superapp;
@@ -124,9 +136,27 @@ public class ObjectEntity {
 	public void setObjectDetails(Map<String,Object>  objectDetails) {
 		this.objectDetails = objectDetails;
 	}
-
+	
+	public void addChild(String childID ) {
+		this.bindings.put("Child",childID );
+	}
+	
+	public void addParent(String parentID ) {
+		this.bindings.put("Parent",parentID );
+	}
+	
+	public void RemoveChild(String childID ) {
+		this.bindings.remove("Child", childID);
+	}
+	
+	public void RemoveParent(String parentID ) {
+		this.bindings.remove("Parent",parentID );
+	}
+	
+	
 	public ObjectEntity(String superapp, String internalObjectId, String type, String alias, boolean active,
-			Date creationTimestamp, Double lat, Double lng, String email, Map<String,Object>  objectDetails,String usersuperapp) {
+			Date creationTimestamp, Double lat, Double lng, String email, Map<String, Object> objectDetails,
+			Map<String, String> bindings, String userSuperapp) {
 		super();
 		this.superapp = superapp;
 		this.internalObjectId = internalObjectId;
@@ -138,17 +168,20 @@ public class ObjectEntity {
 		this.lng = lng;
 		this.email = email;
 		this.objectDetails = objectDetails;
-		this.userSuperapp =  usersuperapp;
+		this.bindings = bindings;
+		this.userSuperapp = userSuperapp;
 	}
 
 	@Override
 	public String toString() {
 		return "ObjectEntity [superapp=" + superapp + ", internalObjectId=" + internalObjectId + ", type=" + type
 				+ ", alias=" + alias + ", active=" + active + ", creationTimestamp=" + creationTimestamp + ", lat="
-				+ lat + ", lng=" + lng + ", email=" + email + ", objectDetails=" + objectDetails + ", userSuperapp="
-				+ userSuperapp + "]";
+				+ lat + ", lng=" + lng + ", email=" + email + ", objectDetails=" + objectDetails + ", bindings="
+				+ bindings + ", userSuperapp=" + userSuperapp + "]";
 	}
-
-
 	
+
+
+
+
 }
