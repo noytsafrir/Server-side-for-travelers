@@ -80,7 +80,7 @@ public class MiniAppCommadServiceRDB implements MiniAppCommandService {
 		List<MiniAppCommandEntity> entities = this.miniCrud.findAll();
 		List<MiniAppCommandBoundary> rv = new ArrayList<>();
 		for (MiniAppCommandEntity m : entities) {
-			if (m.getMiniapp().equals(miniAppName))
+			if (m.getCommandID().getMiniapp().equals(miniAppName))
 				rv.add(this.miniConverter.toBoundary(m));
 		}
 		return rv ;

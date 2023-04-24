@@ -5,27 +5,18 @@ import java.util.Date;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-//import jakarta.persistence.Entity;
-//import jakarta.persistence.Id;
-//import jakarta.persistence.IdClass;
-//import jakarta.persistence.Lob;
-//import jakarta.persistence.Table;
+import superapp.boundaries.command.MiniAppCommandID;
+
 
 // at this part we want to change the attributes for the DB data type
 //e.g. obj to 3 strings like commandID that we replace
 // with the strings : superapp , miniapp & internalCommandId
 
 @Document(collection = "MiniAppCommands")
-//@IdClass(MiniAppCommandPrimaryKeyId.class) // pk will be defind later
 public class MiniAppCommandEntity {
-	// private MiniAppCommandID commandID;
 	@Id
-	private String superapp;
-	@Id
-	private String miniapp;
-	@Id
-	private String internalCommandId;
-
+	private MiniAppCommandPrimaryKeyId commandID;
+	
 	private String command;
 
 	private String internalObjectId;
@@ -34,17 +25,15 @@ public class MiniAppCommandEntity {
 	
 	private String commandAttributes;
 
-	// empty const'
-	public MiniAppCommandEntity() {
-	}
 
-	// const'
-	public MiniAppCommandEntity(String superapp, String miniapp, String internalCommandId, String command,
-			String internalObjectId, Date invocationTimestamp, String email, String commandAttributes) {
+	public MiniAppCommandEntity() {}
+
+
+
+	public MiniAppCommandEntity(MiniAppCommandPrimaryKeyId commandID, String command, String internalObjectId,
+			Date invocationTimestamp, String email, String commandAttributes) {
 		super();
-		this.superapp = superapp;
-		this.miniapp = miniapp;
-		this.internalCommandId = internalCommandId;
+		this.commandID = commandID;
 		this.command = command;
 		this.internalObjectId = internalObjectId;
 		this.invocationTimestamp = invocationTimestamp;
@@ -52,30 +41,19 @@ public class MiniAppCommandEntity {
 		this.commandAttributes = commandAttributes;
 	}
 
-	// g & s
-	public String getSuperapp() {
-		return superapp;
+
+
+	public MiniAppCommandPrimaryKeyId getCommandID() {
+		return commandID;
 	}
 
-	public void setSuperapp(String superapp) {
-		this.superapp = superapp;
+
+
+	public void setCommandID(MiniAppCommandPrimaryKeyId commandID) {
+		this.commandID = commandID;
 	}
 
-	public String getMiniapp() {
-		return miniapp;
-	}
 
-	public void setMiniapp(String miniapp) {
-		this.miniapp = miniapp;
-	}
-
-	public String getInternalCommandId() {
-		return internalCommandId;
-	}
-
-	public void setInternalCommandId(String internalCommandId) {
-		this.internalCommandId = internalCommandId;
-	}
 
 	public String getCommand() {
 		return command;
@@ -116,5 +94,15 @@ public class MiniAppCommandEntity {
 	public void setCommandAttributes(String commandAttributes) {
 		this.commandAttributes = commandAttributes;
 	}
+
+
+	@Override
+	public String toString() {
+		return "MiniAppCommandEntity [commandID=" + commandID + ", command=" + command + ", internalObjectId="
+				+ internalObjectId + ", invocationTimestamp=" + invocationTimestamp + ", email=" + email
+				+ ", commandAttributes=" + commandAttributes + "]";
+	}
+
+	
 
 }

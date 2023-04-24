@@ -1,8 +1,6 @@
 package superapp.data;
 
-import java.io.Serializable;
-
-public class ObjectPrimaryKeyId implements Serializable{
+public class ObjectPrimaryKeyId{
 	private String superapp;
 	private String internalObjectId;
 	

@@ -1,9 +1,6 @@
 package superapp.data;
 
-import java.io.Serializable;
-
-
-public class MiniAppCommandPrimaryKeyId implements Serializable{
+public class MiniAppCommandPrimaryKeyId{
 	private String superapp;
 	private String miniapp;
 	private String internalCommandId;

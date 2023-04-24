@@ -146,8 +146,8 @@ public class ObjectServicesRDB implements ObjectServiceBinding {
 
 	@Override
 	public void bindObjects(ObjectEntity parent, ObjectEntity child) {
-		ObjectPrimaryKeyId parent_pkid = new ObjectPrimaryKeyId(parent.getSuperapp(), parent.getInternalObjectId());
-		ObjectPrimaryKeyId child_pkid = new ObjectPrimaryKeyId(child.getSuperapp(), child.getInternalObjectId());
+		ObjectPrimaryKeyId parent_pkid = new ObjectPrimaryKeyId(parent.getObjectId().getSuperapp(), parent.getObjectId().getInternalObjectId());
+		ObjectPrimaryKeyId child_pkid = new ObjectPrimaryKeyId(child.getObjectId().getSuperapp(), child.getObjectId().getInternalObjectId());
 		
 		 Optional<ObjectEntity> parentEntity =this.objectCrud.findById(parent_pkid);
 		 Optional<ObjectEntity> childEntity =this.objectCrud.findById(child_pkid);
@@ -160,8 +160,8 @@ public class ObjectServicesRDB implements ObjectServiceBinding {
 	@Override
 	public void unbindObjects(ObjectEntity parent, ObjectEntity child) {
 		
-		ObjectPrimaryKeyId parent_pkid = new ObjectPrimaryKeyId(parent.getSuperapp(), parent.getInternalObjectId());
-		ObjectPrimaryKeyId child_pkid = new ObjectPrimaryKeyId(child.getSuperapp(), child.getInternalObjectId());
+		ObjectPrimaryKeyId parent_pkid = new ObjectPrimaryKeyId(parent.getObjectId().getSuperapp(), parent.getObjectId().getInternalObjectId());
+		ObjectPrimaryKeyId child_pkid = new ObjectPrimaryKeyId(child.getObjectId().getSuperapp(), child.getObjectId().getInternalObjectId());
 		
 		 Optional<ObjectEntity> parentEntity =this.objectCrud.findById(parent_pkid);
 		 Optional<ObjectEntity> childEntity =this.objectCrud.findById(child_pkid);

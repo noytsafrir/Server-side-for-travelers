@@ -12,9 +12,11 @@ import superapp.boundaries.command.InvocationUser;
 import superapp.boundaries.command.MiniAppCommandBoundary;
 import superapp.boundaries.command.MiniAppCommandID;
 import superapp.boundaries.command.TargetObject;
+import superapp.boundaries.object.ObjectBoundary;
 import superapp.boundaries.object.ObjectId;
 import superapp.boundaries.user.UserId;
 import superapp.data.MiniAppCommandEntity;
+import superapp.data.MiniAppCommandPrimaryKeyId;
 
 @Component // create an instance from this class
 
@@ -24,12 +26,18 @@ public class MiniAppCommandConverter {
 	public MiniAppCommandBoundary toBoundary(MiniAppCommandEntity entity) {
 
 		MiniAppCommandBoundary boundary = new MiniAppCommandBoundary();
-		boundary.setCommand(entity.getCommand());
 		
+		MiniAppCommandID miniappId = new MiniAppCommandID();
+		miniappId.setSuperapp(entity.getCommandID().getSuperapp());
+		miniappId.setMiniapp(entity.getCommandID().getMiniapp());
+		miniappId.setInternalCommandId(entity.getCommandID().getInternalCommandId());
+		boundary.setCommandId(miniappId);
+
+		boundary.setCommand(entity.getCommand());
 	
-		boundary.setTargetObject(new TargetObject(new ObjectId(entity.getSuperapp(), entity.getInternalObjectId())));
-		boundary.setInvokedBy(new InvocationUser(new UserId(entity.getSuperapp(), entity.getEmail())));
-		boundary.setCommandId(new MiniAppCommandID(entity.getSuperapp(), entity.getMiniapp(), entity.getInternalCommandId()));
+		boundary.setTargetObject(new TargetObject(new ObjectId(entity.getCommandID().getSuperapp(), entity.getInternalObjectId())));
+		boundary.setInvokedBy(new InvocationUser(new UserId(entity.getCommandID().getSuperapp(), entity.getEmail())));
+		boundary.setCommandId(new MiniAppCommandID(entity.getCommandID().getSuperapp(), entity.getCommandID().getMiniapp(), entity.getCommandID().getInternalCommandId()));
 		boundary.setInvocationTimestamp(entity.getInvocationTimestamp());
 		
 		 ObjectMapper mapper = new ObjectMapper();
@@ -46,9 +54,13 @@ public class MiniAppCommandConverter {
 
 	public MiniAppCommandEntity toEntity(MiniAppCommandBoundary boundary) {
 		MiniAppCommandEntity entity = new MiniAppCommandEntity();
-		entity.setSuperapp(boundary.getCommandId().getSuperapp());
-		entity.setMiniapp(boundary.getCommandId().getMiniapp());
-		entity.setInternalCommandId(boundary.getCommandId().getInternalCommandId());
+		
+		MiniAppCommandPrimaryKeyId miniAppPrimaryKeyId= new MiniAppCommandPrimaryKeyId();
+		miniAppPrimaryKeyId.setSuperapp(boundary.getCommandId().getSuperapp());
+		miniAppPrimaryKeyId.setMiniapp(boundary.getCommandId().getMiniapp());
+		miniAppPrimaryKeyId.setInternalCommandId(boundary.getCommandId().getInternalCommandId());
+		entity.setCommandID(miniAppPrimaryKeyId);
+		
 		entity.setCommand(boundary.getCommand());
 		entity.setInternalObjectId(boundary.getTargetObject().getObjectId().getInternalObjectId());
 		entity.setInvocationTimestamp(boundary.getInvocationTimestamp());

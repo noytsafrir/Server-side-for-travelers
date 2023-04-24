@@ -6,37 +6,47 @@ import java.util.Map;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-//import jakarta.persistence.Entity;
-//import jakarta.persistence.Id;
-//import jakarta.persistence.IdClass;
-//import jakarta.persistence.Lob;
-//import jakarta.persistence.Table;
-
 
 @Document(collection = "Objects")
-//@IdClass(ObjectPrimaryKeyId.class)
 public class ObjectEntity {
 	@Id
-	private String superapp;
-	@Id
-	private String internalObjectId;
-
+	private ObjectPrimaryKeyId objectId;
 	private String type;
 	private String alias;
 	private boolean active;
-	private Date creationTimestamp;
-
+	private Date creationTimestamp;	
 	private Double lat;
 	private Double lng;
-
+	
+	//for the userId
+	private String userSuperapp;
 	private String email;
 
 	private Map<String,Object> objectDetails;
 
 	// this map will be for children and parents of the object
-	private Map<String,String> bindings ;
-
+	private Map<String,String> bindings ;	
+	
 	public ObjectEntity() {}
+	
+	
+	public ObjectEntity(ObjectPrimaryKeyId objectId, String type, String alias, boolean active, Date creationTimestamp,
+			Double lat, Double lng, String userSuperapp, String email, Map<String, Object> objectDetails,
+			Map<String, String> bindings) {
+		this.objectId = objectId;
+		this.type = type;
+		this.alias = alias;
+		this.active = active;
+		this.creationTimestamp = creationTimestamp;
+		this.lat = lat;
+		this.lng = lng;
+		this.userSuperapp = userSuperapp;
+		this.email = email;
+		this.objectDetails = objectDetails;
+		this.bindings = bindings;
+	}
+
+
 
 	public Map<String, String> getBindings() {
 		return bindings;
@@ -55,22 +65,13 @@ public class ObjectEntity {
 		this.userSuperapp = userSuperapp;
 	}
 
-	private String userSuperapp;
 
-	public String getSuperapp() {
-		return superapp;
+	public ObjectPrimaryKeyId getObjectId() {
+		return objectId;
 	}
 
-	public void setSuperapp(String superapp) {
-		this.superapp = superapp;
-	}
-
-	public String getInternalObjectId() {
-		return internalObjectId;
-	}
-
-	public void setInternalObjectId(String internalObjectId) {
-		this.internalObjectId = internalObjectId;
+	public void setObjectId(ObjectPrimaryKeyId objectId) {
+		this.objectId = objectId;
 	}
 
 	public String getType() {
@@ -152,36 +153,14 @@ public class ObjectEntity {
 	public void RemoveParent(String parentID ) {
 		this.bindings.remove("Parent",parentID );
 	}
-	
-	
-	public ObjectEntity(String superapp, String internalObjectId, String type, String alias, boolean active,
-			Date creationTimestamp, Double lat, Double lng, String email, Map<String, Object> objectDetails,
-			Map<String, String> bindings, String userSuperapp) {
-		super();
-		this.superapp = superapp;
-		this.internalObjectId = internalObjectId;
-		this.type = type;
-		this.alias = alias;
-		this.active = active;
-		this.creationTimestamp = creationTimestamp;
-		this.lat = lat;
-		this.lng = lng;
-		this.email = email;
-		this.objectDetails = objectDetails;
-		this.bindings = bindings;
-		this.userSuperapp = userSuperapp;
-	}
+
 
 	@Override
 	public String toString() {
-		return "ObjectEntity [superapp=" + superapp + ", internalObjectId=" + internalObjectId + ", type=" + type
-				+ ", alias=" + alias + ", active=" + active + ", creationTimestamp=" + creationTimestamp + ", lat="
-				+ lat + ", lng=" + lng + ", email=" + email + ", objectDetails=" + objectDetails + ", bindings="
-				+ bindings + ", userSuperapp=" + userSuperapp + "]";
+		return "ObjectEntity [objectId=" + objectId + ", type=" + type + ", alias=" + alias + ", active=" + active
+				+ ", creationTimestamp=" + creationTimestamp + ", lat=" + lat + ", lng=" + lng + ", userSuperapp="
+				+ userSuperapp + ", email=" + email + ", objectDetails=" + objectDetails + ", bindings=" + bindings
+				+ "]";
 	}
-	
-
-
-
 
 }

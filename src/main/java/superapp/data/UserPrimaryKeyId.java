@@ -1,8 +1,6 @@
 package superapp.data;
 
-import java.io.Serializable;
-
-public class UserPrimaryKeyId implements Serializable{
+public class UserPrimaryKeyId{
 	private String superapp;
 	private String email;
 	

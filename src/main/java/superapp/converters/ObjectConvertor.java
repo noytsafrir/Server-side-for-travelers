@@ -14,16 +14,52 @@ import superapp.boundaries.object.ObjectBoundary;
 import superapp.boundaries.object.ObjectId;
 import superapp.boundaries.user.UserId;
 import superapp.data.ObjectEntity;
+import superapp.data.ObjectPrimaryKeyId;
+import superapp.data.UserPrimaryKeyId;
 @Component //create an instance from this class 
 public class ObjectConvertor {
+	
+
+
+	@SuppressWarnings("unchecked")
+	public ObjectBoundary toBoundary(ObjectEntity entity)
+	{
+		ObjectBoundary boundary = new ObjectBoundary();
+		
+		ObjectId objectId = new ObjectId();
+		objectId.setSuperapp(entity.getObjectId().getSuperapp());
+		objectId.setInternalObjectId(entity.getObjectId().getInternalObjectId());
+		
+		boundary.setObjectId(objectId);
+		
+		boundary.setType(entity.getType());
+		boundary.setAlias(entity.getAlias());
+		boundary.setActive(entity.getActive());
+		boundary.setCreationTimestamp(entity.getCreationTimestamp());
+		
+		Location location = new Location(entity.getLat(), entity.getLng());
+		boundary.setLocation(location);
+		
+		UserId uid = new UserId(entity.getEmail());
+		uid.setSuperapp(entity.getUserSuperapp());
+		CreatedBy cb = new CreatedBy(uid);
+		
+		boundary.setCreatedBy( cb );
+		
+	    boundary.setObjectDetails(entity.getObjectDetails());
+	    boundary.setBinding(entity.getBindings());
+	    return boundary;
+	}
 	
 
 	public ObjectEntity toEntity(ObjectBoundary obj)
 	{
 		ObjectEntity entity = new ObjectEntity();
-		entity.setSuperapp(obj.getObjectId().getSuperapp());
-		entity.setInternalObjectId(obj.getObjectId().getInternalObjectId());
+		ObjectPrimaryKeyId objectPrimaryKeyId = new ObjectPrimaryKeyId();
+		objectPrimaryKeyId.setSuperapp(obj.getObjectId().getSuperapp());
+		objectPrimaryKeyId.setInternalObjectId(obj.getObjectId().getInternalObjectId());
 		
+		entity.setObjectId(objectPrimaryKeyId);
 		entity.setType(obj.getType());
 		entity.setAlias(obj.getAlias());
 		entity.setActive(obj.getActive());
@@ -35,69 +71,27 @@ public class ObjectConvertor {
 		entity.setEmail(obj.getCreatedBy().getUserId().getEmail());
 		entity.setUserSuperapp(obj.getCreatedBy().getUserId().getSuperapp());
 		
-		// Convert the objectDetails map to a serialized string
-//	    ObjectMapper mapper = new ObjectMapper();
-//	    String objectDetailsString = null;
-//	    try {
-//	        objectDetailsString = mapper.writeValueAsString(obj.getObjectDetails());
-//	    } catch (JsonProcessingException e) {
-//	        e.printStackTrace();
-//	    }
 	    entity.setObjectDetails(obj.getObjectDetails());
 	    
 	    entity.setBindings(obj.getBinding());
 		
 		return entity;
 	}
-	@SuppressWarnings("unchecked")
-	public ObjectBoundary toBoundary(ObjectEntity obj)
-	{
-		ObjectBoundary boundary = new ObjectBoundary();
-		
-		ObjectId oid = new ObjectId(obj.getSuperapp() , obj.getInternalObjectId());
-		boundary.setObjectId(oid);
-		boundary.setType(obj.getType());
-		boundary.setAlias(obj.getAlias());
-		boundary.setActive(obj.getActive());
-		boundary.setCreationTimestamp(obj.getCreationTimestamp());
-		
-		Location location = new Location(obj.getLat(), obj.getLng());
-		boundary.setLocation(location);
-		
-		UserId uid = new UserId(obj.getEmail());
-		uid.setSuperapp(obj.getUserSuperapp());
-		CreatedBy cb = new CreatedBy(uid);
-		
-		boundary.setCreatedBy( cb );
-		
-		
-		  // Convert the objectDetails string to a Map
+	
+
+//	public String MapToString (HashMap<String,Object> objectDetails)
+//	{
+//		// Convert the objectDetails map to a serialized string
 //	    ObjectMapper mapper = new ObjectMapper();
-//	    HashMap<String, Object> objectDetailsMap = null;
+//	    String objectDetailsString = null;
 //	    try {
-//	        objectDetailsMap = (HashMap<String, Object>) mapper.readValue(obj.getObjectDetails(), Map.class);
+//	        objectDetailsString = mapper.writeValueAsString(objectDetails);
 //	    } catch (JsonProcessingException e) {
 //	        e.printStackTrace();
 //	    }
-	    boundary.setObjectDetails(obj.getObjectDetails());
-	    boundary.setBinding(obj.getBindings());
-	    return boundary;
-
-	}
-	
-	public String MapToString (HashMap<String,Object> objectDetails)
-	{
-		// Convert the objectDetails map to a serialized string
-	    ObjectMapper mapper = new ObjectMapper();
-	    String objectDetailsString = null;
-	    try {
-	        objectDetailsString = mapper.writeValueAsString(objectDetails);
-	    } catch (JsonProcessingException e) {
-	        e.printStackTrace();
-	    }
-	    return objectDetailsString ; 
-		
-	}
+//	    return objectDetailsString ; 
+//		
+//	}
 }
 	
 

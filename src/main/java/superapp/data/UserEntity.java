@@ -11,13 +11,9 @@ import org.springframework.data.annotation.Id;
 
 
 @Document(collection = "Users")
-//@IdClass(UserPrimaryKeyId.class)
 public class UserEntity {
-	
 	@Id
-	private String superapp;
-	@Id
-	private String email;
+	private UserPrimaryKeyId userId;
 	
 	private String role;
 	private String username;
@@ -25,18 +21,15 @@ public class UserEntity {
 
 	public UserEntity() {}
 	
-	public String getSuperapp() {
-		return superapp;
+	
+	public UserPrimaryKeyId getUserId() {
+		return userId;
 	}
-	public void setSuperapp(String superapp) {
-		this.superapp = superapp;
+
+	public void setUserId(UserPrimaryKeyId userId) {
+		this.userId = userId;
 	}
-	public String getEmail() {
-		return email;
-	}
-	public void setEmail(String email) {
-		this.email = email;
-	}
+
 	public String getRole() {
 		return role;
 	}
@@ -58,8 +51,8 @@ public class UserEntity {
 
 	@Override
 	public String toString() {
-		return "UserEntity [superapp=" + superapp + ", name=" + email + ", role=" + role + ", username=" + username
-				+ ", avatar=" + avatar + "]";
+		return "UserEntity [userId=" + userId + ", role=" + role + ", username=" + username + ", avatar=" + avatar
+				+ "]";
 	}
 }
 
