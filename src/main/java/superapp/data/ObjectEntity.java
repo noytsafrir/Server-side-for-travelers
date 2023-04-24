@@ -146,5 +146,4 @@ public class ObjectEntity {
 				+ ", creationTimestamp=" + creationTimestamp + ", lat=" + lat + ", lng=" + lng + ", createdBy="
 				+ createdBy + ", objectDetails=" + objectDetails + ", bindings=" + bindings + "]";
 	}
-
 }
