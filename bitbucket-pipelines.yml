@@ -7,5 +7,5 @@ pipelines:
           enabled: false
         script:
           - git clone --bare git@bitbucket.org:shlomisaidian/2023b.noy.tsafrir.git
-          - cd RepoName.git
-          - git push --mirror git@github.com:ShacharFelman/SoftDev_TravelersSuperapp.git
+          - cd 2023b.noy.tsafrir.git
+          - git push --mirror git@github.com:ShacharFelman/2023b.noy.tsafrir.git
