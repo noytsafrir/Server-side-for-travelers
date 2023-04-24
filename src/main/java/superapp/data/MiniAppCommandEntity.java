@@ -1,11 +1,13 @@
 package superapp.data;
 
 import java.util.Date;
+import java.util.Map;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import superapp.boundaries.command.MiniAppCommandID;
+import superapp.boundaries.object.ObjectId;
+import superapp.boundaries.user.UserId;
 
 
 // at this part we want to change the attributes for the DB data type
@@ -18,42 +20,35 @@ public class MiniAppCommandEntity {
 	private MiniAppCommandPrimaryKeyId commandID;
 	
 	private String command;
-
-	private String internalObjectId;
+	private ObjectId targetObject;
 	private Date invocationTimestamp;
-	private String email;
 	
-	private String commandAttributes;
+	private UserId invokedBy;
+		
+	private Map<String,Object> commandAttributes;
 
 
 	public MiniAppCommandEntity() {}
 
-
-
-	public MiniAppCommandEntity(MiniAppCommandPrimaryKeyId commandID, String command, String internalObjectId,
-			Date invocationTimestamp, String email, String commandAttributes) {
+	public MiniAppCommandEntity(MiniAppCommandPrimaryKeyId commandID, String command, ObjectId targetObject,
+			Date invocationTimestamp, UserId invokedBy, Map<String, Object> commandAttributes) {
 		super();
 		this.commandID = commandID;
 		this.command = command;
-		this.internalObjectId = internalObjectId;
+		this.targetObject = targetObject;
 		this.invocationTimestamp = invocationTimestamp;
-		this.email = email;
+		this.invokedBy = invokedBy;
 		this.commandAttributes = commandAttributes;
 	}
-
 
 
 	public MiniAppCommandPrimaryKeyId getCommandID() {
 		return commandID;
 	}
 
-
-
 	public void setCommandID(MiniAppCommandPrimaryKeyId commandID) {
 		this.commandID = commandID;
 	}
-
-
 
 	public String getCommand() {
 		return command;
@@ -63,13 +58,17 @@ public class MiniAppCommandEntity {
 		this.command = command;
 	}
 
-	public String getInternalObjectId() {
-		return internalObjectId;
+
+
+	public ObjectId getTargetObject() {
+		return targetObject;
 	}
 
-	public void setInternalObjectId(String internalObjectId) {
-		this.internalObjectId = internalObjectId;
+
+	public void setTargetObject(ObjectId targetObject) {
+		this.targetObject = targetObject;
 	}
+
 
 	public Date getInvocationTimestamp() {
 		return invocationTimestamp;
@@ -79,30 +78,33 @@ public class MiniAppCommandEntity {
 		this.invocationTimestamp = invocationTimestamp;
 	}
 
-	public String getEmail() {
-		return email;
+
+
+	public UserId getInvokedBy() {
+		return invokedBy;
 	}
 
-	public void setEmail(String email) {
-		this.email = email;
+
+
+	public void setInvokedBy(UserId invokedBy) {
+		this.invokedBy = invokedBy;
 	}
 
-	public String getCommandAttributes() {
+
+	public Map<String, Object> getCommandAttributes() {
 		return commandAttributes;
 	}
 
-	public void setCommandAttributes(String commandAttributes) {
+	public void setCommandAttributes(Map<String, Object> commandAttributes) {
 		this.commandAttributes = commandAttributes;
 	}
 
-
 	@Override
 	public String toString() {
-		return "MiniAppCommandEntity [commandID=" + commandID + ", command=" + command + ", internalObjectId="
-				+ internalObjectId + ", invocationTimestamp=" + invocationTimestamp + ", email=" + email
+		return "MiniAppCommandEntity [commandID=" + commandID + ", command=" + command + ", targetObject="
+				+ targetObject + ", invocationTimestamp=" + invocationTimestamp + ", invokedBy=" + invokedBy
 				+ ", commandAttributes=" + commandAttributes + "]";
 	}
 
-	
 
 }

@@ -35,19 +35,12 @@ public class MiniAppCommandConverter {
 
 		boundary.setCommand(entity.getCommand());
 	
-		boundary.setTargetObject(new TargetObject(new ObjectId(entity.getCommandID().getSuperapp(), entity.getInternalObjectId())));
-		boundary.setInvokedBy(new InvocationUser(new UserId(entity.getCommandID().getSuperapp(), entity.getEmail())));
+		boundary.setTargetObject(new TargetObject(entity.getTargetObject()));
+		boundary.setInvokedBy(new InvocationUser(entity.getInvokedBy()));
 		boundary.setCommandId(new MiniAppCommandID(entity.getCommandID().getSuperapp(), entity.getCommandID().getMiniapp(), entity.getCommandID().getInternalCommandId()));
 		boundary.setInvocationTimestamp(entity.getInvocationTimestamp());
 		
-		 ObjectMapper mapper = new ObjectMapper();
-		    HashMap<String, Object> commandAttributesMap = null;
-		    try {
-		    	commandAttributesMap = (HashMap<String, Object>) mapper.readValue(entity.getCommandAttributes(), Map.class);
-		    } catch (JsonProcessingException e) {
-		        e.printStackTrace();
-		    }
-		boundary.setCommandAttributes(commandAttributesMap);
+		boundary.setCommandAttributes(entity.getCommandAttributes());
 		return boundary;
 
 	}
@@ -62,18 +55,11 @@ public class MiniAppCommandConverter {
 		entity.setCommandID(miniAppPrimaryKeyId);
 		
 		entity.setCommand(boundary.getCommand());
-		entity.setInternalObjectId(boundary.getTargetObject().getObjectId().getInternalObjectId());
+		entity.setTargetObject(boundary.getTargetObject().getObjectId());
 		entity.setInvocationTimestamp(boundary.getInvocationTimestamp());
-		entity.setEmail(boundary.getInvokedBy().getUserId().getEmail());
+		entity.setInvokedBy(boundary.getInvokedBy().getUserId());
 		
-		   ObjectMapper mapper = new ObjectMapper();
-		    String commandAttributesString = null;
-		    try {
-		    	commandAttributesString = mapper.writeValueAsString(boundary.getCommandAttributes());
-		    } catch (JsonProcessingException e) {
-		        e.printStackTrace();
-		    }
-		    entity.setCommandAttributes(commandAttributesString);
+	    entity.setCommandAttributes(boundary.getCommandAttributes());
 		return entity;
 	}
 }

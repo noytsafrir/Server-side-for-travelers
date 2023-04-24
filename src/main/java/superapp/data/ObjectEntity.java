@@ -6,6 +6,8 @@ import java.util.Map;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import superapp.boundaries.user.UserId;
+
 
 @Document(collection = "Objects")
 public class ObjectEntity {
@@ -17,10 +19,8 @@ public class ObjectEntity {
 	private Date creationTimestamp;	
 	private Double lat;
 	private Double lng;
-	
-	//for the userId
-	private String userSuperapp;
-	private String email;
+
+	private UserId createdBy;
 
 	private Map<String,Object> objectDetails;
 
@@ -28,11 +28,9 @@ public class ObjectEntity {
 	private Map<String,String> bindings ;	
 	
 	public ObjectEntity() {}
-	
-	
+
 	public ObjectEntity(ObjectPrimaryKeyId objectId, String type, String alias, boolean active, Date creationTimestamp,
-			Double lat, Double lng, String userSuperapp, String email, Map<String, Object> objectDetails,
-			Map<String, String> bindings) {
+			Double lat, Double lng, UserId createdBy, Map<String, Object> objectDetails, Map<String, String> bindings) {
 		this.objectId = objectId;
 		this.type = type;
 		this.alias = alias;
@@ -40,13 +38,10 @@ public class ObjectEntity {
 		this.creationTimestamp = creationTimestamp;
 		this.lat = lat;
 		this.lng = lng;
-		this.userSuperapp = userSuperapp;
-		this.email = email;
+		this.createdBy = createdBy;
 		this.objectDetails = objectDetails;
 		this.bindings = bindings;
 	}
-
-
 
 	public Map<String, String> getBindings() {
 		return bindings;
@@ -56,15 +51,13 @@ public class ObjectEntity {
 		this.bindings = bindings;
 	}
 
-
-	public String getUserSuperapp() {
-		return userSuperapp;
+	public UserId getCreatedBy() {
+		return createdBy;
 	}
 
-	public void setUserSuperapp(String userSuperapp) {
-		this.userSuperapp = userSuperapp;
+	public void setCreatedBy(UserId createdBy) {
+		this.createdBy = createdBy;
 	}
-
 
 	public ObjectPrimaryKeyId getObjectId() {
 		return objectId;
@@ -122,13 +115,6 @@ public class ObjectEntity {
 		this.lng = lng;
 	}
 
-	public String getEmail() {
-		return email;
-	}
-
-	public void setEmail(String email) {
-		this.email = email;
-	}
 
 	public Map<String,Object>  getObjectDetails() {
 		return objectDetails;
@@ -154,13 +140,11 @@ public class ObjectEntity {
 		this.bindings.remove("Parent",parentID );
 	}
 
-
 	@Override
 	public String toString() {
 		return "ObjectEntity [objectId=" + objectId + ", type=" + type + ", alias=" + alias + ", active=" + active
-				+ ", creationTimestamp=" + creationTimestamp + ", lat=" + lat + ", lng=" + lng + ", userSuperapp="
-				+ userSuperapp + ", email=" + email + ", objectDetails=" + objectDetails + ", bindings=" + bindings
-				+ "]";
+				+ ", creationTimestamp=" + creationTimestamp + ", lat=" + lat + ", lng=" + lng + ", createdBy="
+				+ createdBy + ", objectDetails=" + objectDetails + ", bindings=" + bindings + "]";
 	}
 
 }

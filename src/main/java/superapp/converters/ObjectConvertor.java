@@ -1,27 +1,20 @@
 package superapp.converters;
 
-import java.util.HashMap;
-import java.util.Map;
 
 import org.springframework.stereotype.Component;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 import superapp.boundaries.object.CreatedBy;
 import superapp.boundaries.object.Location;
 import superapp.boundaries.object.ObjectBoundary;
 import superapp.boundaries.object.ObjectId;
-import superapp.boundaries.user.UserId;
 import superapp.data.ObjectEntity;
 import superapp.data.ObjectPrimaryKeyId;
-import superapp.data.UserPrimaryKeyId;
+
+
 @Component //create an instance from this class 
 public class ObjectConvertor {
-	
 
-
-	@SuppressWarnings("unchecked")
 	public ObjectBoundary toBoundary(ObjectEntity entity)
 	{
 		ObjectBoundary boundary = new ObjectBoundary();
@@ -40,11 +33,8 @@ public class ObjectConvertor {
 		Location location = new Location(entity.getLat(), entity.getLng());
 		boundary.setLocation(location);
 		
-		UserId uid = new UserId(entity.getEmail());
-		uid.setSuperapp(entity.getUserSuperapp());
-		CreatedBy cb = new CreatedBy(uid);
-		
-		boundary.setCreatedBy( cb );
+		CreatedBy cb = new CreatedBy(entity.getCreatedBy());
+		boundary.setCreatedBy(cb);
 		
 	    boundary.setObjectDetails(entity.getObjectDetails());
 	    boundary.setBinding(entity.getBindings());
@@ -67,31 +57,13 @@ public class ObjectConvertor {
 		
 		entity.setLat(obj.getLocation().getLat());
 		entity.setLng(obj.getLocation().getLng());
-		
-		entity.setEmail(obj.getCreatedBy().getUserId().getEmail());
-		entity.setUserSuperapp(obj.getCreatedBy().getUserId().getSuperapp());
+		entity.setCreatedBy(obj.getCreatedBy().getUserId());
 		
 	    entity.setObjectDetails(obj.getObjectDetails());
-	    
 	    entity.setBindings(obj.getBinding());
 		
 		return entity;
 	}
-	
-
-//	public String MapToString (HashMap<String,Object> objectDetails)
-//	{
-//		// Convert the objectDetails map to a serialized string
-//	    ObjectMapper mapper = new ObjectMapper();
-//	    String objectDetailsString = null;
-//	    try {
-//	        objectDetailsString = mapper.writeValueAsString(objectDetails);
-//	    } catch (JsonProcessingException e) {
-//	        e.printStackTrace();
-//	    }
-//	    return objectDetailsString ; 
-//		
-//	}
 }
 	
 
