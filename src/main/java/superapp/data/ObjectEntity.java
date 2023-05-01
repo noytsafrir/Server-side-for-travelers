@@ -8,7 +8,6 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 import superapp.boundaries.user.UserId;
 
-
 @Document(collection = "Objects")
 public class ObjectEntity {
 	@Id

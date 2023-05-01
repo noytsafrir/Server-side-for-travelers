@@ -1,8 +1,5 @@
 package superapp.Controllers;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,13 +10,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import superapp.boundaries.object.CreatedBy;
-import superapp.boundaries.object.Location;
 import superapp.boundaries.object.ObjectBoundary;
-import superapp.boundaries.object.ObjectId;
-import superapp.boundaries.user.UserId;
 import superapp.logic.ObjectService;
-import superapp.logic.UsersService;
+
 
 @RestController
 public class ObjectController {
@@ -52,7 +45,6 @@ public class ObjectController {
 			consumes = {MediaType.APPLICATION_JSON_VALUE})
 	public ObjectBoundary createObject(
 			@RequestBody ObjectBoundary newObject){
-
 		
 		return this.objects.createObject(newObject);
 		
@@ -75,7 +67,6 @@ public class ObjectController {
 			method = {RequestMethod.GET},
 			produces = {MediaType.APPLICATION_JSON_VALUE})
 	public List<ObjectBoundary> getAllObjects(){
-		
 		
 		return this.objects.getAllObjects();
 	}

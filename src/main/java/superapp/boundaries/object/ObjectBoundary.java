@@ -15,15 +15,12 @@ public class ObjectBoundary {
 		private Map<String,String> binding;
 		
 		
-
 		public ObjectBoundary() {}
 		
 		public ObjectBoundary(ObjectId objectId, String type, String alias, Boolean active, Date creationTimestamp,
 				Location location, CreatedBy createdBy, Map<String, Object> objectDetails,Map<String,String> binding) {
-			super();
-			// 1 2 
+			// 1 2
 			this.objectId = objectId;
-			
 			this.type = type;
 			this.alias = alias;
 			this.active = active;
