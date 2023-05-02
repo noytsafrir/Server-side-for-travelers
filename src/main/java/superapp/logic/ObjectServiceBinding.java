@@ -1,11 +1,12 @@
 package superapp.logic;
 
-import superapp.data.ObjectEntity;
+import java.util.List;
 
-public interface ObjectServiceBinding  extends ObjectService{
+import superapp.boundaries.object.ObjectBoundary;
+import superapp.boundaries.object.ObjectId;
 
-	
-	    void bindObjects(ObjectEntity parent, ObjectEntity child);
-	    void unbindObjects(ObjectEntity parent, ObjectEntity child);
-	}
-
+public interface ObjectServiceBinding extends ObjectService {
+	public void bindObjectToParent(String superapp,String internalObjectId , ObjectId child);
+	public List<ObjectBoundary> getAllChildrenOfObject(String superapp, String internalObjectId);
+	public List<ObjectBoundary> getAllParentsOfObject(String superapp, String internalObjectId);
+}

@@ -37,7 +37,6 @@ public class ObjectConvertor {
 		boundary.setCreatedBy(cb);
 		
 	    boundary.setObjectDetails(entity.getObjectDetails());
-	    boundary.setBinding(entity.getBindings());
 	    return boundary;
 	}
 	
@@ -60,9 +59,24 @@ public class ObjectConvertor {
 		entity.setCreatedBy(obj.getCreatedBy().getUserId());
 		
 	    entity.setObjectDetails(obj.getObjectDetails());
-	    entity.setBindings(obj.getBinding());
 		
 		return entity;
+	}
+	
+	public ObjectPrimaryKeyId idToEntity(ObjectId boundaryId) {
+		ObjectPrimaryKeyId entityPk = new ObjectPrimaryKeyId();
+		entityPk.setSuperapp(boundaryId.getSuperapp());
+		entityPk.setInternalObjectId(boundaryId.getInternalObjectId());
+		
+		return entityPk;
+	}
+	
+	public ObjectId idToBoundary(ObjectPrimaryKeyId entityPk) {
+		ObjectId boundaryId = new ObjectId();
+		boundaryId.setSuperapp(entityPk.getSuperapp());
+		boundaryId.setInternalObjectId(entityPk.getInternalObjectId());
+		
+		return boundaryId;
 	}
 }
 	

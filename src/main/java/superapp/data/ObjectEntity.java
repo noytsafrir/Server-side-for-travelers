@@ -1,9 +1,11 @@
 package superapp.data;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import superapp.boundaries.user.UserId;
@@ -15,21 +17,27 @@ public class ObjectEntity {
 	private String type;
 	private String alias;
 	private boolean active;
-	private Date creationTimestamp;	
+	private Date creationTimestamp;
 	private Double lat;
 	private Double lng;
 
 	private UserId createdBy;
 
-	private Map<String,Object> objectDetails;
+	private Map<String, Object> objectDetails;
 
-	// this map will be for children and parents of the object
-	private Map<String,String> bindings ;	
-	
-	public ObjectEntity() {}
+	@DBRef
+	private List<ObjectEntity> parents;
+
+	@DBRef
+	private List<ObjectEntity> children;
+
+	public ObjectEntity() {
+	}
 
 	public ObjectEntity(ObjectPrimaryKeyId objectId, String type, String alias, boolean active, Date creationTimestamp,
-			Double lat, Double lng, UserId createdBy, Map<String, Object> objectDetails, Map<String, String> bindings) {
+			Double lat, Double lng, UserId createdBy, Map<String, Object> objectDetails, List<ObjectEntity> parents,
+			List<ObjectEntity> children) {
+		super();
 		this.objectId = objectId;
 		this.type = type;
 		this.alias = alias;
@@ -39,15 +47,24 @@ public class ObjectEntity {
 		this.lng = lng;
 		this.createdBy = createdBy;
 		this.objectDetails = objectDetails;
-		this.bindings = bindings;
+		this.parents = parents;
+		this.children = children;
 	}
 
-	public Map<String, String> getBindings() {
-		return bindings;
+	public List<ObjectEntity> getParents() {
+		return parents;
 	}
 
-	public void setBindings(Map<String, String> bindings) {
-		this.bindings = bindings;
+	public void setParents(List<ObjectEntity> parents) {
+		this.parents = parents;
+	}
+
+	public List<ObjectEntity> getChildren() {
+		return children;
+	}
+
+	public void setChildren(List<ObjectEntity> children) {
+		this.children = children;
 	}
 
 	public UserId getCreatedBy() {
@@ -114,35 +131,34 @@ public class ObjectEntity {
 		this.lng = lng;
 	}
 
-
-	public Map<String,Object>  getObjectDetails() {
+	public Map<String, Object> getObjectDetails() {
 		return objectDetails;
 	}
 
-	public void setObjectDetails(Map<String,Object>  objectDetails) {
+	public void setObjectDetails(Map<String, Object> objectDetails) {
 		this.objectDetails = objectDetails;
 	}
-	
-	public void addChild(String childID ) {
-		this.bindings.put("Child",childID );
+
+	public boolean addParent(ObjectEntity parent) {
+		if (parent == this || this.parents.contains(parent))
+			return false;
+
+		return this.parents.add(parent);
 	}
 	
-	public void addParent(String parentID ) {
-		this.bindings.put("Parent",parentID );
-	}
-	
-	public void RemoveChild(String childID ) {
-		this.bindings.remove("Child", childID);
-	}
-	
-	public void RemoveParent(String parentID ) {
-		this.bindings.remove("Parent",parentID );
+	public boolean addChild(ObjectEntity child) {
+		if (child == this || this.children.contains(child))
+			return false;
+
+		return this.children.add(child);
 	}
 
 	@Override
 	public String toString() {
 		return "ObjectEntity [objectId=" + objectId + ", type=" + type + ", alias=" + alias + ", active=" + active
 				+ ", creationTimestamp=" + creationTimestamp + ", lat=" + lat + ", lng=" + lng + ", createdBy="
-				+ createdBy + ", objectDetails=" + objectDetails + ", bindings=" + bindings + "]";
+				+ createdBy + ", objectDetails=" + objectDetails + ", parents=" + parents + ", children=" + children
+				+ "]";
 	}
+
 }

@@ -3,6 +3,10 @@ package superapp.boundaries.object;
 import java.util.Date;
 import java.util.Map;
 
+import org.springframework.data.mongodb.core.mapping.DBRef;
+
+import superapp.data.ObjectEntity;
+
 public class ObjectBoundary {
 		private ObjectId objectId;
 		private String type;
@@ -12,35 +16,20 @@ public class ObjectBoundary {
 		private Location location;
 		private CreatedBy createdBy;
 		private Map<String,Object> objectDetails;
-		private Map<String,String> binding;
-		
 		
 		public ObjectBoundary() {}
-		
+				
 		public ObjectBoundary(ObjectId objectId, String type, String alias, Boolean active, Date creationTimestamp,
-				Location location, CreatedBy createdBy, Map<String, Object> objectDetails,Map<String,String> binding) {
-			// 1 2
+				Location location, CreatedBy createdBy, Map<String, Object> objectDetails) {
+			super();
 			this.objectId = objectId;
 			this.type = type;
 			this.alias = alias;
 			this.active = active;
 			this.creationTimestamp = creationTimestamp;
-			// 2- 6 
 			this.location = location;
-			// 7 -8 
 			this.createdBy = createdBy;
-			// 9 -10
 			this.objectDetails = objectDetails;
-			//11
-			this.binding = binding ; 
-		}
-		
-		public Map<String, String> getBinding() {
-			return binding;
-		}
-
-		public void setBinding(Map<String, String> binding) {
-			this.binding = binding;
 		}
 
 		public ObjectId getObjectId() {
@@ -111,9 +100,7 @@ public class ObjectBoundary {
 		public String toString() {
 			return "ObjectBoundary [objectId=" + objectId + ", type=" + type + ", alias=" + alias + ", active=" + active
 					+ ", creationTimestamp=" + creationTimestamp + ", location=" + location + ", createdBy=" + createdBy
-					+ ", objectDetails=" + objectDetails + ", binding=" + binding + "]";
+					+ ", objectDetails=" + objectDetails + "]";
 		}
-
-	
-
+		
 }

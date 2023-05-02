@@ -3,8 +3,6 @@ package superapp.logic;
 import java.util.List;
 
 import superapp.boundaries.object.ObjectBoundary;
-import superapp.boundaries.object.ObjectId;
-import superapp.boundaries.user.UserBoundary;
 
 public interface ObjectService {
 
