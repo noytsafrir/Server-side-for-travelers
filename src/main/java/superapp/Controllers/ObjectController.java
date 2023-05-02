@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -25,7 +26,7 @@ public class ObjectController {
 	public void setObjects(ObjectService objects) {
 		this.objects = objects;
 	}
-
+	@CrossOrigin(origins = "*")
 	@RequestMapping(
 			path = {"/superapp/objects/{superapp}/{internalObjectId}"},
 			method = {RequestMethod.PUT},
@@ -37,7 +38,7 @@ public class ObjectController {
 	
 		this.objects.updateObject(superapp, internalObjectId, update);
 	}
-
+	@CrossOrigin(origins = "*")
 	@RequestMapping(
 			path = {"/superapp/objects"},
 			method = {RequestMethod.POST},
@@ -49,7 +50,7 @@ public class ObjectController {
 		return this.objects.createObject(newObject);
 		
 	}
-	
+	@CrossOrigin(origins = "*")
 	@RequestMapping(
 			path = {"/superapp/objects/{superapp}/{internalObjectId}"},
 			method = {RequestMethod.GET},
@@ -61,7 +62,7 @@ public class ObjectController {
 		return this.objects.getSpecsificObject(superapp, internalObjectId);
 	}
 	
-	
+	@CrossOrigin(origins = "*")
 	@RequestMapping(
 			path = {"/superapp/objects"},
 			method = {RequestMethod.GET},

@@ -2,6 +2,7 @@ package superapp.Controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -36,21 +37,21 @@ public class AdminController {
 		this.commands = commands;
 	}
 
-
+	@CrossOrigin(origins = "*")
 	@RequestMapping(
 			path = "/superapp/admin/users",
 			method = {RequestMethod.DELETE})
 	public void deleteAllUsers() {
 		this.users.deleteAllUsers();
 	}
-		
+	@CrossOrigin(origins = "*")	
 	@RequestMapping(
 			path = "/superapp/admin/objects",
 			method = {RequestMethod.DELETE})
 	public void deleteAllObjects() {
 		this.objects.deleteAllObject();
 	}
-	
+	@CrossOrigin(origins = "*")
 	@RequestMapping(
 			path = "/superapp/admin/miniapp",
 			method = {RequestMethod.DELETE})
@@ -58,7 +59,7 @@ public class AdminController {
 		this.commands.deleteAllCommands();
 	}
 	
-	
+	@CrossOrigin(origins = "*")
 	@RequestMapping(
 			path = {"/superapp/admin/users"},
 			method = {RequestMethod.GET},
@@ -67,7 +68,7 @@ public class AdminController {
 		return this.users.getAllUsers().toArray(new UserBoundary[0]);
 	}
 	
-	
+	@CrossOrigin(origins = "*")
 	@RequestMapping(
 			path = {"/superapp/admin/miniapp"},
 			method = {RequestMethod.GET},
@@ -75,7 +76,7 @@ public class AdminController {
 	public MiniAppCommandBoundary[] getAllMiniappsCommandsHistory () {
 		return this.commands.getAllCommands().toArray(new MiniAppCommandBoundary[0]);
 	}
-	
+	@CrossOrigin(origins = "*")
 	@RequestMapping(
 			path = {"/superapp/admin/miniapp/{miniAppName}"},
 			method = {RequestMethod.GET},

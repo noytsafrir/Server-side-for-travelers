@@ -2,6 +2,7 @@ package superapp.Controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,7 +22,7 @@ public class UserController {
 	public void setUsers(UsersService users) {
 		this.users = users;
 	}
-
+	@CrossOrigin(origins = "*")
 	@RequestMapping(
 			path = {"/superapp/users/login/{superapp}/{email}"},
 			method = {RequestMethod.GET},
@@ -32,7 +33,7 @@ public class UserController {
 		return this.users.login(superapp, email);
 	}
 	
-
+	@CrossOrigin(origins = "*")
 	@RequestMapping(
 			path = {"/superapp/users/{superapp}/{userEmail}"},
 			method = {RequestMethod.PUT},
@@ -43,7 +44,7 @@ public class UserController {
 			@RequestBody UserBoundary update) {
 		this.users.updateUser(superapp, userEmail, update);
 	}
-	
+	@CrossOrigin(origins = "*")
 	@RequestMapping(
 			path = {"/superapp/users"},
 			method = {RequestMethod.POST},
