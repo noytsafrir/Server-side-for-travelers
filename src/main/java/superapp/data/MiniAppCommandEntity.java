@@ -6,7 +6,7 @@ import java.util.Map;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import superapp.boundaries.object.ObjectId;
+import superapp.boundaries.object.SuperAppObjectIdBoundary;
 import superapp.boundaries.user.UserId;
 
 
@@ -20,7 +20,7 @@ public class MiniAppCommandEntity {
 	private MiniAppCommandPrimaryKeyId commandID;
 	
 	private String command;
-	private ObjectId targetObject;
+	private SuperAppObjectIdBoundary targetObject;
 	private Date invocationTimestamp;
 	
 	private UserId invokedBy;
@@ -30,7 +30,7 @@ public class MiniAppCommandEntity {
 
 	public MiniAppCommandEntity() {}
 
-	public MiniAppCommandEntity(MiniAppCommandPrimaryKeyId commandID, String command, ObjectId targetObject,
+	public MiniAppCommandEntity(MiniAppCommandPrimaryKeyId commandID, String command, SuperAppObjectIdBoundary targetObject,
 			Date invocationTimestamp, UserId invokedBy, Map<String, Object> commandAttributes) {
 		super();
 		this.commandID = commandID;
@@ -60,12 +60,12 @@ public class MiniAppCommandEntity {
 
 
 
-	public ObjectId getTargetObject() {
+	public SuperAppObjectIdBoundary getTargetObject() {
 		return targetObject;
 	}
 
 
-	public void setTargetObject(ObjectId targetObject) {
+	public void setTargetObject(SuperAppObjectIdBoundary targetObject) {
 		this.targetObject = targetObject;
 	}
 

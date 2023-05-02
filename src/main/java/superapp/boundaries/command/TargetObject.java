@@ -1,22 +1,22 @@
 package superapp.boundaries.command;
 
-import superapp.boundaries.object.ObjectId;
+import superapp.boundaries.object.SuperAppObjectIdBoundary;
 
 public class TargetObject {
 
-	private ObjectId objectId;
+	private SuperAppObjectIdBoundary objectId;
 
 	public TargetObject() {}
 
-	public TargetObject(ObjectId objectId) {
+	public TargetObject(SuperAppObjectIdBoundary objectId) {
 		this.objectId = objectId;
 	}
 
-	public ObjectId getObjectId() {
+	public SuperAppObjectIdBoundary getObjectId() {
 		return objectId;
 	}
 
-	public void setObjectId(ObjectId objectId) {
+	public void setObjectId(SuperAppObjectIdBoundary objectId) {
 		this.objectId = objectId;
 	}
 

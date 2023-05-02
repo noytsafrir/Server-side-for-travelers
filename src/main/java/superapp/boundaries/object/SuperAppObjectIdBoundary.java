@@ -1,7 +1,6 @@
 package superapp.boundaries.object;
 
 public class SuperAppObjectIdBoundary {
-	
 	private String superapp;
 	private String internalObjectId;
 	
@@ -32,5 +31,6 @@ public class SuperAppObjectIdBoundary {
 	public String toString() {
 		return "SuperAppObjectIdBoundary [superapp=" + superapp + ", internalObjectId=" + internalObjectId + "]";
 	}
+
 	
 }

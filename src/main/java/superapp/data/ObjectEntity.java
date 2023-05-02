@@ -1,5 +1,6 @@
 package superapp.data;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -26,10 +27,10 @@ public class ObjectEntity {
 	private Map<String, Object> objectDetails;
 
 	@DBRef
-	private List<ObjectEntity> parents;
+	private List<ObjectEntity> parents = new ArrayList<>();
 
 	@DBRef
-	private List<ObjectEntity> children;
+	private List<ObjectEntity> children = new ArrayList<>();
 
 	public ObjectEntity() {
 	}
@@ -139,14 +140,14 @@ public class ObjectEntity {
 		this.objectDetails = objectDetails;
 	}
 
-	public boolean addParent(ObjectEntity parent) {
+	public boolean addParent(ObjectEntity parent) {	
 		if (parent == this || this.parents.contains(parent))
 			return false;
 
 		return this.parents.add(parent);
 	}
 	
-	public boolean addChild(ObjectEntity child) {
+	public boolean addChild(ObjectEntity child) {		
 		if (child == this || this.children.contains(child))
 			return false;
 

@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 import superapp.boundaries.object.CreatedBy;
 import superapp.boundaries.object.Location;
 import superapp.boundaries.object.ObjectBoundary;
-import superapp.boundaries.object.ObjectId;
+import superapp.boundaries.object.SuperAppObjectIdBoundary;
 import superapp.data.ObjectEntity;
 import superapp.data.ObjectPrimaryKeyId;
 
@@ -19,7 +19,7 @@ public class ObjectConvertor {
 	{
 		ObjectBoundary boundary = new ObjectBoundary();
 		
-		ObjectId objectId = new ObjectId();
+		SuperAppObjectIdBoundary objectId = new SuperAppObjectIdBoundary();
 		objectId.setSuperapp(entity.getObjectId().getSuperapp());
 		objectId.setInternalObjectId(entity.getObjectId().getInternalObjectId());
 		
@@ -63,7 +63,7 @@ public class ObjectConvertor {
 		return entity;
 	}
 	
-	public ObjectPrimaryKeyId idToEntity(ObjectId boundaryId) {
+	public ObjectPrimaryKeyId idToEntity(SuperAppObjectIdBoundary boundaryId) {
 		ObjectPrimaryKeyId entityPk = new ObjectPrimaryKeyId();
 		entityPk.setSuperapp(boundaryId.getSuperapp());
 		entityPk.setInternalObjectId(boundaryId.getInternalObjectId());
@@ -71,8 +71,8 @@ public class ObjectConvertor {
 		return entityPk;
 	}
 	
-	public ObjectId idToBoundary(ObjectPrimaryKeyId entityPk) {
-		ObjectId boundaryId = new ObjectId();
+	public SuperAppObjectIdBoundary idToBoundary(ObjectPrimaryKeyId entityPk) {
+		SuperAppObjectIdBoundary boundaryId = new SuperAppObjectIdBoundary();
 		boundaryId.setSuperapp(entityPk.getSuperapp());
 		boundaryId.setInternalObjectId(entityPk.getInternalObjectId());
 		

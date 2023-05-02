@@ -3,12 +3,8 @@ package superapp.boundaries.object;
 import java.util.Date;
 import java.util.Map;
 
-import org.springframework.data.mongodb.core.mapping.DBRef;
-
-import superapp.data.ObjectEntity;
-
 public class ObjectBoundary {
-		private ObjectId objectId;
+		private SuperAppObjectIdBoundary objectId;
 		private String type;
 		private String alias;
 		private Boolean active;
@@ -19,7 +15,7 @@ public class ObjectBoundary {
 		
 		public ObjectBoundary() {}
 				
-		public ObjectBoundary(ObjectId objectId, String type, String alias, Boolean active, Date creationTimestamp,
+		public ObjectBoundary(SuperAppObjectIdBoundary objectId, String type, String alias, Boolean active, Date creationTimestamp,
 				Location location, CreatedBy createdBy, Map<String, Object> objectDetails) {
 			super();
 			this.objectId = objectId;
@@ -32,11 +28,11 @@ public class ObjectBoundary {
 			this.objectDetails = objectDetails;
 		}
 
-		public ObjectId getObjectId() {
+		public SuperAppObjectIdBoundary getObjectId() {
 			return objectId;
 		}
 
-		public void setObjectId(ObjectId objectId) {
+		public void setObjectId(SuperAppObjectIdBoundary objectId) {
 			this.objectId = objectId;
 		}
 

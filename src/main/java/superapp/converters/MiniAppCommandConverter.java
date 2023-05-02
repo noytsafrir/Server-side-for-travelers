@@ -1,20 +1,11 @@
 package superapp.converters;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.springframework.stereotype.Component;
-
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 import superapp.boundaries.command.InvocationUser;
 import superapp.boundaries.command.MiniAppCommandBoundary;
 import superapp.boundaries.command.MiniAppCommandID;
 import superapp.boundaries.command.TargetObject;
-import superapp.boundaries.object.ObjectBoundary;
-import superapp.boundaries.object.ObjectId;
-import superapp.boundaries.user.UserId;
 import superapp.data.MiniAppCommandEntity;
 import superapp.data.MiniAppCommandPrimaryKeyId;
 
@@ -22,7 +13,6 @@ import superapp.data.MiniAppCommandPrimaryKeyId;
 
 public class MiniAppCommandConverter {
 
-	@SuppressWarnings("unchecked")
 	public MiniAppCommandBoundary toBoundary(MiniAppCommandEntity entity) {
 
 		MiniAppCommandBoundary boundary = new MiniAppCommandBoundary();

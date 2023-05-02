@@ -10,9 +10,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import jakarta.annotation.PostConstruct;
 import superapp.boundaries.object.ObjectBoundary;
-import superapp.boundaries.object.ObjectId;
+import superapp.boundaries.object.SuperAppObjectIdBoundary;
 import superapp.converters.ObjectConvertor;
 import superapp.dal.ObjectCrud;
 import superapp.data.ObjectEntity;
@@ -42,19 +41,13 @@ public class ObjectServicesRDB implements ObjectServiceBinding {
 		this.superappName = superappName;
 	}
 
-	// ???
-	@PostConstruct // after its build but before
-	public void init() {
-		System.err.println("********** spring.application.name = " + this.superappName);
-	}
-
 	@Override
 	@Transactional // will be atomic - part of the transaction
 	public ObjectBoundary createObject(ObjectBoundary obej) {
 		// the server need to make object internal id ?
 		// TODO have the database define the id, instead of the server or find another
 		// mechanisms to generate the object
-		ObjectId objId = obej.getObjectId();
+		SuperAppObjectIdBoundary objId = obej.getObjectId();
 
 		if (objId == null || objId.getInternalObjectId() == null || obej.getType() == null || obej.getAlias() == null
 				|| obej.getAlias() == null || obej.getCreationTimestamp() == null || obej.getLocation() == null
@@ -140,7 +133,7 @@ public class ObjectServicesRDB implements ObjectServiceBinding {
 	}
 
 	@Override
-	public void bindObjectToParent(String superapp, String internalObjectId, ObjectId childId) {
+	public void bindObjectToParent(String superapp, String internalObjectId, SuperAppObjectIdBoundary childId) {
 		ObjectPrimaryKeyId parentPk = new ObjectPrimaryKeyId(superapp, internalObjectId);
 		ObjectPrimaryKeyId childPk = converter.idToEntity(childId);
 

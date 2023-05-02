@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import superapp.boundaries.object.ObjectBoundary;
-import superapp.boundaries.object.ObjectId;
+import superapp.boundaries.object.SuperAppObjectIdBoundary;
 import superapp.logic.ObjectService;
 import superapp.logic.ObjectServiceBinding;
 
@@ -33,7 +33,7 @@ public class ObjectBindingController {
 	public void bindObject(
 			@PathVariable("superapp")String superapp , 
 			@PathVariable("internalObjectId") String internalObjectId,
-			@RequestBody ObjectId child){
+			@RequestBody SuperAppObjectIdBoundary child){
 	
 		this.objects.bindObjectToParent(superapp, internalObjectId, child);
 	}
