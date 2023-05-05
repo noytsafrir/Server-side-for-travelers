@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -51,7 +52,7 @@ public class MiniAppCommadServiceRDB implements MiniAppCommandService {
 		}
 		command.getCommandId().setSuperapp(superAppName);
 		command.setInvocationTimestamp(new Date());
-		command.getCommandId().setInternalCommandId(System.currentTimeMillis() + "");
+		command.getCommandId().setInternalCommandId(UUID.randomUUID().toString());
 		MiniAppCommandPrimaryKeyId id = new MiniAppCommandPrimaryKeyId(command.getCommandId().getSuperapp(),
 				command.getCommandId().getMiniapp(), command.getCommandId().getInternalCommandId());
 		Optional<MiniAppCommandEntity> entity = miniCrud.findById(id);

@@ -17,6 +17,7 @@ import superapp.dal.UserCrud;
 import superapp.data.UserEntity;
 import superapp.data.UserPrimaryKeyId;
 import superapp.data.UserRole;
+import superapp.exceptions.UserAlreadyExistException;
 
 @Service // spring create an instance from this class so we can use it
 public class UserServiceRDB implements UsersService {
@@ -59,7 +60,7 @@ public class UserServiceRDB implements UsersService {
 		UserPrimaryKeyId id = new UserPrimaryKeyId(userId.getSuperapp(), userId.getEmail());
 		Optional<UserEntity> newUser = this.userCrud.findById(id);
 		if (newUser.isPresent())
-			throw new RuntimeException("User already exist");
+			throw new UserAlreadyExistException("User "+ userId+" is already exist");
 
 		this.userCrud.save(this.userConverter.toEntity(user));
 		return user;

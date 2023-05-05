@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -47,15 +48,14 @@ public class ObjectServicesRDB implements ObjectServiceBinding {
 		// the server need to make object internal id ?
 		// TODO have the database define the id, instead of the server or find another
 		// mechanisms to generate the object
-		SuperAppObjectIdBoundary objId = obej.getObjectId();
-
-		if (objId == null || objId.getInternalObjectId() == null || obej.getType() == null || obej.getAlias() == null
-				|| obej.getAlias() == null || obej.getCreationTimestamp() == null || obej.getLocation() == null
+		SuperAppObjectIdBoundary objId = new SuperAppObjectIdBoundary();
+		System.err.println("hello"+ obej.toString());
+		if (obej.getType() == null || obej.getAlias() == null|| obej.getAlias() == null || obej.getLocation() == null
 				|| obej.getCreatedBy() == null)
 			throw new RuntimeException("could not create a object without all the valid details");
-
+		obej.setObjectId(objId);
 		obej.getObjectId().setSuperapp(this.superappName);
-		obej.getObjectId().setInternalObjectId(System.currentTimeMillis() + "");
+		obej.getObjectId().setInternalObjectId(UUID.randomUUID().toString());
 		obej.setCreationTimestamp(new Date());
 		ObjectPrimaryKeyId id = new ObjectPrimaryKeyId(obej.getObjectId().getSuperapp(),
 				obej.getObjectId().getInternalObjectId());
