@@ -16,6 +16,7 @@ import superapp.converters.MiniAppCommandConverter;
 import superapp.dal.MiniAppCommandCrud;
 import superapp.data.MiniAppCommandEntity;
 import superapp.data.MiniAppCommandPrimaryKeyId;
+import superapp.exceptions.ResourceAlreadyExistException;
 
 
 @Service
@@ -57,7 +58,7 @@ public class MiniAppCommadServiceRDB implements MiniAppCommandService {
 				command.getCommandId().getMiniapp(), command.getCommandId().getInternalCommandId());
 		Optional<MiniAppCommandEntity> entity = miniCrud.findById(id);
 		if (entity.isPresent()) {
-			throw new RuntimeException("command already exists ");
+			throw new ResourceAlreadyExistException(id, "invoke command");
 		}
 		MiniAppCommandEntity newEntity = miniConverter.toEntity(command);
 		miniCrud.save(newEntity);

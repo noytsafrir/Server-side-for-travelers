@@ -1,6 +1,8 @@
 package superapp.boundaries.command;
 
-public class MiniAppCommandID {
+import superapp.data.ResourceIdentifier;
+
+public class MiniAppCommandID implements ResourceIdentifier {
 
 	private String superapp;
 	private String miniapp; 

@@ -1,6 +1,6 @@
 package superapp.data;
 
-public class UserPrimaryKeyId{
+public class UserPrimaryKeyId implements ResourceIdentifier{
 	private String superapp;
 	private String email;
 	

@@ -1,6 +1,6 @@
 package superapp.data;
 
-public class MiniAppCommandPrimaryKeyId{
+public class MiniAppCommandPrimaryKeyId implements ResourceIdentifier{
 	private String superapp;
 	private String miniapp;
 	private String internalCommandId;

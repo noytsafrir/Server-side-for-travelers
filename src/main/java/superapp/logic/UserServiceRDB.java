@@ -17,7 +17,7 @@ import superapp.dal.UserCrud;
 import superapp.data.UserEntity;
 import superapp.data.UserPrimaryKeyId;
 import superapp.data.UserRole;
-import superapp.exceptions.UserAlreadyExistException;
+import superapp.exceptions.ResourceAlreadyExistException;
 
 @Service // spring create an instance from this class so we can use it
 public class UserServiceRDB implements UsersService {
@@ -60,7 +60,7 @@ public class UserServiceRDB implements UsersService {
 		UserPrimaryKeyId id = new UserPrimaryKeyId(userId.getSuperapp(), userId.getEmail());
 		Optional<UserEntity> newUser = this.userCrud.findById(id);
 		if (newUser.isPresent())
-			throw new UserAlreadyExistException("User "+ userId+" is already exist");
+			throw new ResourceAlreadyExistException("User "+ userId+" is already exist");
 
 		this.userCrud.save(this.userConverter.toEntity(user));
 		return user;
@@ -70,7 +70,7 @@ public class UserServiceRDB implements UsersService {
 	public UserBoundary login(String userSuperApp, String userEmail) {
 		UserPrimaryKeyId id = new UserPrimaryKeyId(userSuperApp, userEmail);
 		UserEntity user = this.userCrud.findById(id).orElseThrow(
-				() -> new RuntimeException("could not login User with id: " + id + " since it does not exist"));
+				() -> new ResourceAlreadyExistException(id, "login user"));
 		return this.userConverter.toBoundary(user);
 	}
 
@@ -79,7 +79,7 @@ public class UserServiceRDB implements UsersService {
 	public UserBoundary updateUser(String userSuperApp, String userEmail, UserBoundary update) {
 		UserPrimaryKeyId id = new UserPrimaryKeyId(userSuperApp, userEmail);
 		UserEntity existing = this.userCrud.findById(id).orElseThrow(
-				() -> new RuntimeException("could not update User with id: " + id + " since it does not exist"));
+				() -> new ResourceAlreadyExistException(id, "update user"));
 
 		// update entity
 		if (update.getAvatar() != null) {

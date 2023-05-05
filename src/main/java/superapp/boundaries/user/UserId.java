@@ -1,6 +1,8 @@
 package superapp.boundaries.user;
 
-public class UserId{
+import superapp.data.ResourceIdentifier;
+
+public class UserId implements ResourceIdentifier{
 	private String superapp;
 	private String email;
 	

@@ -18,7 +18,8 @@ import superapp.dal.ObjectCrud;
 import superapp.data.ObjectEntity;
 import superapp.data.ObjectPrimaryKeyId;
 import superapp.exceptions.ObjectBindingException;
-import superapp.exceptions.ObjectNotFoundException;
+import superapp.exceptions.ResourceAlreadyExistException;
+import superapp.exceptions.ResourceNotFoundException;
 
 @Service // spring create an instance from this class so we can use it
 public class ObjectServicesRDB implements ObjectServiceBinding {
@@ -44,26 +45,26 @@ public class ObjectServicesRDB implements ObjectServiceBinding {
 
 	@Override
 	@Transactional // will be atomic - part of the transaction
-	public ObjectBoundary createObject(ObjectBoundary obej) {
+	public ObjectBoundary createObject(ObjectBoundary obj) {
 		// the server need to make object internal id ?
 		// TODO have the database define the id, instead of the server or find another
 		// mechanisms to generate the object
 		SuperAppObjectIdBoundary objId = new SuperAppObjectIdBoundary();
-		System.err.println("hello"+ obej.toString());
-		if (obej.getType() == null || obej.getAlias() == null|| obej.getAlias() == null || obej.getLocation() == null
-				|| obej.getCreatedBy() == null)
+		System.err.println("hello"+ obj.toString());
+		if (obj.getType() == null || obj.getAlias() == null|| obj.getAlias() == null || obj.getLocation() == null
+				|| obj.getCreatedBy() == null)
 			throw new RuntimeException("could not create a object without all the valid details");
-		obej.setObjectId(objId);
-		obej.getObjectId().setSuperapp(this.superappName);
-		obej.getObjectId().setInternalObjectId(UUID.randomUUID().toString());
-		obej.setCreationTimestamp(new Date());
-		ObjectPrimaryKeyId id = new ObjectPrimaryKeyId(obej.getObjectId().getSuperapp(),
-				obej.getObjectId().getInternalObjectId());
+		obj.setObjectId(objId);
+		obj.getObjectId().setSuperapp(this.superappName);
+		obj.getObjectId().setInternalObjectId(UUID.randomUUID().toString());
+		obj.setCreationTimestamp(new Date());
+		ObjectPrimaryKeyId id = new ObjectPrimaryKeyId(obj.getObjectId().getSuperapp(),
+				obj.getObjectId().getInternalObjectId());
 		Optional<ObjectEntity> newObject = this.objectCrud.findById(id);
 		if (newObject.isPresent())
-			throw new RuntimeException("User already exist");
-		this.objectCrud.save(this.converter.toEntity(obej));
-		return obej;
+			throw new ResourceAlreadyExistException(id, "create object");
+		this.objectCrud.save(this.converter.toEntity(obj));
+		return obj;
 	}
 
 	@Override
@@ -71,7 +72,7 @@ public class ObjectServicesRDB implements ObjectServiceBinding {
 
 		ObjectPrimaryKeyId id = new ObjectPrimaryKeyId(superapp, internalObjectId);
 		ObjectEntity existing = this.objectCrud.findById(id).orElseThrow(
-				() -> new RuntimeException("could not update User with id: " + id + " since it does not exist"));
+				() -> new ResourceNotFoundException(id, "update object"));
 		// update entity
 		if (update.getType() != null) {
 			existing.setType(update.getType());
@@ -125,7 +126,7 @@ public class ObjectServicesRDB implements ObjectServiceBinding {
 		ObjectPrimaryKeyId pkid = new ObjectPrimaryKeyId(ObjectSuperapp, internalObjectId);
 		Optional<ObjectEntity> entity = this.objectCrud.findById(pkid);
 		if (!entity.isPresent()) {
-			throw new RuntimeException("Object not exist");
+			throw new ResourceNotFoundException(pkid, "find object");
 		}
 
 		return this.converter.toBoundary(entity.get());
@@ -138,10 +139,10 @@ public class ObjectServicesRDB implements ObjectServiceBinding {
 		ObjectPrimaryKeyId childPk = converter.idToEntity(childId);
 
 		ObjectEntity parent = this.objectCrud.findById(parentPk)
-				.orElseThrow(() -> new ObjectNotFoundException("could not find parent object by id: " + parentPk));
+				.orElseThrow(() -> new ResourceNotFoundException(parentPk, "find parent object"));
 
 		ObjectEntity child = this.objectCrud.findById(childPk)
-				.orElseThrow(() -> new ObjectNotFoundException("could not find child object by id: " + childPk));
+				.orElseThrow(() -> new ResourceNotFoundException(parentPk, "find child object"));
 
 		if (!child.addParent(parent) || !parent.addChild(child))
 			throw new ObjectBindingException("could bind parent object:" + parentPk + " to child object: " + childPk);
@@ -155,7 +156,7 @@ public class ObjectServicesRDB implements ObjectServiceBinding {
 		ObjectPrimaryKeyId parentPk = new ObjectPrimaryKeyId(superapp, internalObjectId);
 
 		ObjectEntity parent = this.objectCrud.findById(parentPk)
-				.orElseThrow(() -> new ObjectNotFoundException("could not find parent object by id: " + parentPk));
+				.orElseThrow(() -> new ResourceNotFoundException(parentPk, "find children objects"));
 
 		List<ObjectBoundary> rv = new ArrayList<>();
 
@@ -172,7 +173,7 @@ public class ObjectServicesRDB implements ObjectServiceBinding {
 		ObjectPrimaryKeyId childPk = new ObjectPrimaryKeyId(superapp, internalObjectId);
 
 		ObjectEntity child = this.objectCrud.findById(childPk)
-				.orElseThrow(() -> new ObjectNotFoundException("could not find child object by id: " + childPk));
+				.orElseThrow(() -> new ResourceNotFoundException(childPk, "find parents objects"));
 
 		List<ObjectBoundary> rv = new ArrayList<>();
 
