@@ -38,7 +38,6 @@ public class ObjectEntity {
 	public ObjectEntity(ObjectPrimaryKeyId objectId, String type, String alias, boolean active, Date creationTimestamp,
 			Double lat, Double lng, UserId createdBy, Map<String, Object> objectDetails, List<ObjectEntity> parents,
 			List<ObjectEntity> children) {
-		super();
 		this.objectId = objectId;
 		this.type = type;
 		this.alias = alias;
@@ -141,16 +140,10 @@ public class ObjectEntity {
 	}
 
 	public boolean addParent(ObjectEntity parent) {	
-		if (parent == this || this.parents.contains(parent))
-			return false;
-
 		return this.parents.add(parent);
 	}
 	
 	public boolean addChild(ObjectEntity child) {		
-		if (child == this || this.children.contains(child))
-			return false;
-
 		return this.children.add(child);
 	}
 

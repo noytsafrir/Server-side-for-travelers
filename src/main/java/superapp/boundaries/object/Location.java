@@ -32,5 +32,4 @@ public class Location {
 	public String toString() {
 		return "Location [lat=" + lat + ", lng=" + lng + "]";
 	}
-	
 }
