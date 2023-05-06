@@ -1,5 +1,7 @@
 package superapp.data;
 
+import java.util.Objects;
+
 import superapp.utils.ResourceIdentifier;
 
 public class MiniAppCommandPrimaryKeyId implements ResourceIdentifier{
@@ -49,6 +51,23 @@ public class MiniAppCommandPrimaryKeyId implements ResourceIdentifier{
 				+ internalCommandId + "]";
 	}
 
+    @Override
+    public boolean equals(Object o) {
 
+        if (o == this) return true;
+        if (!(o instanceof MiniAppCommandPrimaryKeyId)) {
+            return false;
+        }
+        
+        MiniAppCommandPrimaryKeyId other = (MiniAppCommandPrimaryKeyId) o;
+        return Objects.equals(this.superapp, other.getSuperapp()) &&
+               Objects.equals(this.miniapp, other.getMiniapp()) &&
+               Objects.equals(this.internalCommandId, other.getInternalCommandId());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(this.superapp, this.miniapp, this.internalCommandId);
+    }
 
 }
