@@ -3,7 +3,9 @@ package superapp.boundaries.command;
 import java.util.Date;
 import java.util.Map;
 
-public class MiniAppCommandBoundary {
+import superapp.utils.BoundaryObject;
+
+public class MiniAppCommandBoundary implements BoundaryObject {
 
 	private MiniAppCommandID commandId;
 	private String command;

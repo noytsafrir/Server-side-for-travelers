@@ -17,6 +17,7 @@ import superapp.dal.UserCrud;
 import superapp.data.UserEntity;
 import superapp.data.UserPrimaryKeyId;
 import superapp.data.UserRole;
+import superapp.exceptions.InvalidInputException;
 import superapp.exceptions.ResourceAlreadyExistException;
 
 @Service // spring create an instance from this class so we can use it
@@ -54,13 +55,13 @@ public class UserServiceRDB implements UsersService {
 		UserId userId = user.getUserId();
 		if (userId == null || userId.getEmail() == null || !(UserRole.isValid(user.getRole()))
 				|| user.getUsername() == null || user.getAvatar() == null)
-			throw new RuntimeException("could not create a user without all the valid details");
+			throw new InvalidInputException(user, "create user");
 
 		user.getUserId().setSuperapp(this.superappName);
 		UserPrimaryKeyId id = new UserPrimaryKeyId(userId.getSuperapp(), userId.getEmail());
 		Optional<UserEntity> newUser = this.userCrud.findById(id);
 		if (newUser.isPresent())
-			throw new ResourceAlreadyExistException("User "+ userId+" is already exist");
+			throw new ResourceAlreadyExistException(userId, "create user");
 
 		this.userCrud.save(this.userConverter.toEntity(user));
 		return user;

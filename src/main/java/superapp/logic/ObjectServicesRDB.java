@@ -17,6 +17,7 @@ import superapp.converters.ObjectConvertor;
 import superapp.dal.ObjectCrud;
 import superapp.data.ObjectEntity;
 import superapp.data.ObjectPrimaryKeyId;
+import superapp.exceptions.InvalidInputException;
 import superapp.exceptions.ObjectBindingException;
 import superapp.exceptions.ResourceAlreadyExistException;
 import superapp.exceptions.ResourceNotFoundException;
@@ -53,7 +54,7 @@ public class ObjectServicesRDB implements ObjectServiceBinding {
 		System.err.println("hello"+ obj.toString());
 		if (obj.getType() == null || obj.getAlias() == null|| obj.getAlias() == null || obj.getLocation() == null
 				|| obj.getCreatedBy() == null)
-			throw new RuntimeException("could not create a object without all the valid details");
+			throw new InvalidInputException(obj, "create object");
 		obj.setObjectId(objId);
 		obj.getObjectId().setSuperapp(this.superappName);
 		obj.getObjectId().setInternalObjectId(UUID.randomUUID().toString());

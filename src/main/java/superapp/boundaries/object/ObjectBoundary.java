@@ -3,7 +3,9 @@ package superapp.boundaries.object;
 import java.util.Date;
 import java.util.Map;
 
-public class ObjectBoundary {
+import superapp.utils.BoundaryObject;
+
+public class ObjectBoundary implements BoundaryObject {
 		private SuperAppObjectIdBoundary objectId;
 		private String type;
 		private String alias;

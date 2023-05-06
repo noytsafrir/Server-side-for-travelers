@@ -3,7 +3,7 @@ package superapp.exceptions;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
-@ResponseStatus(code = HttpStatus.CONFLICT)
+@ResponseStatus(code = HttpStatus.UNPROCESSABLE_ENTITY)
 public class ObjectBindingException extends RuntimeException {
 	private static final long serialVersionUID = 8242664202862712681L;
 

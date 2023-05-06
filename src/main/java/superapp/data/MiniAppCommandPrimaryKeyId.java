@@ -1,5 +1,7 @@
 package superapp.data;
 
+import superapp.utils.ResourceIdentifier;
+
 public class MiniAppCommandPrimaryKeyId implements ResourceIdentifier{
 	private String superapp;
 	private String miniapp;

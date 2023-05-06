@@ -1,8 +1,9 @@
 package superapp.boundaries.object;
 
-import superapp.data.ResourceIdentifier;
+import superapp.utils.BoundaryObject;
+import superapp.utils.ResourceIdentifier;
 
-public class SuperAppObjectIdBoundary implements ResourceIdentifier {
+public class SuperAppObjectIdBoundary implements ResourceIdentifier, BoundaryObject {
 	private String superapp;
 	private String internalObjectId;
 	

@@ -16,6 +16,7 @@ import superapp.converters.MiniAppCommandConverter;
 import superapp.dal.MiniAppCommandCrud;
 import superapp.data.MiniAppCommandEntity;
 import superapp.data.MiniAppCommandPrimaryKeyId;
+import superapp.exceptions.InvalidInputException;
 import superapp.exceptions.ResourceAlreadyExistException;
 
 
@@ -49,7 +50,7 @@ public class MiniAppCommadServiceRDB implements MiniAppCommandService {
 				|| command.getTargetObject().getObjectId().getSuperapp() == null
 				|| command.getInvokedBy().getUserId() == null || command.getInvokedBy().getUserId().getEmail() == null
 				|| command.getInvokedBy().getUserId().getSuperapp() == null) {
-			throw new RuntimeException("could not create a command without all the valid details:\n" + command + "\n");
+			throw new InvalidInputException(command, "invoke command");
 		}
 		command.getCommandId().setSuperapp(superAppName);
 		command.setInvocationTimestamp(new Date());

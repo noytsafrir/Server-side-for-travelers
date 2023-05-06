@@ -1,4 +1,4 @@
-package superapp.data;
+package superapp.utils;
 
 public interface ResourceIdentifier {
 
