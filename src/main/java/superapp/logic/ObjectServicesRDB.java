@@ -52,18 +52,27 @@ public class ObjectServicesRDB implements ObjectServiceBinding {
 		// mechanisms to generate the object
 		SuperAppObjectIdBoundary objId = new SuperAppObjectIdBoundary();
 		System.err.println("hello"+ obj.toString());
-		if (obj.getType() == null || obj.getAlias() == null|| obj.getAlias() == null || obj.getLocation() == null
-				|| obj.getCreatedBy() == null)
+		if (obj.getType() == null ||
+			obj.getType().isBlank() ||	
+			obj.getAlias() == null||
+			obj.getAlias().isBlank() ||
+			obj.getLocation() == null || 
+			obj.getCreatedBy() == null
+			)
 			throw new InvalidInputException(obj, "create object");
+		
 		obj.setObjectId(objId);
 		obj.getObjectId().setSuperapp(this.superappName);
 		obj.getObjectId().setInternalObjectId(UUID.randomUUID().toString());
+		
 		obj.setCreationTimestamp(new Date());
+		
 		ObjectPrimaryKeyId id = new ObjectPrimaryKeyId(obj.getObjectId().getSuperapp(),
 				obj.getObjectId().getInternalObjectId());
 		Optional<ObjectEntity> newObject = this.objectCrud.findById(id);
 		if (newObject.isPresent())
 			throw new ResourceAlreadyExistException(id, "create object");
+		
 		this.objectCrud.save(this.converter.toEntity(obj));
 		return obj;
 	}
@@ -75,25 +84,26 @@ public class ObjectServicesRDB implements ObjectServiceBinding {
 		ObjectEntity existing = this.objectCrud.findById(id).orElseThrow(
 				() -> new ResourceNotFoundException(id, "update object"));
 		// update entity
-		if (update.getType() != null) {
+		if (update.getType() != null && !update.getType().isBlank()) {
 			existing.setType(update.getType());
 		}
 
-		if (update.getAlias() != null) {
+		if (update.getAlias() != null && !update.getAlias().isBlank()) {
 			existing.setAlias(update.getAlias());
 		}
 
 		if (update.getActive() != null) {
 			existing.setActive(update.getActive());
 		}
-		// creation time stamp update ?
-		if (update.getLocation().getLat() != null) {
-			existing.setLat(update.getLocation().getLat());
+		
+		if(	update.getLocation() != null &&
+			update.getLocation().getLat() != null &&
+			update.getLocation().getLng() != null
+			) {
+				existing.setLat(update.getLocation().getLat());
+				existing.setLng(update.getLocation().getLng());
 		}
-		if (update.getLocation().getLng() != null) {
-			existing.setLng(update.getLocation().getLng());
-		}
-		// created by ??
+		
 		if (update.getObjectDetails() != null) {
 			existing.setObjectDetails(update.getObjectDetails());
 		}

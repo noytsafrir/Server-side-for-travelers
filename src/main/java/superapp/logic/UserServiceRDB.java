@@ -19,6 +19,7 @@ import superapp.data.UserPrimaryKeyId;
 import superapp.data.UserRole;
 import superapp.exceptions.InvalidInputException;
 import superapp.exceptions.ResourceAlreadyExistException;
+import superapp.utils.Validator;
 
 @Service // spring create an instance from this class so we can use it
 public class UserServiceRDB implements UsersService {
@@ -50,11 +51,17 @@ public class UserServiceRDB implements UsersService {
 	@Override
 	@Transactional // will be atomic - part of the transaction
 	public UserBoundary createUser(UserBoundary user) {
-		// TODO have the database define the id, instead of the server or find another
-		// mechanisms to generate the object
 		UserId userId = user.getUserId();
-		if (userId == null || userId.getEmail() == null || !(UserRole.isValid(user.getRole()))
-				|| user.getUsername() == null || user.getAvatar() == null)
+		if (userId == null || 
+			userId.getEmail() == null ||
+			Validator.isValidEmail(userId.getEmail()) ||
+			user.getUsername() == null ||
+			user.getUsername().isBlank() ||
+			user.getAvatar() == null ||
+			user.getAvatar().isBlank() ||
+			user.getRole() == null ||
+			UserRole.isValid(user.getRole())
+			)
 			throw new InvalidInputException(user, "create user");
 
 		user.getUserId().setSuperapp(this.superappName);
@@ -83,21 +90,20 @@ public class UserServiceRDB implements UsersService {
 				() -> new ResourceAlreadyExistException(id, "update user"));
 
 		// update entity
-		if (update.getAvatar() != null) {
+		if (update.getAvatar() != null && !update.getAvatar().isBlank()) {
 			existing.setAvatar(update.getAvatar());
 		}
 
-		if (update.getUsername() != null) {
+		if (update.getUsername() != null && !update.getUsername().isBlank()) {
 			existing.setUsername(update.getUsername());
 		}
 
-		if (update.getRole() != null) {
-			existing.setRole(update.getRole());
+		if (update.getRole() != null && UserRole.isValid(update.getRole())) {
+				existing.setRole(update.getRole());
 		}
 
 		// save (UPDATE) entity to database if user was indeed updated
 		this.userCrud.save(existing);
-
 		return this.userConverter.toBoundary(existing);
 	}
 
