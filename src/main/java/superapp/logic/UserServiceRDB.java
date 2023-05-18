@@ -52,15 +52,16 @@ public class UserServiceRDB implements UsersService {
 	@Transactional // will be atomic - part of the transaction
 	public UserBoundary createUser(UserBoundary user) {
 		UserId userId = user.getUserId();
-		if (userId == null || 
+		if (
+			userId == null || 
 			userId.getEmail() == null ||
-			Validator.isValidEmail(userId.getEmail()) ||
+			!Validator.isValidEmail(userId.getEmail()) ||
 			user.getUsername() == null ||
 			user.getUsername().isBlank() ||
 			user.getAvatar() == null ||
 			user.getAvatar().isBlank() ||
 			user.getRole() == null ||
-			UserRole.isValid(user.getRole())
+			!UserRole.isValid(user.getRole())
 			)
 			throw new InvalidInputException(user, "create user");
 
