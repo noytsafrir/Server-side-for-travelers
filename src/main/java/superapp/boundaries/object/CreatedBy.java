@@ -1,5 +1,7 @@
 package superapp.boundaries.object;
 
+import java.util.Objects;
+
 import superapp.boundaries.user.UserId;
 
 public class CreatedBy {
@@ -24,4 +26,20 @@ public class CreatedBy {
 		return "CreatedBy [userId=" + userId + "]";
 	}
 	
+    @Override
+    public boolean equals(Object o) {
+
+        if (o == this) return true;
+        if (!(o instanceof UserId)) {
+            return false;
+        }
+        
+        CreatedBy other = (CreatedBy) o;
+        return Objects.equals(this.userId, other.getUserId());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(this.userId);
+    }
 }

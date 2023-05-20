@@ -26,10 +26,10 @@ public class ObjectEntity {
 
 	private Map<String, Object> objectDetails;
 
-	@DBRef
+	@DBRef(lazy = true)
 	private List<ObjectEntity> parents = new ArrayList<>();
 
-	@DBRef
+	@DBRef(lazy = true)
 	private List<ObjectEntity> children = new ArrayList<>();
 
 	public ObjectEntity() {
@@ -54,7 +54,7 @@ public class ObjectEntity {
 	public List<ObjectEntity> getParents() {
 		return parents;
 	}
-
+	
 	public void setParents(List<ObjectEntity> parents) {
 		this.parents = parents;
 	}
@@ -62,6 +62,8 @@ public class ObjectEntity {
 	public List<ObjectEntity> getChildren() {
 		return children;
 	}
+	
+
 
 	public void setChildren(List<ObjectEntity> children) {
 		this.children = children;

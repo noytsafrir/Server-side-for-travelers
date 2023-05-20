@@ -32,7 +32,7 @@ public class InvalidInputException extends RuntimeException {
 		super(resourceType + "input is invalid: " + obj);
 	}
 	
-	public InvalidInputException(BoundaryObject obj, String resourceType, String operation) {
+	public InvalidInputException(Object obj, String resourceType, String operation) {
 		super("Could not " + operation + " because " + resourceType + " input is invalid: " + obj);
 	}
 

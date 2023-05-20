@@ -1,5 +1,9 @@
 package superapp.boundaries.object;
 
+import java.util.Objects;
+
+import superapp.data.ObjectPrimaryKeyId;
+
 public class Location {
 	
 	private Double lat;
@@ -32,4 +36,22 @@ public class Location {
 	public String toString() {
 		return "Location [lat=" + lat + ", lng=" + lng + "]";
 	}
+	
+    @Override
+    public boolean equals(Object o) {
+
+        if (o == this) return true;
+        if (!(o instanceof Location)) {
+            return false;
+        }
+        
+        Location other = (Location) o;
+        return Objects.equals(this.lat, other.getLat()) &&
+               Objects.equals(this.lng, other.getLng());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(this.lat, this.lng);
+    }
 }

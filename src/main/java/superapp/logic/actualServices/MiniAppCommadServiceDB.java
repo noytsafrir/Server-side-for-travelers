@@ -1,4 +1,4 @@
-package superapp.logic;
+package superapp.logic.actualServices;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -8,7 +8,10 @@ import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.jms.core.JmsTemplate;
 import org.springframework.stereotype.Service;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import superapp.boundaries.command.InvocationUser;
 import superapp.boundaries.command.MiniAppCommandBoundary;
@@ -27,16 +30,21 @@ import superapp.exceptions.ForbbidenException;
 import superapp.exceptions.InvalidInputException;
 import superapp.exceptions.ResourceAlreadyExistException;
 import superapp.exceptions.ResourceNotFoundException;
+import superapp.logic.GeneralService;
+import superapp.logic.MiniAppCommandAsyncService;
 import superapp.utils.Validator;
 
 
 @Service
-public class MiniAppCommadServiceRDB implements MiniAppCommandService {
+public class MiniAppCommadServiceDB extends GeneralService implements MiniAppCommandAsyncService {
 	private MiniAppCommandCrud miniCrud;
     private ObjectCrud objects;
     private UserCrud users;
 	private MiniAppCommandConverter miniConverter;
 	private String superAppName;
+	private JmsTemplate jmsTemplate;
+	private ObjectMapper jackson;
+
 
 	@Autowired
 	public void setMiniCrud(MiniAppCommandCrud miniCrud) {
@@ -49,7 +57,6 @@ public class MiniAppCommadServiceRDB implements MiniAppCommandService {
 	}
 
 	@Autowired
-
 	public void setUsers(UserCrud users) {
 		this.users = users;
 	}
@@ -63,6 +70,7 @@ public class MiniAppCommadServiceRDB implements MiniAppCommandService {
 	public void setSuperAppName(String superAppName) {
 		this.superAppName = superAppName;
 	}
+	
 	@Override
 	public Object invokeCommand(MiniAppCommandBoundary command) {
 		// Check command validity and throw appropriate exception if not valid:
@@ -84,6 +92,30 @@ public class MiniAppCommadServiceRDB implements MiniAppCommandService {
 		return newEntity;
 	}
 
+	// TODO: write this function (async logic)
+	@Override
+	public Object invokeCommandAsync(MiniAppCommandBoundary command) {
+		command.setInvocationTimestamp(new Date());
+		command.getCommandId().setSuperapp(superAppName);
+		command.getCommandId().setInternalCommandId(UUID.randomUUID().toString());
+//		if (command.getData() == null) {
+//			message.setData(new HashMap<>());
+//		}
+//		message.getData().put("status", "waiting...");
+		
+		try {
+			String json = this.jackson
+				.writeValueAsString(command);
+			
+			this.jmsTemplate
+				.convertAndSend("asyncMessageQueue", json);
+			
+			return command;
+		}catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+	}
+	
 	@Override
 	public List<MiniAppCommandBoundary> getAllCommands() {
 		List<MiniAppCommandEntity> entities = this.miniCrud.findAll();
@@ -113,34 +145,36 @@ public class MiniAppCommadServiceRDB implements MiniAppCommandService {
 	}
 	
     private void checkInvokedCommand(MiniAppCommandBoundary command, UserRole userRole){
-		if (command == null ||
-				command.getCommandId() == null ||
-				command.getCommandId().getMiniapp() == null ||
-				!command.getCommandId().getMiniapp().isBlank() ||
-				command.getCommandAttributes() == null
-				) {
-				throw new InvalidInputException(command, "invoke command");
-			}
+		if (command == null)
+			throw new InvalidInputException(command, "command", "invoke command");
 		
+		if (command.getCommandId() == null)
+			throw new InvalidInputException(command.getCommandId(), "command id", "invoke command");
+		
+		if (command.getCommandId().getMiniapp() == null || command.getCommandId().getMiniapp().isBlank())
+			throw new InvalidInputException(command.getCommandId().getMiniapp(), "miniapp", "invoke command");
+		
+		if (command.getCommandAttributes() == null)
+			throw new InvalidInputException(command.getCommandAttributes(), "command attributes", "invoke command");
+				
         if (command.getCommand() == null || command.getCommand().isBlank())
 			throw new InvalidInputException(command, "command string", "invoke command");
 
         InvocationUser invokedBy = command.getInvokedBy();
-        if (invokedBy == null ||
-                invokedBy.getUserId() == null ||
-                invokedBy.getUserId().getSuperapp() == null ||
-                invokedBy.getUserId().getEmail() == null ||
-                invokedBy.getUserId().getSuperapp().isBlank() ||
-                invokedBy.getUserId().getEmail().isBlank()) {
-			throw new InvalidInputException(command, "user data", "invoke command");
-        }
-   
-        if (!Validator.isValidEmail(invokedBy.getUserId().getEmail()))
- 			throw new InvalidInputException(command, "user email", "invoke command");
+        if (invokedBy == null || invokedBy.getUserId() == null)
+			throw new InvalidInputException(invokedBy, "user data", "invoke command");
         
+        if (invokedBy.getUserId().getSuperapp() == null || invokedBy.getUserId().getSuperapp().isBlank())
+			throw new InvalidInputException(invokedBy.getUserId().getSuperapp(), "user superapp", "invoke command");
+        
+        if (invokedBy.getUserId().getEmail() == null ||
+        	invokedBy.getUserId().getEmail().isBlank() ||
+        	!Validator.isValidEmail(invokedBy.getUserId().getEmail()))
+			throw new InvalidInputException(invokedBy.getUserId().getEmail(), "user email", "invoke command");
+
        UserPrimaryKeyId user = new UserPrimaryKeyId(invokedBy.getUserId().getSuperapp(), invokedBy.getUserId().getEmail());
-       if(!Validator.isValidUserCredentials(user, userRole, this.users))
-            throw new ForbbidenException(user, "invoke command");
+       if(!isValidUserCredentials(user, userRole, this.users))
+            throw new ForbbidenException(user.getEmail(), "invoke command");
 
         TargetObject targetObject = command.getTargetObject();
         if (targetObject == null ||

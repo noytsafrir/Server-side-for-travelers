@@ -25,7 +25,7 @@ public class ForbbidenException extends RuntimeException {
 		super(message, cause);
 	}
 	
-	public ForbbidenException(ResourceIdentifier userId, String operation) {
+	public ForbbidenException(Object userId, String operation) {
 		super("Could not " + operation + " because " + userId + " does not have permissions");
 	}
 

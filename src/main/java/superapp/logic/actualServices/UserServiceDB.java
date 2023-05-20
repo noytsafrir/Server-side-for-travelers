@@ -1,4 +1,4 @@
-package superapp.logic;
+package superapp.logic.actualServices;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,10 +19,12 @@ import superapp.data.UserPrimaryKeyId;
 import superapp.data.UserRole;
 import superapp.exceptions.InvalidInputException;
 import superapp.exceptions.ResourceAlreadyExistException;
+import superapp.exceptions.ResourceNotFoundException;
+import superapp.logic.UsersService;
 import superapp.utils.Validator;
 
 @Service // spring create an instance from this class so we can use it
-public class UserServiceRDB implements UsersService {
+public class UserServiceDB implements UsersService {
 	private UserCrud userCrud;
 	private UserConverter userConverter;
 	private String superappName;
@@ -79,7 +81,7 @@ public class UserServiceRDB implements UsersService {
 	public UserBoundary login(String userSuperApp, String userEmail) {
 		UserPrimaryKeyId id = new UserPrimaryKeyId(userSuperApp, userEmail);
 		UserEntity user = this.userCrud.findById(id).orElseThrow(
-				() -> new ResourceAlreadyExistException(id, "login user"));
+				() -> new ResourceNotFoundException(id, "login user"));
 		return this.userConverter.toBoundary(user);
 	}
 
@@ -88,7 +90,7 @@ public class UserServiceRDB implements UsersService {
 	public UserBoundary updateUser(String userSuperApp, String userEmail, UserBoundary update) {
 		UserPrimaryKeyId id = new UserPrimaryKeyId(userSuperApp, userEmail);
 		UserEntity existing = this.userCrud.findById(id).orElseThrow(
-				() -> new ResourceAlreadyExistException(id, "update user"));
+				() -> new ResourceNotFoundException(id, "update user"));
 
 		// update entity
 		if (update.getAvatar() != null && !update.getAvatar().isBlank()) {

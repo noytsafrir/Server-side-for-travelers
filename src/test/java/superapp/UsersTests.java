@@ -6,55 +6,38 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
-import org.springframework.boot.test.web.server.LocalServerPort;
-import org.springframework.http.HttpStatus;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.web.client.HttpClientErrorException;
-import org.springframework.web.client.RestTemplate;
 
 import jakarta.annotation.PostConstruct;
 import superapp.boundaries.user.NewUserBoundary;
 import superapp.boundaries.user.UserBoundary;
 import superapp.boundaries.user.UserId;
+import superapp.data.UserRole;
 
-@SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
-class UserTests {
+class UsersTests extends BaseControllerTest {
 
 	protected String url;
 	protected String deleteUrl;
 	protected String loginUrl;
-	protected int port;
-	protected RestTemplate restTemplate;
-	protected String superAppName;
 
 	@PostConstruct
 	public void init() {
-		this.restTemplate = new RestTemplate();
-		this.url = "http://localhost:" + this.port + "/superapp/users";
-		this.deleteUrl = "http://localhost:" + this.port + "/superapp/admin/users";
-		this.loginUrl = "http://localhost:" + this.port + "/superapp/users/login";
-	}
-
-	@LocalServerPort
-	public void setPort(int port) {
-		this.port = port;
+		super.init();
+		this.url = this.baseUrl + "/users";
+		this.loginUrl = this.url + "/login";
+		this.deleteUrl = this.adminUrl + "users";
 	}
 
 	@AfterEach
 	public void tearDown() {
-		// cleanup database
 		this.restTemplate.delete(this.deleteUrl);
 	}
 
 	@Value("${spring.application.name:defaultValue}")
 	public void setSuperAppName(String superAppName) {
 		this.superAppName = superAppName;
-	}
-
-	@Test
-	public final void contextLoads() {
 	}
 
 	@Test
@@ -99,17 +82,27 @@ class UserTests {
 	}
 
 	@Test
-	public void testLogin() {
-		String email = "user@test.com";
-		NewUserBoundary newUser = new NewUserBoundary(email, "ADMIN", "username", "avatar");
+	public void testLogin() throws Exception {
+		UserBoundary user = super.createUser(UserRole.ADMIN);
+
+		UserBoundary login = super.loginUser(user.getUserId().getEmail());
+		assertThat(user.getUserId().getEmail().equals(login.getUserId().getEmail())
+				&& user.getUsername().equals(login.getUsername()) && login.getAvatar().equals(user.getAvatar())
+				&& user.getRole().equals(login.getRole()));
+	}
+	
+	@Test
+	public void testCreateDuplicateUser() {
+		NewUserBoundary newUser = new NewUserBoundary("user@test.com", "ADMIN", "username", "avatar");
 		UserBoundary user = this.restTemplate.postForObject(this.url, newUser, UserBoundary.class);
 
-		UserBoundary login = this.restTemplate.getForObject(
-				this.loginUrl + "/" + user.getUserId().getSuperapp() + "/" + user.getUserId().getEmail(),
-				UserBoundary.class);
-		assertThat(user.getUserId().getEmail().equals(login.getUserId().getEmail())
-				&& user.getUsername().equals(login.getUsername()) && login.getAvatar().equals(newUser.getAvatar())
-				&& user.getRole().equals(login.getRole()));
+		NewUserBoundary dupUser = new NewUserBoundary(user.getUserId().getEmail(), "ADMIN", "username", "avatar");
+		
+		try {
+			restTemplate.postForEntity(url, dupUser, UserBoundary.class);
+		} catch (HttpClientErrorException ex) {
+			assertEquals(HttpStatus.CONFLICT, ex.getStatusCode());
+		}
 	}
 
 	@Test
@@ -158,7 +151,6 @@ class UserTests {
 				UserBoundary.class);
 
 		assertEquals(afterUpdate.getUsername(), updateUsername);
-
 	}
 
 }

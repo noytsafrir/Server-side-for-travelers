@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import superapp.boundaries.object.ObjectBoundary;
@@ -34,6 +35,8 @@ public class ObjectController {
 	public void updateObject(
 			@PathVariable("superapp")String superapp , 
 			@PathVariable("internalObjectId") String internalObjectId,
+			@RequestParam(name = "userSuperapp", required = false, defaultValue = "") String userSuperapp,
+			@RequestParam(name = "userEmail", required = false, defaultValue = "") String email,
 			@RequestBody ObjectBoundary update){
 	
 		this.objects.updateObject(superapp, internalObjectId, update);

@@ -29,7 +29,7 @@ public class ResourceNotFoundException extends RuntimeException {
 		super(id + " does not exist");
 	}
 	
-	public ResourceNotFoundException(ResourceIdentifier id, String operation) {
+	public ResourceNotFoundException(Object id, String operation) {
 		super("Could not " + operation + " because " + id + " does not exist");
 	}
 	
@@ -37,7 +37,7 @@ public class ResourceNotFoundException extends RuntimeException {
 		super(resourceType + " " + id + " does not exist");
 	}
 	
-	public ResourceNotFoundException(ResourceIdentifier id, String resourceType, String operation) {
+	public ResourceNotFoundException(Object id, String resourceType, String operation) {
 		super("Could not " + operation + " because " + resourceType + " " + id + " does not exist");
 	}
 	

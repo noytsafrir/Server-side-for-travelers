@@ -1,5 +1,8 @@
 package superapp.boundaries.user;
 
+import java.util.Objects;
+
+import superapp.boundaries.object.Location;
 import superapp.utils.ResourceIdentifier;
 
 public class UserId implements ResourceIdentifier{
@@ -40,5 +43,23 @@ public class UserId implements ResourceIdentifier{
 	public String toString() {
 		return "UserId [superapp=" + superapp + ", email=" + email + "]";
 	}
+	
+    @Override
+    public boolean equals(Object o) {
+
+        if (o == this) return true;
+        if (!(o instanceof UserId)) {
+            return false;
+        }
+        
+        UserId other = (UserId) o;
+        return Objects.equals(this.superapp, other.getSuperapp()) &&
+               Objects.equals(this.email, other.getEmail());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(this.superapp, this.email);
+    }
 	
 }
