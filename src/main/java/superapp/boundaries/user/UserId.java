@@ -41,7 +41,7 @@ public class UserId implements ResourceIdentifier{
 	
 	@Override
 	public String toString() {
-		return "UserId [superapp=" + superapp + ", email=" + email + "]";
+		return "userId [superapp=" + superapp + ", email=" + email + "]";
 	}
 	
     @Override

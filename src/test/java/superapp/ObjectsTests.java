@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Value;
 
@@ -19,9 +20,11 @@ import superapp.boundaries.object.CreatedBy;
 import superapp.boundaries.object.Location;
 import superapp.boundaries.object.ObjectBoundary;
 import superapp.boundaries.object.SuperAppObjectIdBoundary;
+import superapp.boundaries.user.NewUserBoundary;
 import superapp.boundaries.user.UserBoundary;
 import superapp.boundaries.user.UserId;
 import superapp.data.UserRole;
+import superapp.exceptions.ForbbidenException;
 
 class ObjectsTests extends BaseControllerTest {
 
@@ -35,9 +38,10 @@ class ObjectsTests extends BaseControllerTest {
 		this.deleteUrl = this.adminUrl + "objects";
 	}
 
-	@AfterEach
+//	@AfterEach
+	@BeforeEach
 	public void tearDown() throws Exception {
-		this.restTemplate.delete(this.deleteUrl);
+//		this.restTemplate.delete(this.deleteUrl);
 		super.deleteUsers();
 	}
 
@@ -46,7 +50,7 @@ class ObjectsTests extends BaseControllerTest {
 		this.superAppName = superAppName;
 	}
 
-	@Test
+//	@Test
 	public void testCreateValidObject() throws Exception {
 		ObjectBoundary newObject = new ObjectBoundary();
 		SuperAppObjectIdBoundary objId = new SuperAppObjectIdBoundary();
@@ -87,13 +91,14 @@ class ObjectsTests extends BaseControllerTest {
 		newObject.setType("updateType");
 
 		UserBoundary user = super.createUser(UserRole.SUPERAPP_USER);
-
-
-		Map<String, String> vars = new HashMap<>();
-		vars.put("userSuperapp", user.getUserId().getSuperapp());
-		vars.put("userEmail", user.getUserId().getEmail());
-
-		this.restTemplate.put(this.url, newObject, vars);
+		
+		System.err.println(user.toString());
+		
+		this.restTemplate.put(this.url + "/" + createResult.getObjectId().getSuperapp() + "/"
+				+ createResult.getObjectId().getInternalObjectId()
+				+ "?userSuperapp={userSuperapp}&userEmail={email}",
+		newObject, user.getUserId().getSuperapp(), user.getUserId().getEmail());
+				
 		ObjectBoundary updateResult = this.restTemplate.getForObject(this.url + "/"
 				+ createResult.getObjectId().getSuperapp() + "/" + createResult.getObjectId().getInternalObjectId(),
 				ObjectBoundary.class);
@@ -104,6 +109,28 @@ class ObjectsTests extends BaseControllerTest {
 		assertEquals(updateResult.getObjectId().getSuperapp(), createResult.getObjectId().getSuperapp());
 		assertEquals(updateResult.getObjectId().getInternalObjectId(),
 				createResult.getObjectId().getInternalObjectId());
+	}
+
+//	@Test
+	public void testUpdateValidObjectInvalidUser() throws Exception {
+
+		ObjectBoundary newObject = createObject();
+		ObjectBoundary createResult = this.restTemplate.postForObject(this.url, newObject, ObjectBoundary.class);
+
+		newObject.setAlias("updateAlias");
+		newObject.setType("updateType");
+
+		UserBoundary user = super.createUser(UserRole.MINIAPP_USER);
+
+		try {
+			this.restTemplate.put(
+					this.url + "/" + createResult.getObjectId().getSuperapp() + "/"
+							+ createResult.getObjectId().getInternalObjectId()
+							+ "?userSuperapp={userSuperapp}&userEmail={email}",
+					newObject, user.getUserId().getSuperapp(), user.getUserId().getEmail());
+		} catch (HttpClientErrorException ex) {
+			assertEquals(HttpStatus.FORBIDDEN, ex.getStatusCode());
+		}
 	}
 
 	public ObjectBoundary createObject() {

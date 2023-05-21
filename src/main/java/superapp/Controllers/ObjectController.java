@@ -13,66 +13,67 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import superapp.boundaries.object.ObjectBoundary;
-import superapp.logic.ObjectService;
-
+import superapp.logic.ObjectServiceWithPagination;
 
 @RestController
 public class ObjectController {
-	private ObjectService objects;
-	
-	public ObjectService getObjects() {
+	private ObjectServiceWithPagination objects;
+
+	public ObjectServiceWithPagination getObjects() {
 		return objects;
 	}
-	@Autowired //when you will make the instance - you should implement this class
-	public void setObjects(ObjectService objects) {
+
+	@Autowired // when you will make the instance - you should implement this class
+	public void setObjects(ObjectServiceWithPagination objects) {
 		this.objects = objects;
 	}
+
 	@CrossOrigin(origins = "*")
 	@RequestMapping(
-			path = {"/superapp/objects/{superapp}/{internalObjectId}"},
-			method = {RequestMethod.PUT},
-			consumes = {MediaType.APPLICATION_JSON_VALUE})
+			path = {"/superapp/objects/{superapp}/{internalObjectId}"}, 
+			method = {RequestMethod.PUT }, 
+			consumes = { MediaType.APPLICATION_JSON_VALUE })
 	public void updateObject(
-			@PathVariable("superapp")String superapp , 
+			@PathVariable("superapp") String superapp,
 			@PathVariable("internalObjectId") String internalObjectId,
-			@RequestParam(name = "userSuperapp", required = false, defaultValue = "") String userSuperapp,
-			@RequestParam(name = "userEmail", required = false, defaultValue = "") String email,
-			@RequestBody ObjectBoundary update){
-	
-		this.objects.updateObject(superapp, internalObjectId, update);
+			
+			@RequestParam(name = "userSuperapp", required = false, defaultValue = "a") String userSuperapp,
+			@RequestParam(name = "userEmail", required = false, defaultValue = "b") String email,
+			@RequestBody ObjectBoundary update) {
+		System.err.println("check  "+ superapp + "    "+internalObjectId);
+		this.objects.updateObject(superapp, internalObjectId, update, userSuperapp, email);
 	}
+
 	@CrossOrigin(origins = "*")
-	@RequestMapping(
-			path = {"/superapp/objects"},
-			method = {RequestMethod.POST},
-			produces = {MediaType.APPLICATION_JSON_VALUE},
-			consumes = {MediaType.APPLICATION_JSON_VALUE})
-	public ObjectBoundary createObject(
-			@RequestBody ObjectBoundary newObject){
-		
+	@RequestMapping(path = { "/superapp/objects" }, method = { RequestMethod.POST }, produces = {
+			MediaType.APPLICATION_JSON_VALUE }, consumes = { MediaType.APPLICATION_JSON_VALUE })
+	public ObjectBoundary createObject(@RequestBody ObjectBoundary newObject) {
+
 		return this.objects.createObject(newObject);
-		
+
 	}
+
 	@CrossOrigin(origins = "*")
-	@RequestMapping(
-			path = {"/superapp/objects/{superapp}/{internalObjectId}"},
-			method = {RequestMethod.GET},
-			produces = {MediaType.APPLICATION_JSON_VALUE})
-	public ObjectBoundary retrieveObject(
-			@PathVariable("superapp")String superapp , 
-			@PathVariable("internalObjectId") String internalObjectId){
-		
-		return this.objects.getSpecsificObject(superapp, internalObjectId);
+	@RequestMapping(path = { "/superapp/objects/{superapp}/{internalObjectId}" }, method = {
+			RequestMethod.GET }, produces = { MediaType.APPLICATION_JSON_VALUE })
+	public ObjectBoundary retrieveObject(@PathVariable("superapp") String superapp,
+			@PathVariable("internalObjectId") String internalObjectId,
+			@RequestParam(name = "userSupperapp", required = false, defaultValue = "") String userSupperapp,
+			@RequestParam(name = "userEmail", required = false, defaultValue = "") String email) {
+
+		return this.objects.getSpecsificObject(superapp, internalObjectId, userSupperapp, email);
 	}
-	
+
 	@CrossOrigin(origins = "*")
-	@RequestMapping(
-			path = {"/superapp/objects"},
-			method = {RequestMethod.GET},
-			produces = {MediaType.APPLICATION_JSON_VALUE})
-	public List<ObjectBoundary> getAllObjects(){
+	@RequestMapping(path = { "/superapp/objects" }, method = { RequestMethod.GET }, produces = {
+			MediaType.APPLICATION_JSON_VALUE })
+	public List<ObjectBoundary> getAllObjects(
+			@RequestParam(name = "userSupperapp", required = false, defaultValue = "") String userSupperapp,
+			@RequestParam(name = "userEmail", required = false, defaultValue = "") String email,
+			@RequestParam(name = "size", required = false, defaultValue = "10") int size,
+			@RequestParam(name = "page", required = false, defaultValue = "0") int page) {
 		
-		return this.objects.getAllObjects();
+		return this.objects.getAllObjects(userSupperapp, email, size, page);
 	}
 
 }
