@@ -1,7 +1,5 @@
 package superapp.logic;
 
-import java.util.Optional;
-
 import org.springframework.beans.factory.annotation.Value;
 
 import superapp.dal.UserCrud;
@@ -17,7 +15,7 @@ public abstract class GeneralService {
 	public void setSuperappName(String superappName) {
 		this.superappName = superappName;
 	}
-	
+
 	public String getSuperappName() {
 		return superappName;
 	}
@@ -25,11 +23,10 @@ public abstract class GeneralService {
 	public boolean isValidUserCredentials(UserPrimaryKeyId userId, UserRole role, UserCrud repository) {
 		return getUser(userId, repository).getRole().toString().equals(role.toString());
 	}
-	
+
 	public UserEntity getUser(UserPrimaryKeyId userId, UserCrud repository) {
-		Optional<UserEntity> userE = repository.findById(userId);
-		if (!userE.isPresent())
-			throw new ResourceNotFoundException(userId, "validate user role");
-		return userE.get();
+		UserEntity userE = repository.findById(userId)
+				.orElseThrow(() -> new ResourceNotFoundException(userId, "validate user role"));
+		return userE;
 	}
 }

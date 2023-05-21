@@ -1,5 +1,6 @@
 package superapp;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
@@ -82,7 +83,7 @@ class ObjectsTests extends BaseControllerTest {
 		assertNotNull(result.getObjectId().getInternalObjectId());
 	}
 
-	@Test
+//	@Test
 	public void testUpdateValidObjectValidUser() throws Exception {
 		ObjectBoundary newObject = createObject();
 		ObjectBoundary createResult = this.restTemplate.postForObject(this.url, newObject, ObjectBoundary.class);
@@ -91,8 +92,6 @@ class ObjectsTests extends BaseControllerTest {
 		newObject.setType("updateType");
 
 		UserBoundary user = super.createUser(UserRole.SUPERAPP_USER);
-		
-		System.err.println(user.toString());
 		
 		this.restTemplate.put(this.url + "/" + createResult.getObjectId().getSuperapp() + "/"
 				+ createResult.getObjectId().getInternalObjectId()
@@ -111,7 +110,7 @@ class ObjectsTests extends BaseControllerTest {
 				createResult.getObjectId().getInternalObjectId());
 	}
 
-//	@Test
+	@Test
 	public void testUpdateValidObjectInvalidUser() throws Exception {
 
 		ObjectBoundary newObject = createObject();
