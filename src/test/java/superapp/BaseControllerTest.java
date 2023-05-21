@@ -43,6 +43,10 @@ public abstract class BaseControllerTest {
 		this.superAppName = superAppName;
 	}
 	
+	public void deleteUsers() throws Exception {
+		this.restTemplate.delete(this.adminUrl + "/users");
+	}
+	
 	public UserBoundary createUser(UserRole role) throws Exception {
 		NewUserBoundary newUser = new NewUserBoundary("user@test.com", role.toString(), "username", "avatar");
 		return this.restTemplate.postForObject(this.userUrl, newUser, UserBoundary.class);

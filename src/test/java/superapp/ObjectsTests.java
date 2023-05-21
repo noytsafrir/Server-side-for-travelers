@@ -36,8 +36,9 @@ class ObjectsTests extends BaseControllerTest {
 	}
 
 	@AfterEach
-	public void tearDown() {
+	public void tearDown() throws Exception {
 		this.restTemplate.delete(this.deleteUrl);
+		super.deleteUsers();
 	}
 
 	@Value("${spring.application.name:defaultValue}")
@@ -87,28 +88,22 @@ class ObjectsTests extends BaseControllerTest {
 
 		UserBoundary user = super.createUser(UserRole.SUPERAPP_USER);
 
-		try {
-			restTemplate.postForEntity(url, user, UserBoundary.class);
-		} catch (HttpClientErrorException ex) {
-			if (ex.getStatusCode().equals(HttpStatus.CONFLICT))
-				user = super.loginUser(user.getUserId().getEmail());
-			else
-				throw ex;
-		}
 
 		Map<String, String> vars = new HashMap<>();
 		vars.put("userSuperapp", user.getUserId().getSuperapp());
 		vars.put("userEmail", user.getUserId().getEmail());
 
 		this.restTemplate.put(this.url, newObject, vars);
-		ObjectBoundary updateResult = this.restTemplate.getForObject(this.url + "/" + createResult.getObjectId().getSuperapp()
-				+ "/" + createResult.getObjectId().getInternalObjectId(), ObjectBoundary.class);
+		ObjectBoundary updateResult = this.restTemplate.getForObject(this.url + "/"
+				+ createResult.getObjectId().getSuperapp() + "/" + createResult.getObjectId().getInternalObjectId(),
+				ObjectBoundary.class);
 
 		assertEquals(updateResult.getType(), "updateAlias");
 		assertEquals(updateResult.getAlias(), "updateType");
 		assertEquals(updateResult.getCreationTimestamp(), createResult.getCreationTimestamp());
 		assertEquals(updateResult.getObjectId().getSuperapp(), createResult.getObjectId().getSuperapp());
-		assertEquals(updateResult.getObjectId().getInternalObjectId(), createResult.getObjectId().getInternalObjectId());
+		assertEquals(updateResult.getObjectId().getInternalObjectId(),
+				createResult.getObjectId().getInternalObjectId());
 	}
 
 	public ObjectBoundary createObject() {
