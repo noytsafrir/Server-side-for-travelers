@@ -66,13 +66,13 @@ public class ObjectController {
 	@CrossOrigin(origins = "*")
 	@RequestMapping(path = { "/superapp/objects" }, method = { RequestMethod.GET }, produces = {
 			MediaType.APPLICATION_JSON_VALUE })
-	public List<ObjectBoundary> getAllObjects(
+	public ObjectBoundary[] getAllObjects(
 			@RequestParam(name = "userSuperapp", required = false, defaultValue = "") String userSuperapp,
 			@RequestParam(name = "userEmail", required = false, defaultValue = "") String email,
 			@RequestParam(name = "size", required = false, defaultValue = "10") int size,
 			@RequestParam(name = "page", required = false, defaultValue = "0") int page) {
 		
-		return this.objects.getAllObjects(userSuperapp, email, size, page);
+		return this.objects.getAllObjects(userSuperapp, email, size, page).toArray(new ObjectBoundary[0]);
 	}
 
 }

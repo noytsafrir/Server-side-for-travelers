@@ -143,10 +143,10 @@ public class ObjectServicesDB extends GeneralService implements ObjectServiceWit
 		List<ObjectBoundary> rv;
 
 		UserEntity user = getUser(new UserPrimaryKeyId(userSuperapp, email), users);
-		if (user.getRole() == UserRole.SUPERAPP_USER.toString()) {
+		if (user.getRole().equals(UserRole.SUPERAPP_USER.toString())) {
 			rv = this.objectCrud.findAll(PageRequest.of(page, size, Direction.DESC, "creationTimestamp", "objectId"))
 					.stream().map(this.converter::toBoundary).toList();
-		} else if (user.getRole() == UserRole.MINIAPP_USER.toString()) {
+		} else if (user.getRole().equals(UserRole.MINIAPP_USER.toString())) {
 			rv = this.objectCrud
 					.findAllByActive(true, PageRequest.of(page, size, Direction.DESC, "creationTimestamp", "objectId"))
 					.stream().map(this.converter::toBoundary).toList();
