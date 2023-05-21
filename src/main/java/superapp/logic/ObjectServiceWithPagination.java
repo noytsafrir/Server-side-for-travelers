@@ -25,5 +25,4 @@ public interface ObjectServiceWithPagination extends ObjectServiceBinding {
 
 	public List<ObjectBoundary> getAllParentsOfObject(String superapp, String internalObjectId, String userSuperapp,
 			String email, int size, int page);
-
 }
