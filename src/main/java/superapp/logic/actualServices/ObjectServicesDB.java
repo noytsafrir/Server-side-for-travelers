@@ -116,6 +116,27 @@ public class ObjectServicesDB extends GeneralService implements ObjectServiceWit
 		// Return object as boundary
 		return this.converter.toBoundary(existing);
 	}
+	
+	@Override
+	public ObjectBoundary getSpecsificObject(String ObjectSuperapp, String internalObjectId, String userSuperapp,
+			String email) {
+		
+		boolean isMiniappUser;
+		UserEntity user = getUser(new UserPrimaryKeyId(userSuperapp, email), users);
+		isMiniappUser = user.getRole().equals(UserRole.MINIAPP_USER.toString());
+		
+		if (!isMiniappUser && !user.getRole().equals(UserRole.SUPERAPP_USER.toString()))
+			throw new ForbbidenException(user.getUserId().getEmail(), "find object");
+		
+		ObjectPrimaryKeyId pkid = new ObjectPrimaryKeyId(ObjectSuperapp, internalObjectId);
+		ObjectEntity entity = this.objectCrud.findById(pkid)
+				.orElseThrow(() -> new ResourceNotFoundException(internalObjectId, "find object"));
+		
+		if (isMiniappUser && !entity.getActive())
+			throw new ResourceNotFoundException(internalObjectId, "find object");
+		
+		return this.converter.toBoundary(entity);
+	}
 
 	@Override
 	public List<ObjectBoundary> getAllObjects(String userSuperapp, String email, int size, int page) {
@@ -136,26 +157,6 @@ public class ObjectServicesDB extends GeneralService implements ObjectServiceWit
 		return rv;
 	}
 
-	@Override
-	public ObjectBoundary getSpecsificObject(String ObjectSuperapp, String internalObjectId, String userSuperapp,
-			String email) {
-
-		boolean isMiniappUser;
-		UserEntity user = getUser(new UserPrimaryKeyId(userSuperapp, email), users);
-		isMiniappUser = user.getRole().equals(UserRole.MINIAPP_USER.toString());
-
-		if (isMiniappUser && !user.getRole().equals(UserRole.SUPERAPP_USER.toString()))
-			throw new ForbbidenException(user.getUserId().getEmail(), "find object");
-
-		ObjectPrimaryKeyId pkid = new ObjectPrimaryKeyId(ObjectSuperapp, internalObjectId);
-		ObjectEntity entity = this.objectCrud.findById(pkid)
-				.orElseThrow(() -> new ResourceNotFoundException(internalObjectId, "find object"));
-
-		if (isMiniappUser && !entity.getActive())
-			throw new ResourceNotFoundException(internalObjectId, "find object");
-
-		return this.converter.toBoundary(entity);
-	}
 
 	@Override
 	public void bindObjectToParent(String superapp, String internalObjectId, SuperAppObjectIdBoundary childId,

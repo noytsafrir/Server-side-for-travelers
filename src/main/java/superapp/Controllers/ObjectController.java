@@ -37,10 +37,9 @@ public class ObjectController {
 			@PathVariable("superapp") String superapp,
 			@PathVariable("internalObjectId") String internalObjectId,
 			
-			@RequestParam(name = "userSuperapp", required = false, defaultValue = "a") String userSuperapp,
-			@RequestParam(name = "userEmail", required = false, defaultValue = "b") String email,
+			@RequestParam(name = "userSuperapp", required = false, defaultValue = "") String userSuperapp,
+			@RequestParam(name = "userEmail", required = false, defaultValue = "") String email,
 			@RequestBody ObjectBoundary update) {
-		System.err.println("check  "+ superapp + "    "+internalObjectId);
 		this.objects.updateObject(superapp, internalObjectId, update, userSuperapp, email);
 	}
 
@@ -58,22 +57,22 @@ public class ObjectController {
 			RequestMethod.GET }, produces = { MediaType.APPLICATION_JSON_VALUE })
 	public ObjectBoundary retrieveObject(@PathVariable("superapp") String superapp,
 			@PathVariable("internalObjectId") String internalObjectId,
-			@RequestParam(name = "userSupperapp", required = false, defaultValue = "") String userSupperapp,
+			@RequestParam(name = "userSuperapp", required = false, defaultValue = "") String userSuperapp,
 			@RequestParam(name = "userEmail", required = false, defaultValue = "") String email) {
 
-		return this.objects.getSpecsificObject(superapp, internalObjectId, userSupperapp, email);
+		return this.objects.getSpecsificObject(superapp, internalObjectId, userSuperapp, email);
 	}
 
 	@CrossOrigin(origins = "*")
 	@RequestMapping(path = { "/superapp/objects" }, method = { RequestMethod.GET }, produces = {
 			MediaType.APPLICATION_JSON_VALUE })
 	public List<ObjectBoundary> getAllObjects(
-			@RequestParam(name = "userSupperapp", required = false, defaultValue = "") String userSupperapp,
+			@RequestParam(name = "userSuperapp", required = false, defaultValue = "") String userSuperapp,
 			@RequestParam(name = "userEmail", required = false, defaultValue = "") String email,
 			@RequestParam(name = "size", required = false, defaultValue = "10") int size,
 			@RequestParam(name = "page", required = false, defaultValue = "0") int page) {
 		
-		return this.objects.getAllObjects(userSupperapp, email, size, page);
+		return this.objects.getAllObjects(userSuperapp, email, size, page);
 	}
 
 }

@@ -23,7 +23,7 @@ class UsersTests extends BaseControllerTest {
 	protected String loginUrl;
 
 	@PostConstruct
-	public void init() {
+	public void init(){
 		super.init();
 		this.url = this.baseUrl + "/users";
 		this.loginUrl = this.url + "/login";

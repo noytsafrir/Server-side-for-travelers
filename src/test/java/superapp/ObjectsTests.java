@@ -32,26 +32,27 @@ class ObjectsTests extends BaseControllerTest {
 	protected String url;
 	protected String deleteUrl;
 
+
 	@PostConstruct
-	public void init() {
+	public void init(){
 		super.init();
 		this.url = this.baseUrl + "/objects";
 		this.deleteUrl = this.adminUrl + "objects";
 	}
 
-//	@AfterEach
-	@BeforeEach
+	@AfterEach
 	public void tearDown() throws Exception {
-//		this.restTemplate.delete(this.deleteUrl);
-		super.deleteUsers();
+		this.restTemplate.delete(this.deleteUrl + "?userSuperapp={superapp}&userEmail={email}",
+				userAdmin.getUserId().getSuperapp(), userAdmin.getUserId().getEmail());
+//		super.deleteUsers();
 	}
 
 	@Value("${spring.application.name:defaultValue}")
 	public void setSuperAppName(String superAppName) {
 		this.superAppName = superAppName;
 	}
-
-//	@Test
+	
+	@Test
 	public void testCreateValidObject() throws Exception {
 		ObjectBoundary newObject = new ObjectBoundary();
 		SuperAppObjectIdBoundary objId = new SuperAppObjectIdBoundary();
@@ -83,35 +84,56 @@ class ObjectsTests extends BaseControllerTest {
 		assertNotNull(result.getObjectId().getInternalObjectId());
 	}
 
-//	@Test
+	@Test
 	public void testUpdateValidObjectValidUser() throws Exception {
 		ObjectBoundary newObject = createObject();
 		ObjectBoundary createResult = this.restTemplate.postForObject(this.url, newObject, ObjectBoundary.class);
 
 		newObject.setAlias("updateAlias");
 		newObject.setType("updateType");
-
-		UserBoundary user = super.createUser(UserRole.SUPERAPP_USER);
 		
 		this.restTemplate.put(this.url + "/" + createResult.getObjectId().getSuperapp() + "/"
 				+ createResult.getObjectId().getInternalObjectId()
 				+ "?userSuperapp={userSuperapp}&userEmail={email}",
-		newObject, user.getUserId().getSuperapp(), user.getUserId().getEmail());
-				
-		ObjectBoundary updateResult = this.restTemplate.getForObject(this.url + "/"
-				+ createResult.getObjectId().getSuperapp() + "/" + createResult.getObjectId().getInternalObjectId(),
-				ObjectBoundary.class);
+		newObject, userSuperapp.getUserId().getSuperapp(), userSuperapp.getUserId().getEmail());
+	
+		ObjectBoundary updateResult = this.restTemplate.getForObject(
+				this.url + "/" + createResult.getObjectId().getSuperapp() + "/"
+				+ createResult.getObjectId().getInternalObjectId()
+				+ "?userSuperapp={userSuperapp}&userEmail={email}",
+				ObjectBoundary.class, userSuperapp.getUserId().getSuperapp(), userSuperapp.getUserId().getEmail());
 
-		assertEquals(updateResult.getType(), "updateAlias");
-		assertEquals(updateResult.getAlias(), "updateType");
+		assertEquals(updateResult.getType(), "updateType");
+		assertEquals(updateResult.getAlias(), "updateAlias");
 		assertEquals(updateResult.getCreationTimestamp(), createResult.getCreationTimestamp());
 		assertEquals(updateResult.getObjectId().getSuperapp(), createResult.getObjectId().getSuperapp());
 		assertEquals(updateResult.getObjectId().getInternalObjectId(),
-				createResult.getObjectId().getInternalObjectId());
+					createResult.getObjectId().getInternalObjectId());
 	}
 
 	@Test
 	public void testUpdateValidObjectInvalidUser() throws Exception {
+
+		ObjectBoundary newObject = createObject();
+		ObjectBoundary createResult = this.restTemplate.postForObject(this.url, newObject, ObjectBoundary.class);
+
+		newObject.setAlias("updateAlias");
+		newObject.setType("updateType");
+
+
+		try {
+			this.restTemplate.put(
+					this.url + "/" + createResult.getObjectId().getSuperapp() + "/"
+							+ createResult.getObjectId().getInternalObjectId()
+							+ "?userSuperapp={userSuperapp}&userEmail={email}",
+					newObject, userMiniapp.getUserId().getSuperapp(), userMiniapp.getUserId().getEmail());
+		} catch (HttpClientErrorException ex) {
+			assertEquals(HttpStatus.FORBIDDEN, ex.getStatusCode());
+		}
+	}
+	
+//	@Test
+	public void testGetValidSpecificObject() throws Exception {
 
 		ObjectBoundary newObject = createObject();
 		ObjectBoundary createResult = this.restTemplate.postForObject(this.url, newObject, ObjectBoundary.class);
