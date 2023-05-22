@@ -2,7 +2,6 @@ package superapp.boundaries.user;
 
 import java.util.Objects;
 
-import superapp.boundaries.object.Location;
 import superapp.utils.ResourceIdentifier;
 
 public class UserId implements ResourceIdentifier{

@@ -8,8 +8,12 @@ import superapp.boundaries.command.MiniAppCommandBoundary;
 public interface MiniAppCommandService {
 
 	public Object invokeCommand(MiniAppCommandBoundary command); 
+	
+	@Deprecated
 	public List<MiniAppCommandBoundary> getAllCommands();
+	@Deprecated
 	public List<MiniAppCommandBoundary> getAllMiniAppCommands(String miniAppName);
+	@Deprecated
 	public void deleteAllCommands();
 	
 	

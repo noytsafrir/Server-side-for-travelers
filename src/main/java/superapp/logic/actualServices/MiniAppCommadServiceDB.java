@@ -1,5 +1,6 @@
 package superapp.logic.actualServices;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -26,6 +27,7 @@ import superapp.data.ObjectEntity;
 import superapp.data.ObjectPrimaryKeyId;
 import superapp.data.UserPrimaryKeyId;
 import superapp.data.UserRole;
+import superapp.exceptions.DeprecatedException;
 import superapp.exceptions.ForbbidenException;
 import superapp.exceptions.InvalidInputException;
 import superapp.exceptions.ResourceAlreadyExistException;
@@ -116,8 +118,9 @@ public class MiniAppCommadServiceDB extends GeneralService implements MiniAppCom
 		}
 	}
 	
+	// TODO: change the function, this is the old version
 	@Override
-	public List<MiniAppCommandBoundary> getAllCommands() {
+	public List<MiniAppCommandBoundary> getAllCommands(String userSuperapp, String email, int size, int page) {
 		List<MiniAppCommandEntity> entities = this.miniCrud.findAll();
 		List<MiniAppCommandBoundary> rv = new ArrayList<>();
 		for (MiniAppCommandEntity m : entities) {
@@ -126,10 +129,10 @@ public class MiniAppCommadServiceDB extends GeneralService implements MiniAppCom
 		return rv;
 	}
 
-
+	// TODO: change the function, this is the old version
 	@Override
-	public List<MiniAppCommandBoundary> getAllMiniAppCommands(String miniAppName) {
-		
+	public List<MiniAppCommandBoundary> getAllMiniAppCommands(String miniAppName, String userSuperapp, String email,
+			int size, int page) {
 		List<MiniAppCommandEntity> entities = this.miniCrud.findAll();
 		List<MiniAppCommandBoundary> rv = new ArrayList<>();
 		for (MiniAppCommandEntity m : entities) {
@@ -138,10 +141,31 @@ public class MiniAppCommadServiceDB extends GeneralService implements MiniAppCom
 		}
 		return rv ;
 	}
+	
+	@Override
+	public void deleteAllCommands(String superapp, String email) {	
+		UserPrimaryKeyId user = new UserPrimaryKeyId(superapp, email);
+		if (!isValidUserCredentials(user, UserRole.ADMIN, this.users))
+			throw new ForbbidenException(user.getEmail(), "delete all miniapp commands");
+		this.miniCrud.deleteAll();
+	}
+	
+	@Deprecated
+	@Override
+	public List<MiniAppCommandBoundary> getAllCommands() {
+		throw new DeprecatedException(LocalDate.of(2023, 5, 22));
+	}
 
+	@Deprecated
+	@Override
+	public List<MiniAppCommandBoundary> getAllMiniAppCommands(String miniAppName) {
+		throw new DeprecatedException(LocalDate.of(2023, 5, 22));
+	}
+	
+	@Deprecated
 	@Override
 	public void deleteAllCommands() {
-		this.miniCrud.deleteAll();
+		throw new DeprecatedException(LocalDate.of(2023, 5, 22));
 	}
 	
     private void checkInvokedCommand(MiniAppCommandBoundary command, UserRole userRole){
@@ -192,4 +216,8 @@ public class MiniAppCommadServiceDB extends GeneralService implements MiniAppCom
         if(objectE.isEmpty() || !objectE.get().getActive())
             throw new ResourceNotFoundException(objId, "invoke command");
     }
+
+
+
+
 }

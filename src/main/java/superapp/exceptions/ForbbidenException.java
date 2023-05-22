@@ -3,9 +3,6 @@ package superapp.exceptions;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
-import superapp.utils.ResourceIdentifier;
-
-
 @ResponseStatus(code = HttpStatus.FORBIDDEN)
 public class ForbbidenException extends RuntimeException {
 	private static final long serialVersionUID = 4293997442861105632L;

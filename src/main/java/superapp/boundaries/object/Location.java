@@ -2,8 +2,6 @@ package superapp.boundaries.object;
 
 import java.util.Objects;
 
-import superapp.data.ObjectPrimaryKeyId;
-
 public class Location {
 	
 	private Double lat;

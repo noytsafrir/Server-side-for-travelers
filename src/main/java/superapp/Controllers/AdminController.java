@@ -11,20 +11,19 @@ import org.springframework.web.bind.annotation.RestController;
 
 import superapp.boundaries.command.MiniAppCommandBoundary;
 import superapp.boundaries.user.UserBoundary;
-import superapp.logic.MiniAppCommandService;
-import superapp.logic.ObjectService;
+import superapp.logic.MiniAppCommandAsyncService;
 import superapp.logic.ObjectServiceWithPagination;
-import superapp.logic.UsersService;
+import superapp.logic.UsersServiceNew;
 
 @RestController
 public class AdminController {
 
-	private UsersService users;
+	private UsersServiceNew users;
 	private ObjectServiceWithPagination objects;
-	private MiniAppCommandService commands;
+	private MiniAppCommandAsyncService commands;
 
 	@Autowired
-	public void setUsers(UsersService users) {
+	public void setUsers(UsersServiceNew users) {
 		this.users = users;
 	}
 
@@ -34,7 +33,7 @@ public class AdminController {
 	}
 
 	@Autowired
-	public void setCommands(MiniAppCommandService commands) {
+	public void setCommands(MiniAppCommandAsyncService commands) {
 		this.commands = commands;
 	}
 
@@ -42,8 +41,10 @@ public class AdminController {
 	@RequestMapping(
 			path = "/superapp/admin/users", 
 			method = { RequestMethod.DELETE })
-	public void deleteAllUsers() {
-		this.users.deleteAllUsers();
+	public void deleteAllUsers(
+			@RequestParam(name = "userSuperapp", required = true) String userSuperapp,
+			@RequestParam(name = "userEmail", required = true) String email) {
+		this.users.deleteAllUsers(userSuperapp, email);;
 	}
 
 	@CrossOrigin(origins = "*")
@@ -51,35 +52,58 @@ public class AdminController {
 			path = "/superapp/admin/objects",
 			method = { RequestMethod.DELETE })
 	public void deleteAllObjects(
-			@RequestParam(name = "userSuperapp", required = false, defaultValue = "") String superapp,
-			@RequestParam(name = "userEmail", required = false, defaultValue = "") String email) {
+			@RequestParam(name = "userSuperapp", required = true) String superapp,
+			@RequestParam(name = "userEmail", required = true) String email) {
 		this.objects.deleteAllObject(superapp, email);
 	}
 
 	@CrossOrigin(origins = "*")
-	@RequestMapping(path = "/superapp/admin/miniapp", method = { RequestMethod.DELETE })
-	public void deleteAllCommandsHistory() {
-		this.commands.deleteAllCommands();
+	@RequestMapping(
+			path = "/superapp/admin/miniapp",
+			method = { RequestMethod.DELETE })
+	public void deleteAllCommandsHistory(
+			@RequestParam(name = "userSuperapp", required = true) String superapp,
+			@RequestParam(name = "userEmail", required = true) String email) {
+		this.commands.deleteAllCommands(superapp, email);
 	}
 
 	@CrossOrigin(origins = "*")
-	@RequestMapping(path = { "/superapp/admin/users" }, method = { RequestMethod.GET }, produces = {
-			MediaType.APPLICATION_JSON_VALUE })
-	public UserBoundary[] getAllUsers() {
+	@RequestMapping(
+			path = { "/superapp/admin/users" },
+			method = { RequestMethod.GET },
+			produces = {MediaType.APPLICATION_JSON_VALUE })
+	public UserBoundary[] getAllUsers(
+			@RequestParam(name = "userSuperapp", required = true) String userSuperapp,
+			@RequestParam(name = "userEmail", required = true) String email,
+			@RequestParam(name = "size", required = false, defaultValue = "10") int size,
+			@RequestParam(name = "page", required = false, defaultValue = "0") int page) {
 		return this.users.getAllUsers().toArray(new UserBoundary[0]);
 	}
 
 	@CrossOrigin(origins = "*")
-	@RequestMapping(path = { "/superapp/admin/miniapp" }, method = { RequestMethod.GET }, produces = {
-			MediaType.APPLICATION_JSON_VALUE })
-	public MiniAppCommandBoundary[] getAllMiniappsCommandsHistory() {
-		return this.commands.getAllCommands().toArray(new MiniAppCommandBoundary[0]);
+	@RequestMapping(
+			path = { "/superapp/admin/miniapp" },
+			method = { RequestMethod.GET },
+			produces = {MediaType.APPLICATION_JSON_VALUE })
+	public MiniAppCommandBoundary[] getAllMiniappsCommandsHistory(
+			@RequestParam(name = "userSuperapp", required = true) String userSuperapp,
+			@RequestParam(name = "userEmail", required = true) String email,
+			@RequestParam(name = "size", required = false, defaultValue = "10") int size,
+			@RequestParam(name = "page", required = false, defaultValue = "0") int page) {
+		return this.commands.getAllCommands(userSuperapp, email, size, page).toArray(new MiniAppCommandBoundary[0]);
 	}
 
 	@CrossOrigin(origins = "*")
-	@RequestMapping(path = { "/superapp/admin/miniapp/{miniAppName}" }, method = { RequestMethod.GET }, produces = {
-			MediaType.APPLICATION_JSON_VALUE })
-	public MiniAppCommandBoundary[] getSpecificMiniappCommandsHistory(@PathVariable("miniAppName") String miniAppName) {
-		return this.commands.getAllMiniAppCommands(miniAppName).toArray(new MiniAppCommandBoundary[0]);
+	@RequestMapping(
+			path = { "/superapp/admin/miniapp/{miniAppName}" },
+			method = { RequestMethod.GET },
+			produces = {MediaType.APPLICATION_JSON_VALUE })
+	public MiniAppCommandBoundary[] getSpecificMiniappCommandsHistory(
+			@PathVariable("miniAppName") String miniAppName,
+			@RequestParam(name = "userSuperapp", required = true) String userSuperapp,
+			@RequestParam(name = "userEmail", required = true) String email,
+			@RequestParam(name = "size", required = false, defaultValue = "10") int size,
+			@RequestParam(name = "page", required = false, defaultValue = "0") int page) {
+		return this.commands.getAllMiniAppCommands(miniAppName, userSuperapp, email, size, page).toArray(new MiniAppCommandBoundary[0]);
 	}
 }

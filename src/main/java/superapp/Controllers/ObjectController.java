@@ -31,8 +31,8 @@ public class ObjectController {
 			RequestMethod.PUT }, consumes = { MediaType.APPLICATION_JSON_VALUE })
 	public void updateObject(@PathVariable("superapp") String superapp,
 			@PathVariable("internalObjectId") String internalObjectId,
-			@RequestParam(name = "userSuperapp", required = false, defaultValue = "") String userSuperapp,
-			@RequestParam(name = "userEmail", required = false, defaultValue = "") String email,
+			@RequestParam(name = "userSuperapp", required = true) String userSuperapp,
+			@RequestParam(name = "userEmail", required = true) String email,
 			@RequestBody ObjectBoundary update) {
 		this.objects.updateObject(superapp, internalObjectId, update, userSuperapp, email);
 	}
@@ -49,8 +49,8 @@ public class ObjectController {
 			RequestMethod.GET }, produces = { MediaType.APPLICATION_JSON_VALUE })
 	public ObjectBoundary retrieveObject(@PathVariable("superapp") String superapp,
 			@PathVariable("internalObjectId") String internalObjectId,
-			@RequestParam(name = "userSuperapp", required = false, defaultValue = "") String userSuperapp,
-			@RequestParam(name = "userEmail", required = false, defaultValue = "") String email) {
+			@RequestParam(name = "userSuperapp", required = true) String userSuperapp,
+			@RequestParam(name = "userEmail", required = true) String email) {
 		return this.objects.getSpecsificObject(superapp, internalObjectId, userSuperapp, email);
 	}
 
@@ -58,8 +58,8 @@ public class ObjectController {
 	@RequestMapping(path = { "/superapp/objects" }, method = { RequestMethod.GET }, produces = {
 			MediaType.APPLICATION_JSON_VALUE })
 	public ObjectBoundary[] getAllObjects(
-			@RequestParam(name = "userSuperapp", required = false, defaultValue = "") String userSuperapp,
-			@RequestParam(name = "userEmail", required = false, defaultValue = "") String email,
+			@RequestParam(name = "userSuperapp", required = true) String userSuperapp,
+			@RequestParam(name = "userEmail", required = true) String email,
 			@RequestParam(name = "size", required = false, defaultValue = "10") int size,
 			@RequestParam(name = "page", required = false, defaultValue = "0") int page) {
 		return this.objects.getAllObjects(userSuperapp, email, size, page).toArray(new ObjectBoundary[0]);

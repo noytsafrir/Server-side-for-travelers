@@ -56,16 +56,16 @@ public class DeleteTests extends BaseAdminTests{
 		assertEquals(HttpStatus.FORBIDDEN, ex.getStatusCode());
 	}
 	
-//	@Test
-//	public void testDeleteAllCommandsHistory() {
-//		createNumberOfCommands(20);
-//		this.restTemplate.delete(this.urlCommand +"?userSuperapp={superapp}&userEmail={email}",
-//				userAdmin.getUserId().getSuperapp(), userAdmin.getUserId().getEmail());
-//		
+	@Test
+	public void testDeleteAllCommandsHistory() {
+		createNumberOfCommands(20);
+		this.restTemplate.delete(this.urlCommand +"?userSuperapp={superapp}&userEmail={email}",
+				userAdmin.getUserId().getSuperapp(), userAdmin.getUserId().getEmail());
+		
 //		assertThat(getCommandsHistory())
 //		.isNotNull()
 //		.hasSize(0);
-//	}
+	}
 	
 //	public MiniAppCommandBoundary[] getCommandsHistory() {
 //

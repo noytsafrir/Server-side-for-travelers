@@ -34,8 +34,8 @@ public class ObjectBindingController {
 	public void bindObject(
 			@PathVariable("superapp")String superapp , 
 			@PathVariable("internalObjectId") String internalObjectId,
-			@RequestParam(name = "userSuperapp", required = false, defaultValue = "") String userSuperapp,
-			@RequestParam(name = "userEmail", required = false, defaultValue = "") String email,
+			@RequestParam(name = "userSuperapp", required = true) String userSuperapp,
+			@RequestParam(name = "userEmail", required = true) String email,
 			@RequestBody SuperAppObjectIdBoundary child){
 	
 		this.objects.bindObjectToParent(superapp, internalObjectId, child, userSuperapp, email);
@@ -48,8 +48,8 @@ public class ObjectBindingController {
 	public ObjectBoundary[] getObjectChildren(
 			@PathVariable("superapp")String superapp , 
 			@PathVariable("internalObjectId") String internalObjectId,
-			@RequestParam(name = "userSuperapp", required = false, defaultValue = "") String userSuperapp,
-			@RequestParam(name = "userEmail", required = false, defaultValue = "") String email,
+			@RequestParam(name = "userSuperapp", required = true) String userSuperapp,
+			@RequestParam(name = "userEmail", required = true) String email,
 			@RequestParam(name = "size", required = false, defaultValue = "10") int size,
 			@RequestParam(name = "page", required = false, defaultValue = "0") int page){
 	
@@ -65,8 +65,8 @@ public class ObjectBindingController {
 	public ObjectBoundary[] getObjectParents(
 			@PathVariable("superapp")String superapp , 
 			@PathVariable("internalObjectId") String internalObjectId,
-			@RequestParam(name = "userSuperapp", required = false, defaultValue = "") String userSuperapp,
-			@RequestParam(name = "userEmail", required = false, defaultValue = "") String email,
+			@RequestParam(name = "userSuperapp", required = true) String userSuperapp,
+			@RequestParam(name = "userEmail", required = true) String email,
 			@RequestParam(name = "size", required = false, defaultValue = "10") int size,
 			@RequestParam(name = "page", required = false, defaultValue = "0") int page){
 
