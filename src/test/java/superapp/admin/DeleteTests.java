@@ -55,7 +55,7 @@ public class DeleteTests extends BaseAdminTests{
 	
 	@Test
 	public void testDeleteAllCommandsHistory() {
-		createNumberOfCommands(20);
+		createNumberOfCommands(20,"miniapp");
 		this.restTemplate.delete(this.urlCommand +"?userSuperapp={superapp}&userEmail={email}",
 				userAdmin.getUserId().getSuperapp(), userAdmin.getUserId().getEmail());
 		

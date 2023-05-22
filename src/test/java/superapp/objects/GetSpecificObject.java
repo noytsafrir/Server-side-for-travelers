@@ -18,6 +18,24 @@ class GetSpecificObject extends BaseObjectsTests {
 	public void init() {
 		super.init();
 	}
+	
+	@Test
+	public void testGetValidSpecificObjectValidSuperAppUser() throws Exception {
+		
+		ObjectBoundary newObject = createObject();
+		ObjectBoundary createResult = this.restTemplate.postForObject(this.url, newObject, ObjectBoundary.class);
+		
+		ObjectBoundary getResult = this.restTemplate.getForObject(
+				this.url + "/" + createResult.getObjectId().getSuperapp() + "/"
+						+ createResult.getObjectId().getInternalObjectId()
+						+ "?userSuperapp={userSuperapp}&userEmail={email}",
+						ObjectBoundary.class, userSuperapp.getUserId().getSuperapp(), userSuperapp.getUserId().getEmail());
+		
+		assertEquals(getResult.getType(), createResult.getType());
+		assertEquals(getResult.getAlias(), createResult.getAlias());
+		assertEquals(getResult.getObjectId().getSuperapp(), createResult.getObjectId().getSuperapp());
+		assertEquals(getResult.getObjectId().getInternalObjectId(), createResult.getObjectId().getInternalObjectId());
+	}
 
 	@Test
 	public void testGetValidSpecificObjectInvalidAdminUser() throws Exception {
@@ -35,23 +53,6 @@ class GetSpecificObject extends BaseObjectsTests {
 		assertEquals(HttpStatus.FORBIDDEN, ex.getStatusCode());
 	}
 
-	@Test
-	public void testGetValidSpecificObjectValidSuperAppUser() throws Exception {
-
-		ObjectBoundary newObject = createObject();
-		ObjectBoundary createResult = this.restTemplate.postForObject(this.url, newObject, ObjectBoundary.class);
-
-		ObjectBoundary getResult = this.restTemplate.getForObject(
-				this.url + "/" + createResult.getObjectId().getSuperapp() + "/"
-						+ createResult.getObjectId().getInternalObjectId()
-						+ "?userSuperapp={userSuperapp}&userEmail={email}",
-				ObjectBoundary.class, userSuperapp.getUserId().getSuperapp(), userSuperapp.getUserId().getEmail());
-
-		assertEquals(getResult.getType(), createResult.getType());
-		assertEquals(getResult.getAlias(), createResult.getAlias());
-		assertEquals(getResult.getObjectId().getSuperapp(), createResult.getObjectId().getSuperapp());
-		assertEquals(getResult.getObjectId().getInternalObjectId(), createResult.getObjectId().getInternalObjectId());
-	}
 
 	@Test
 	public void testGetValidSpecificObjectActiveMiniAppUser() throws Exception {

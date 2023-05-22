@@ -21,6 +21,7 @@ import superapp.boundaries.object.Location;
 import superapp.boundaries.object.ObjectBoundary;
 import superapp.boundaries.object.SuperAppObjectIdBoundary;
 import superapp.boundaries.user.UserId;
+import superapp.logic.MiniAppCommandAsyncService;
 import superapp.logic.MiniAppCommandService;
 import superapp.logic.ObjectServiceWithPagination;
 
@@ -30,7 +31,7 @@ abstract class BaseAdminTests extends BaseControllerTest {
 	protected String urlUser;
 	protected String urlCommand;
 	protected ObjectServiceWithPagination objs;
-	protected MiniAppCommandService miniapps;
+	protected MiniAppCommandAsyncService miniapps;
 
 	@PostConstruct
 	public void init() {
@@ -46,12 +47,14 @@ abstract class BaseAdminTests extends BaseControllerTest {
 	}
 
 	@Autowired
-	public void setMiniapps(MiniAppCommandService miniapp) {
+	public void setMiniapps(MiniAppCommandAsyncService miniapp) {
 		this.miniapps = miniapp;
 	}
 
 	@AfterEach
-	public void tearDown() throws Exception {}
+	public void tearDown() throws Exception {
+		this.miniapps.deleteAllCommands(userAdmin.getUserId().getSuperapp(), userAdmin.getUserId().getEmail());
+	}
 
 	public ObjectBoundary createObject() {
 		ObjectBoundary newObject = new ObjectBoundary();
@@ -86,11 +89,11 @@ abstract class BaseAdminTests extends BaseControllerTest {
 		return allObjects.toArray(new ObjectBoundary[0]);
 	}
 	
-	public MiniAppCommandBoundary createCommand() {
+	public MiniAppCommandBoundary createCommand(String miniappName) {
 		ObjectBoundary obj = createObject();
 		objs.createObject(obj);
 		MiniAppCommandBoundary newCommand = new MiniAppCommandBoundary();
-		MiniAppCommandID commandId = new MiniAppCommandID(this.superAppName, "miniapp", "test");
+		MiniAppCommandID commandId = new MiniAppCommandID(this.superAppName, miniappName, "test");
 		HashMap<String, Object> details = new HashMap<String, Object>();
 
 		newCommand.setCommandId(commandId);
@@ -103,11 +106,11 @@ abstract class BaseAdminTests extends BaseControllerTest {
 	}
 	
 	
-	public MiniAppCommandBoundary[] createNumberOfCommands(int num) {
+	public MiniAppCommandBoundary[] createNumberOfCommands(int num, String miniappName) {
 		List<MiniAppCommandBoundary> allCommands = new ArrayList<MiniAppCommandBoundary>();
 		MiniAppCommandBoundary newCommand;
 		for (int i = 0; i < num; i++) {
-			newCommand = createCommand();
+			newCommand = createCommand(miniappName);
 			newCommand.setCommand("command. " + i);
 			miniapps.invokeCommand(newCommand);
 			allCommands.add(newCommand);

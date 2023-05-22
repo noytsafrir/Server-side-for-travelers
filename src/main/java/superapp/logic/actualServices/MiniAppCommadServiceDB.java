@@ -148,7 +148,6 @@ public class MiniAppCommadServiceDB extends GeneralService implements MiniAppCom
 				.toList();
 	}
 
-	// TODO: finish this method to find by miniapp name
 	@Override
 	public List<MiniAppCommandBoundary> getAllMiniAppCommands(String miniAppName, String userSuperapp, String email,
 			int size, int page) {
@@ -156,7 +155,7 @@ public class MiniAppCommadServiceDB extends GeneralService implements MiniAppCom
 		if (!isValidUserCredentials(user, UserRole.ADMIN, this.users))
 			throw new ForbbidenException(user.getEmail(), "get all miniapp commands");
 
-		return this.miniCrud.findAll(PageRequest.of(page, size, Direction.DESC, "invocationTimestamp", "commandId"))
+		return this.miniCrud.findAllByCommandID_Miniapp(miniAppName,PageRequest.of(page, size, Direction.DESC, "invocationTimestamp", "commandId"))
 				.stream()
 				.map(this.miniConverter::toBoundary)
 				.toList();

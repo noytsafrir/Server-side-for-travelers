@@ -17,7 +17,7 @@ public class GetAllCommandsHistory extends BaseAdminTests{
 	
 	@Test
 	public void testGetAllCommandsHistoryUsingPagination() {
-		MiniAppCommandBoundary[] allCommands = createNumberOfCommands(15);
+		MiniAppCommandBoundary[] allCommands = createNumberOfCommands(15, "miniapp");
 
 		MiniAppCommandBoundary[] commands =
 				this.restTemplate.getForObject(
@@ -26,8 +26,12 @@ public class GetAllCommandsHistory extends BaseAdminTests{
 				userAdmin.getUserId().getSuperapp(), 
 				userAdmin.getUserId().getEmail(), 10,1);
 		
-		assertThat(commands).isNotNull().hasSize(5).usingRecursiveFieldByFieldElementComparator()
+		assertThat(commands)
+		.isNotNull()
+		.hasSize(5)
+		.usingRecursiveFieldByFieldElementComparator()
 		.isSubsetOf(allCommands);
 	}
 	
+	//TODO: getAllWithInvalidAuth
 }
