@@ -29,7 +29,7 @@ abstract class BaseObjectsTests extends BaseControllerTest {
 	@PostConstruct
 	public void init() {
 		super.init();
-		this.url = this.baseUrl + "/objects";
+		this.url = this.baseUrl + "objects";
 		this.deleteUrl = this.adminUrl + "objects";
 	}
 

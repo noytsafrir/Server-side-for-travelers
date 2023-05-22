@@ -1,5 +1,6 @@
 package superapp.logic.actualServices;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -17,14 +18,17 @@ import superapp.dal.UserCrud;
 import superapp.data.UserEntity;
 import superapp.data.UserPrimaryKeyId;
 import superapp.data.UserRole;
+import superapp.exceptions.DeprecatedException;
+import superapp.exceptions.ForbbidenException;
 import superapp.exceptions.InvalidInputException;
 import superapp.exceptions.ResourceAlreadyExistException;
 import superapp.exceptions.ResourceNotFoundException;
-import superapp.logic.UsersService;
+import superapp.logic.GeneralService;
+import superapp.logic.UsersServiceNew;
 import superapp.utils.Validator;
 
 @Service // spring create an instance from this class so we can use it
-public class UserServiceDB implements UsersService {
+public class UserServiceDB extends GeneralService implements UsersServiceNew {
 	private UserCrud userCrud;
 	private UserConverter userConverter;
 	private String superappName;
@@ -122,8 +126,18 @@ public class UserServiceDB implements UsersService {
 	}
 
 	@Override
-	@Transactional
+	@Deprecated
 	public void deleteAllUsers() {
+		throw new DeprecatedException(LocalDate.of(2023, 5, 22));
+	}
+	
+	
+	@Override
+	@Transactional
+	public void deleteAllUsers(String superapp, String email) {
+		UserPrimaryKeyId user = new UserPrimaryKeyId(superapp, email);
+		if (!isValidUserCredentials(user, UserRole.ADMIN, this.userCrud))
+			throw new ForbbidenException(user.getEmail(), "delete all objects");
 		this.userCrud.deleteAll();
 	}
 }

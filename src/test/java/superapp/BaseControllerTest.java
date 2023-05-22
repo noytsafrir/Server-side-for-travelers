@@ -98,7 +98,6 @@ public abstract class BaseControllerTest {
 	}
 	
 	@Test
-	public final void contextLoads() {
-	}
+	public final void contextLoads() {}
 
 }
