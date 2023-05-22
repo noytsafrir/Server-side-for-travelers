@@ -11,26 +11,32 @@ import org.springframework.web.bind.annotation.RestController;
 
 import superapp.boundaries.command.MiniAppCommandBoundary;
 import superapp.boundaries.command.MiniAppCommandID;
-import superapp.logic.MiniAppCommandService;
+import superapp.logic.MiniAppCommandAsyncService;
 
 @RestController
 public class MiniappCommandController {
-	public void setService(MiniAppCommandService service) {
-		this.service = service;
-	}
+
+
+	private MiniAppCommandAsyncService service;
 
 	@Autowired
-	private MiniAppCommandService service;
 
+	public void setService(MiniAppCommandAsyncService service) {
+		this.service = service;
+	}
+	
 	@RequestMapping(path = { "/superapp/miniapp/{miniAppName}" }, method = { RequestMethod.POST }, produces = {
 			MediaType.APPLICATION_JSON_VALUE }, consumes = { MediaType.APPLICATION_JSON_VALUE })
 	public Object invokeCommand(@PathVariable("miniAppName") String miniApp,
 			@RequestParam(name = "async", required = false, defaultValue = "false") boolean async,
 			@RequestBody MiniAppCommandBoundary command) {
-		System.err.println(async);
 		MiniAppCommandID cId = new MiniAppCommandID();
 		cId.setMiniapp(miniApp);
 		command.setCommandId(cId);
-		return this.service.invokeCommand(command);
+		
+		if (async)
+			return service.invokeCommandAsync(command);
+		else
+			return this.service.invokeCommand(command);
 	}
 }

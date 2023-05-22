@@ -3,6 +3,7 @@ package superapp.logic.actualServices;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -16,6 +17,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import superapp.boundaries.command.InvocationUser;
 import superapp.boundaries.command.MiniAppCommandBoundary;
+import superapp.boundaries.command.MiniAppCommandID;
 import superapp.boundaries.command.TargetObject;
 import superapp.converters.MiniAppCommandConverter;
 import superapp.dal.MiniAppCommandCrud;
@@ -100,24 +102,27 @@ public class MiniAppCommadServiceDB extends GeneralService implements MiniAppCom
 		command.setInvocationTimestamp(new Date());
 		command.getCommandId().setSuperapp(superAppName);
 		command.getCommandId().setInternalCommandId(UUID.randomUUID().toString());
-//		if (command.getData() == null) {
-//			message.setData(new HashMap<>());
-//		}
-//		message.getData().put("status", "waiting...");
 		
+		if (command.getCommandId() == null) {
+			MiniAppCommandID id;
+			id = new MiniAppCommandID();
+			command.setCommandId(id);
+		}
+		if (command.getCommandAttributes() == null) {
+			command.setCommandAttributes(new HashMap<>());
+		}
+
+		command.getCommandAttributes().put("status", "waiting...");
+
 		try {
-			String json = this.jackson
-				.writeValueAsString(command);
-			
-			this.jmsTemplate
-				.convertAndSend("asyncMessageQueue", json);
-			
+			String json = this.jackson.writeValueAsString(command);
+			this.jmsTemplate.convertAndSend("asyncCommandsQueue", json);
 			return command;
 		}catch (Exception e) {
 			throw new RuntimeException(e);
 		}
 	}
-	
+
 	// TODO: change the function, this is the old version
 	@Override
 	public List<MiniAppCommandBoundary> getAllCommands(String userSuperapp, String email, int size, int page) {
