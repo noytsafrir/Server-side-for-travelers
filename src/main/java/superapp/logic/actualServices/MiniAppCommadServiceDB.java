@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import jakarta.annotation.PostConstruct;
 import superapp.boundaries.command.InvocationUser;
 import superapp.boundaries.command.MiniAppCommandBoundary;
 import superapp.boundaries.command.MiniAppCommandID;
@@ -69,7 +70,18 @@ public class MiniAppCommadServiceDB extends GeneralService implements MiniAppCom
 	public void setMiniConverter(MiniAppCommandConverter miniConverter) {
 		this.miniConverter = miniConverter;
 	}
+	
+	@Autowired
+	public void setJmsTemplate(JmsTemplate jmsTemplate) {
+		this.jmsTemplate = jmsTemplate;
+		this.jmsTemplate.setDeliveryDelay(10000L);
+	}
 
+	@PostConstruct
+	public void init() {
+		this.jackson = new ObjectMapper();
+	}
+	
 	@Value("${spring.application.name:defaultValue}")
 	public void setSuperAppName(String superAppName) {
 		this.superAppName = superAppName;
@@ -99,6 +111,7 @@ public class MiniAppCommadServiceDB extends GeneralService implements MiniAppCom
 	// TODO: write this function (async logic)
 	@Override
 	public Object invokeCommandAsync(MiniAppCommandBoundary command) {
+		System.err.println("sdfasdfsadfsadf");
 		command.setInvocationTimestamp(new Date());
 		command.getCommandId().setSuperapp(superAppName);
 		command.getCommandId().setInternalCommandId(UUID.randomUUID().toString());

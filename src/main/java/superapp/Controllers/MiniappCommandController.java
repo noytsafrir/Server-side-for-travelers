@@ -25,14 +25,21 @@ public class MiniappCommandController {
 		this.service = service;
 	}
 	
-	@RequestMapping(path = { "/superapp/miniapp/{miniAppName}" }, method = { RequestMethod.POST }, produces = {
-			MediaType.APPLICATION_JSON_VALUE }, consumes = { MediaType.APPLICATION_JSON_VALUE })
-	public Object invokeCommand(@PathVariable("miniAppName") String miniApp,
+	@RequestMapping(
+			path = { "/superapp/miniapp/{miniAppName}" }, 
+			method = { RequestMethod.POST }, 
+			produces = {MediaType.APPLICATION_JSON_VALUE }, 
+			consumes = {MediaType.APPLICATION_JSON_VALUE })
+	public Object invokeCommand(
+			@PathVariable("miniAppName") String miniApp,
 			@RequestParam(name = "async", required = false, defaultValue = "false") boolean async,
 			@RequestBody MiniAppCommandBoundary command) {
 		MiniAppCommandID cId = new MiniAppCommandID();
 		cId.setMiniapp(miniApp);
 		command.setCommandId(cId);
+		
+		System.err.println("command = " + command);
+		System.err.println("async = " + async);
 		
 		if (async)
 			return service.invokeCommandAsync(command);
