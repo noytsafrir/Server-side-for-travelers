@@ -35,5 +35,5 @@ public interface ObjectCrud extends ListCrudRepository<ObjectEntity, ObjectPrima
             @Param("active") boolean active,
             Pageable pageable);
     
-    //findAllByParentsObjects_objectId (many to many--> so have to be findAll
+    //findAllByParentsObjects_objectId (many to many--> so have to be findAll)
 }

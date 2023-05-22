@@ -156,6 +156,15 @@ public class ObjectServicesDB extends GeneralService implements ObjectServiceWit
 
 		return rv;
 	}
+	
+	@Override
+	public void deleteAllObject(String userSuperapp, String email) {
+		UserPrimaryKeyId user = new UserPrimaryKeyId(userSuperapp, email);
+		if (!isValidUserCredentials(user, UserRole.ADMIN, this.users))
+			throw new ForbbidenException(user.getEmail(), "delete all objects");
+		this.objectCrud.deleteAll();
+	}
+	// -----------------------------------------------------------------------------------------------------------------
 
 
 	@Override
@@ -246,14 +255,6 @@ public class ObjectServicesDB extends GeneralService implements ObjectServiceWit
 		return parents.stream().map(this.converter::toBoundary).toList();
 	}
 
-	@Override
-	public void deleteAllObject(String userSuperapp, String email) {
-		UserPrimaryKeyId user = new UserPrimaryKeyId(userSuperapp, email);
-		if (!isValidUserCredentials(user, UserRole.ADMIN, this.users))
-			throw new ForbbidenException(user.getEmail(), "delete all objects");
-
-		this.objectCrud.deleteAll();
-	}
 
 	public List<ObjectEntity> filterActiveObjects(List<ObjectEntity> objects) {
 		return objects.stream().filter(obj -> obj.getActive()).toList();
