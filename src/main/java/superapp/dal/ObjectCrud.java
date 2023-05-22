@@ -17,23 +17,19 @@ public interface ObjectCrud extends ListCrudRepository<ObjectEntity, ObjectPrima
 			@Param("active") boolean active,
 			Pageable pageable);
 	
-    public List<ObjectEntity> findParentsByObjectId(
-            @Param("objectId") ObjectPrimaryKeyId objectId,
-            Pageable pageable);
-	
-    public List<ObjectEntity> findChildrenByObjectId(
-            @Param("objectId") ObjectPrimaryKeyId objectId,
+    public List<ObjectEntity> findAllByParents_objectId(
+            @Param("objectId") ObjectEntity object,
             Pageable pageable);
     
-    public List<ObjectEntity> findByObjectIdAndParents_Active(
-            @Param("objectId") ObjectPrimaryKeyId objectId, 
-            @Param("active") boolean active,
-            Pageable pageable);
+    public List<ObjectEntity> findAllByChildren_objectId(
+          @Param("objectId") ObjectEntity object,
+          Pageable pageable);
     
-    public List<ObjectEntity> findByObjectIdAndChildren_Active(
-            @Param("objectId") ObjectPrimaryKeyId objectId, 
-            @Param("active") boolean active,
-            Pageable pageable);
+    public List<ObjectEntity> findAllByActiveIsTrueAndParents_objectId(
+    		@Param("objectId") ObjectEntity object, 
+    		Pageable pageable);
     
-    //findAllByParentsObjects_objectId (many to many--> so have to be findAll)
+    public List<ObjectEntity> findAllByActiveIsTrueAndChildren_objectId(
+            @Param("objectId") ObjectEntity object, 
+            Pageable pageable);
 }

@@ -1,6 +1,7 @@
 package superapp.objects;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import org.junit.jupiter.api.Test;
 
@@ -10,7 +11,6 @@ import org.springframework.web.client.HttpClientErrorException;
 import jakarta.annotation.PostConstruct;
 
 import superapp.boundaries.object.ObjectBoundary;
-
 
 class GetSpecificObject extends BaseObjectsTests {
 
@@ -25,15 +25,14 @@ class GetSpecificObject extends BaseObjectsTests {
 		ObjectBoundary newObject = createObject();
 		ObjectBoundary createResult = this.restTemplate.postForObject(this.url, newObject, ObjectBoundary.class);
 
-		try {
+		HttpClientErrorException ex = assertThrows(HttpClientErrorException.class, () -> {
 			this.restTemplate.getForObject(
 					this.url + "/" + createResult.getObjectId().getSuperapp() + "/"
 							+ createResult.getObjectId().getInternalObjectId()
 							+ "?userSuperapp={userSuperapp}&userEmail={email}",
 					ObjectBoundary.class, userAdmin.getUserId().getSuperapp(), userAdmin.getUserId().getEmail());
-		} catch (HttpClientErrorException ex) {
-			assertEquals(HttpStatus.FORBIDDEN, ex.getStatusCode());
-		}
+		});
+		assertEquals(HttpStatus.FORBIDDEN, ex.getStatusCode());
 	}
 
 	@Test
@@ -80,28 +79,25 @@ class GetSpecificObject extends BaseObjectsTests {
 		newObject.setActive(false);
 		ObjectBoundary createResult = this.restTemplate.postForObject(this.url, newObject, ObjectBoundary.class);
 
-		try {
+		HttpClientErrorException ex = assertThrows(HttpClientErrorException.class, () -> {
 			this.restTemplate.getForObject(
 					this.url + "/" + createResult.getObjectId().getSuperapp() + "/"
 							+ createResult.getObjectId().getInternalObjectId()
 							+ "?userSuperapp={userSuperapp}&userEmail={email}",
 					ObjectBoundary.class, userMiniapp.getUserId().getSuperapp(), userMiniapp.getUserId().getEmail());
-		} catch (HttpClientErrorException ex) {
-			assertEquals(HttpStatus.NOT_FOUND, ex.getStatusCode());
-		}
+		});
+		assertEquals(HttpStatus.NOT_FOUND, ex.getStatusCode());
 	}
 
 	@Test
 	public void testGetInValidSpecificObject() throws Exception {
-
-		try {
+		HttpClientErrorException ex = assertThrows(HttpClientErrorException.class, () -> {
 			this.restTemplate.getForObject(
 					this.url + "/" + this.superAppName + "/" + "UnexistId"
 							+ "?userSuperapp={userSuperapp}&userEmail={email}",
 					ObjectBoundary.class, userSuperapp.getUserId().getSuperapp(), userSuperapp.getUserId().getEmail());
-		} catch (HttpClientErrorException ex) {
-			assertEquals(HttpStatus.NOT_FOUND, ex.getStatusCode());
-		}
+		});
+		assertEquals(HttpStatus.NOT_FOUND, ex.getStatusCode());
 	}
 
 }

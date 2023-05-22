@@ -2,6 +2,7 @@ package superapp.objects;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -94,14 +95,13 @@ class CreateUpdateObjects extends BaseObjectsTests {
 		newObject.setAlias("updateAlias");
 		newObject.setType("updateType");
 
-		try {
+		HttpClientErrorException ex = assertThrows(HttpClientErrorException.class, ()-> {
 			this.restTemplate.put(
 					this.url + "/" + createResult.getObjectId().getSuperapp() + "/"
 							+ createResult.getObjectId().getInternalObjectId()
 							+ "?userSuperapp={userSuperapp}&userEmail={email}",
 					newObject, userMiniapp.getUserId().getSuperapp(), userMiniapp.getUserId().getEmail());
-		} catch (HttpClientErrorException ex) {
+			});
 			assertEquals(HttpStatus.FORBIDDEN, ex.getStatusCode());
-		}
 	}
 }

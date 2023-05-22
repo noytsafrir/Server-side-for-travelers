@@ -2,6 +2,7 @@ package superapp.objects;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import org.junit.jupiter.api.Test;
 
@@ -56,13 +57,12 @@ class GetAllObjectsWithPagination extends BaseObjectsTests {
 
 	@Test
 	public void testGetAllObjectAdminUser() throws Exception {
-		try {
+		
+		HttpClientErrorException ex = assertThrows(HttpClientErrorException.class, ()-> {
 			this.restTemplate.getForObject(this.url + "?userSuperapp={userSuperapp}&userEmail={email}",
 					ObjectBoundary[].class, userAdmin.getUserId().getSuperapp(), userAdmin.getUserId().getEmail());
-
-		} catch (HttpClientErrorException ex) {
+			});
 			assertEquals(HttpStatus.FORBIDDEN, ex.getStatusCode());
-		}
 	}
 
 	@Test

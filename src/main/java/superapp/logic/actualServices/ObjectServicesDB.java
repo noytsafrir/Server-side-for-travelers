@@ -121,11 +121,12 @@ public class ObjectServicesDB extends GeneralService implements ObjectServiceWit
 	public ObjectBoundary getSpecsificObject(String ObjectSuperapp, String internalObjectId, String userSuperapp,
 			String email) {
 		
-		boolean isMiniappUser;
+		boolean isMiniappUser, isSuperappUser;
 		UserEntity user = getUser(new UserPrimaryKeyId(userSuperapp, email), users);
 		isMiniappUser = user.getRole().equals(UserRole.MINIAPP_USER.toString());
+		isSuperappUser = user.getRole().equals(UserRole.SUPERAPP_USER.toString());
 		
-		if (!isMiniappUser && !user.getRole().equals(UserRole.SUPERAPP_USER.toString()))
+		if (!isMiniappUser && !isSuperappUser)
 			throw new ForbbidenException(user.getUserId().getEmail(), "find object");
 		
 		ObjectPrimaryKeyId pkid = new ObjectPrimaryKeyId(ObjectSuperapp, internalObjectId);
@@ -140,13 +141,16 @@ public class ObjectServicesDB extends GeneralService implements ObjectServiceWit
 
 	@Override
 	public List<ObjectBoundary> getAllObjects(String userSuperapp, String email, int size, int page) {
+		boolean isMiniappUser, isSuperappUser;
 		List<ObjectBoundary> rv;
-
 		UserEntity user = getUser(new UserPrimaryKeyId(userSuperapp, email), users);
-		if (user.getRole().equals(UserRole.SUPERAPP_USER.toString())) {
+		isMiniappUser = user.getRole().equals(UserRole.MINIAPP_USER.toString());
+		isSuperappUser = user.getRole().equals(UserRole.SUPERAPP_USER.toString());
+
+		if (isSuperappUser) {
 			rv = this.objectCrud.findAll(PageRequest.of(page, size, Direction.DESC, "creationTimestamp", "objectId"))
 					.stream().map(this.converter::toBoundary).toList();
-		} else if (user.getRole().equals(UserRole.MINIAPP_USER.toString())) {
+		} else if (isMiniappUser) {
 			rv = this.objectCrud
 					.findAllByActive(true, PageRequest.of(page, size, Direction.DESC, "creationTimestamp", "objectId"))
 					.stream().map(this.converter::toBoundary).toList();
@@ -157,20 +161,11 @@ public class ObjectServicesDB extends GeneralService implements ObjectServiceWit
 		return rv;
 	}
 	
-	@Override
-	public void deleteAllObject(String userSuperapp, String email) {
-		UserPrimaryKeyId user = new UserPrimaryKeyId(userSuperapp, email);
-		if (!isValidUserCredentials(user, UserRole.ADMIN, this.users))
-			throw new ForbbidenException(user.getEmail(), "delete all objects");
-		this.objectCrud.deleteAll();
-	}
-	// -----------------------------------------------------------------------------------------------------------------
-
 
 	@Override
 	public void bindObjectToParent(String superapp, String internalObjectId, SuperAppObjectIdBoundary childId,
 			String userSuperapp, String email) {
-
+		
 		UserPrimaryKeyId user = new UserPrimaryKeyId(userSuperapp, email);
 		if (!isValidUserCredentials(user, UserRole.SUPERAPP_USER, this.users))
 			throw new ForbbidenException(user.getEmail(), "bind objects");
@@ -196,11 +191,12 @@ public class ObjectServicesDB extends GeneralService implements ObjectServiceWit
 	public List<ObjectBoundary> getAllChildrenOfObject(String superapp, String internalObjectId, String userSuperapp,
 			String email, int size, int page) {
 
-		boolean isMiniappUser;
+		boolean isMiniappUser, isSuperappUser;
 		UserEntity user = getUser(new UserPrimaryKeyId(userSuperapp, email), users);
 		isMiniappUser = user.getRole().equals(UserRole.MINIAPP_USER.toString());
+		isSuperappUser = user.getRole().equals(UserRole.SUPERAPP_USER.toString());
 
-		if (isMiniappUser && !user.getRole().equals(UserRole.SUPERAPP_USER.toString()))
+		if (!isMiniappUser && !isSuperappUser)
 			throw new ForbbidenException(user.getUserId().getEmail(), "find children objects");
 
 		ObjectPrimaryKeyId parentPk = new ObjectPrimaryKeyId(superapp, internalObjectId);
@@ -210,56 +206,69 @@ public class ObjectServicesDB extends GeneralService implements ObjectServiceWit
 
 		List<ObjectEntity> children = new ArrayList<>();
 
-		if (user.getRole().equals(UserRole.SUPERAPP_USER.toString())) {
-			children = this.objectCrud.findChildrenByObjectId(parentPk,
-					PageRequest.of(page, size, Direction.DESC, "creationTimestamp", "objectId"));
+		if (isSuperappUser) {
+			children = this.objectCrud.findAllByParents_objectId(parent,
+			PageRequest.of(page, size, Direction.DESC, "creationTimestamp", "objectId"));
+			
 		} else if (isMiniappUser) {
 			if (!parent.getActive())
 				throw new ResourceNotFoundException(internalObjectId, "find parent object");
-			children = this.objectCrud.findByObjectIdAndChildren_Active(parentPk, true,
+			children = this.objectCrud.findAllByActiveIsTrueAndParents_objectId(parent,
 					PageRequest.of(page, size, Direction.DESC, "creationTimestamp", "objectId"));
 		}
 
-		return children.stream().map(this.converter::toBoundary).toList();
+		return children
+				.stream()
+				.map(this.converter::toBoundary)
+				.toList();
 	}
 
 	@Override
 	public List<ObjectBoundary> getAllParentsOfObject(String superapp, String internalObjectId, String userSuperapp,
 			String email, int size, int page) {
 
-		boolean isMiniappUser;
+		boolean isMiniappUser, isSuperappUser;
 		UserEntity user = getUser(new UserPrimaryKeyId(userSuperapp, email), users);
 		isMiniappUser = user.getRole().equals(UserRole.MINIAPP_USER.toString());
+		isSuperappUser = user.getRole().equals(UserRole.SUPERAPP_USER.toString());
 
-		if (isMiniappUser && !user.getRole().equals(UserRole.SUPERAPP_USER.toString()))
+		if (!isMiniappUser && !isSuperappUser)
 			throw new ForbbidenException(user.getUserId().getEmail(), "find parents objects");
 
 		ObjectPrimaryKeyId childPk = new ObjectPrimaryKeyId(superapp, internalObjectId);
-
 		ObjectEntity child = this.objectCrud.findById(childPk)
 				.orElseThrow(() -> new ResourceNotFoundException(childPk, "find child object"));
 
 		List<ObjectEntity> parents = new ArrayList<>();
-
-		if (!user.getRole().equals(UserRole.SUPERAPP_USER.toString())) {
-			parents = this.objectCrud.findParentsByObjectId(childPk,
+		
+		if (isMiniappUser && !child.getActive()) 
+			throw new ResourceNotFoundException(internalObjectId, "find child object");
+		else
+				
+		if (isSuperappUser) {
+			parents = this.objectCrud.findAllByChildren_objectId(child,
 					PageRequest.of(page, size, Direction.DESC, "creationTimestamp", "objectId"));
 		} else if (isMiniappUser) {
 			if (!child.getActive())
 				throw new ResourceNotFoundException(internalObjectId, "find child object");
 
-			parents = this.objectCrud.findByObjectIdAndParents_Active(childPk, true,
+			parents = this.objectCrud.findAllByActiveIsTrueAndChildren_objectId(child,
 					PageRequest.of(page, size, Direction.DESC, "creationTimestamp", "objectId"));
 		}
 
 		return parents.stream().map(this.converter::toBoundary).toList();
 	}
 
-
-	public List<ObjectEntity> filterActiveObjects(List<ObjectEntity> objects) {
-		return objects.stream().filter(obj -> obj.getActive()).toList();
+	
+	@Override
+	public void deleteAllObject(String userSuperapp, String email) {
+		UserPrimaryKeyId user = new UserPrimaryKeyId(userSuperapp, email);
+		if (!isValidUserCredentials(user, UserRole.ADMIN, this.users))
+			throw new ForbbidenException(user.getEmail(), "delete all objects");
+		this.objectCrud.deleteAll();
 	}
-
+	
+	
 	@Deprecated
 	@Override
 	public ObjectBoundary updateObject(String superapp, String internalObjectId, ObjectBoundary update) {
