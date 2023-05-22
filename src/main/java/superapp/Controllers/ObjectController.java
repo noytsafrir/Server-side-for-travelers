@@ -1,7 +1,5 @@
 package superapp.Controllers;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -23,20 +21,16 @@ public class ObjectController {
 		return objects;
 	}
 
-	@Autowired // when you will make the instance - you should implement this class
+	@Autowired
 	public void setObjects(ObjectServiceWithPagination objects) {
 		this.objects = objects;
 	}
 
 	@CrossOrigin(origins = "*")
-	@RequestMapping(
-			path = {"/superapp/objects/{superapp}/{internalObjectId}"}, 
-			method = {RequestMethod.PUT }, 
-			consumes = { MediaType.APPLICATION_JSON_VALUE })
-	public void updateObject(
-			@PathVariable("superapp") String superapp,
+	@RequestMapping(path = { "/superapp/objects/{superapp}/{internalObjectId}" }, method = {
+			RequestMethod.PUT }, consumes = { MediaType.APPLICATION_JSON_VALUE })
+	public void updateObject(@PathVariable("superapp") String superapp,
 			@PathVariable("internalObjectId") String internalObjectId,
-			
 			@RequestParam(name = "userSuperapp", required = false, defaultValue = "") String userSuperapp,
 			@RequestParam(name = "userEmail", required = false, defaultValue = "") String email,
 			@RequestBody ObjectBoundary update) {
@@ -47,9 +41,7 @@ public class ObjectController {
 	@RequestMapping(path = { "/superapp/objects" }, method = { RequestMethod.POST }, produces = {
 			MediaType.APPLICATION_JSON_VALUE }, consumes = { MediaType.APPLICATION_JSON_VALUE })
 	public ObjectBoundary createObject(@RequestBody ObjectBoundary newObject) {
-
 		return this.objects.createObject(newObject);
-
 	}
 
 	@CrossOrigin(origins = "*")
@@ -59,7 +51,6 @@ public class ObjectController {
 			@PathVariable("internalObjectId") String internalObjectId,
 			@RequestParam(name = "userSuperapp", required = false, defaultValue = "") String userSuperapp,
 			@RequestParam(name = "userEmail", required = false, defaultValue = "") String email) {
-
 		return this.objects.getSpecsificObject(superapp, internalObjectId, userSuperapp, email);
 	}
 
@@ -71,7 +62,6 @@ public class ObjectController {
 			@RequestParam(name = "userEmail", required = false, defaultValue = "") String email,
 			@RequestParam(name = "size", required = false, defaultValue = "10") int size,
 			@RequestParam(name = "page", required = false, defaultValue = "0") int page) {
-		
 		return this.objects.getAllObjects(userSuperapp, email, size, page).toArray(new ObjectBoundary[0]);
 	}
 
