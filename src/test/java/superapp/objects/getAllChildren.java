@@ -4,44 +4,20 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort.Direction;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.client.HttpClientErrorException;
 
 import jakarta.annotation.PostConstruct;
 import superapp.boundaries.object.ObjectBoundary;
-import superapp.boundaries.user.UserBoundary;
-import superapp.converters.ObjectConvertor;
-import superapp.dal.ObjectCrud;
-import superapp.data.ObjectEntity;
+
 
 class getAllChildren extends BaseObjectsTests {
-
-	private ObjectCrud objectCrud;
-	private ObjectConvertor converter;
-
-	@Autowired // put in the parameter an instance
-	public void setObjectCrud(ObjectCrud oc) {
-		this.objectCrud = oc;
-	}
-
-	@Autowired
-	public void setObjectConverter(ObjectConvertor convertor) {
-		this.converter = convertor;
-	}
 
 	@PostConstruct
 	public void init() {
 		super.init();
 	}
-
 
 	@Test
 	public void testGetChildrenOfObjectSuperappSmallPagination(){

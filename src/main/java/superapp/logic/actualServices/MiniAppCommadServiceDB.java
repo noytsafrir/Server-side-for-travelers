@@ -1,7 +1,6 @@
 package superapp.logic.actualServices;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -10,6 +9,8 @@ import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.stereotype.Service;
 
@@ -111,7 +112,6 @@ public class MiniAppCommadServiceDB extends GeneralService implements MiniAppCom
 	// TODO: write this function (async logic)
 	@Override
 	public Object invokeCommandAsync(MiniAppCommandBoundary command) {
-		System.err.println("sdfasdfsadfsadf");
 		command.setInvocationTimestamp(new Date());
 		command.getCommandId().setSuperapp(superAppName);
 		command.getCommandId().setInternalCommandId(UUID.randomUUID().toString());
@@ -136,28 +136,30 @@ public class MiniAppCommadServiceDB extends GeneralService implements MiniAppCom
 		}
 	}
 
-	// TODO: change the function, this is the old version
 	@Override
 	public List<MiniAppCommandBoundary> getAllCommands(String userSuperapp, String email, int size, int page) {
-		List<MiniAppCommandEntity> entities = this.miniCrud.findAll();
-		List<MiniAppCommandBoundary> rv = new ArrayList<>();
-		for (MiniAppCommandEntity m : entities) {
-			rv.add(this.miniConverter.toBoundary(m));
-		}
-		return rv;
+		UserPrimaryKeyId user = new UserPrimaryKeyId(userSuperapp, email);
+		if (!isValidUserCredentials(user, UserRole.ADMIN, this.users))
+			throw new ForbbidenException(user.getEmail(), "get all miniapp commands");
+
+		return this.miniCrud.findAll(PageRequest.of(page, size, Direction.DESC, "invocationTimestamp", "commandId"))
+				.stream()
+				.map(this.miniConverter::toBoundary)
+				.toList();
 	}
 
-	// TODO: change the function, this is the old version
+	// TODO: finish this method to find by miniapp name
 	@Override
 	public List<MiniAppCommandBoundary> getAllMiniAppCommands(String miniAppName, String userSuperapp, String email,
 			int size, int page) {
-		List<MiniAppCommandEntity> entities = this.miniCrud.findAll();
-		List<MiniAppCommandBoundary> rv = new ArrayList<>();
-		for (MiniAppCommandEntity m : entities) {
-			if (m.getCommandID().getMiniapp().equals(miniAppName))
-				rv.add(this.miniConverter.toBoundary(m));
-		}
-		return rv ;
+		UserPrimaryKeyId user = new UserPrimaryKeyId(userSuperapp, email);
+		if (!isValidUserCredentials(user, UserRole.ADMIN, this.users))
+			throw new ForbbidenException(user.getEmail(), "get all miniapp commands");
+
+		return this.miniCrud.findAll(PageRequest.of(page, size, Direction.DESC, "invocationTimestamp", "commandId"))
+				.stream()
+				.map(this.miniConverter::toBoundary)
+				.toList();
 	}
 	
 	@Override

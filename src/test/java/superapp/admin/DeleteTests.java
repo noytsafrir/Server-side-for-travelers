@@ -4,17 +4,14 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import java.util.List;
-
 import org.junit.jupiter.api.Test;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort.Direction;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.web.client.HttpClientErrorException;
 
 import jakarta.annotation.PostConstruct;
 import superapp.boundaries.command.MiniAppCommandBoundary;
-import superapp.boundaries.object.ObjectBoundary;
+
 
 
 public class DeleteTests extends BaseAdminTests{
@@ -62,21 +59,37 @@ public class DeleteTests extends BaseAdminTests{
 		this.restTemplate.delete(this.urlCommand +"?userSuperapp={superapp}&userEmail={email}",
 				userAdmin.getUserId().getSuperapp(), userAdmin.getUserId().getEmail());
 		
-//		assertThat(getCommandsHistory())
-//		.isNotNull()
-//		.hasSize(0);
+		assertThat(getCommandsHistory())
+		.isNotNull()
+		.hasSize(0);
 	}
 	
-//	public MiniAppCommandBoundary[] getCommandsHistory() {
+	public MiniAppCommandBoundary[] getCommandsHistory() {
+		
+		MiniAppCommandBoundary[] allCommands =
+				this.restTemplate.getForObject(
+				this.urlCommand + "?userSuperapp={userSuperapp}&userEmail={email}&size={size}&page={page}", 
+				MiniAppCommandBoundary[].class,
+				userAdmin.getUserId().getSuperapp(), 
+				userAdmin.getUserId().getEmail());
+		return allCommands;
+	}
+//	
+//	public MiniAppCommandBoundary createCommand() {
+//		ObjectBoundary obj = createObject();
+//		objs.createObject(obj);
+//		MiniAppCommandBoundary newCommand = new MiniAppCommandBoundary();
+//		MiniAppCommandID commandId = new MiniAppCommandID(this.superAppName, "miniapp", "test");
+//		HashMap<String, Object> details = new HashMap<String, Object>();
 //
-//		MiniAppCommandBoundary[] allCommands =
-//				this.restTemplate.getForObject(
-//				this.urlCommand + "?userSuperapp={userSuperapp}&userEmail={email}&size={size}&page={page}", 
-//				MiniAppCommandBoundary[].class,
-//				userAdmin.getUserId().getSuperapp(), 
-//				userAdmin.getUserId().getEmail());
-//		return allCommands;
+//		newCommand.setCommandId(commandId);
+//		newCommand.setCommand("command");
+//		newCommand.setTargetObject(new TargetObject(obj.getObjectId()));
+//		newCommand.setInvocationTimestamp(new Date());
+//		newCommand.setInvokedBy(new InvocationUser(userMiniapp.getUserId()));
+//		newCommand.setCommandAttributes(details);
+//		System.err.println(newCommand.toString());
+//		return newCommand;
 //	}
-	
-	
+//	
 }

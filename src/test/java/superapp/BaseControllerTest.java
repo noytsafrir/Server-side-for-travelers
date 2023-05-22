@@ -12,9 +12,8 @@ import jakarta.annotation.PostConstruct;
 import superapp.boundaries.user.NewUserBoundary;
 import superapp.boundaries.user.UserBoundary;
 import superapp.boundaries.user.UserId;
-import superapp.data.UserPrimaryKeyId;
 import superapp.data.UserRole;
-import superapp.logic.UsersService;
+import superapp.logic.UsersServiceNew;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 public abstract class BaseControllerTest {
@@ -30,7 +29,7 @@ public abstract class BaseControllerTest {
 	protected UserBoundary userAdmin;
 	protected UserBoundary userSuperapp;
 	protected UserBoundary userMiniapp;
-	protected UsersService users;
+	protected UsersServiceNew users;
 
 	
 	@PostConstruct
@@ -40,18 +39,43 @@ public abstract class BaseControllerTest {
 		this.adminUrl = this.baseUrl + "admin/";
 		this.userUrl = this.baseUrl + "/users";
 		this.loginUrl = this.userUrl + "/login";
-		users.deleteAllUsers();
-		setUserAdmin();
-		setUserSuperapp();
-		setUserMiniapp();
+		loginUsers();
+		deleteAllUsers();
+		setUsers();
 	}	
 	
-	
 	@Autowired
-	public void setUsers(UsersService users) {
+	public void setUsers(UsersServiceNew users) {
 		this.users = users;
 	}
 	
+	@LocalServerPort
+	public void setPort(int port) {
+		this.port = port;
+	}
+
+	@Value("${spring.application.name:defaultValue}")
+	public void setSuperAppName(String superAppName) {
+		this.superAppName = superAppName;
+	}
+	
+	public void loginUsers () {
+		this.userAdmin = users.login(this.superAppName, "admin@test.com");
+		this.userSuperapp = users.login(this.superAppName, "superapp@test.com");
+		this.userMiniapp = users.login(this.superAppName, "miniapp@test.com");
+	}
+	
+	public void deleteAllUsers() {
+		users.deleteAllUsers(userAdmin.getUserId().getSuperapp(), userAdmin.getUserId().getEmail());
+	}
+	
+	public void setUsers() {
+		setUserAdmin();
+		setUserSuperapp();
+		setUserMiniapp();
+	}
+	
+
 	public void setUserAdmin(){
 		UserId id = new UserId(this.superAppName, "admin@test.com");
 		this.userAdmin =  new UserBoundary(id, UserRole.ADMIN.toString(), "admin", "adminAvatar");
@@ -71,21 +95,6 @@ public abstract class BaseControllerTest {
 		this.userMiniapp = users.createUser(userMiniapp);
 	}
 
-
-	@LocalServerPort
-	public void setPort(int port) {
-		this.port = port;
-	}
-
-	@Value("${spring.application.name:defaultValue}")
-	public void setSuperAppName(String superAppName) {
-		this.superAppName = superAppName;
-	}
-	
-	public void deleteUsers() throws Exception {
-		this.restTemplate.delete(this.adminUrl + "/users");
-	}
-	
 	public UserBoundary createUser(UserRole role) throws Exception {
 		NewUserBoundary newUser = new NewUserBoundary("user@test.com", role.toString(), "username", "avatar");
 		return this.restTemplate.postForObject(this.userUrl, newUser, UserBoundary.class);

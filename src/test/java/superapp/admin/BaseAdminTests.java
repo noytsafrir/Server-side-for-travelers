@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.junit.jupiter.api.AfterEach;
 
@@ -22,10 +21,8 @@ import superapp.boundaries.object.Location;
 import superapp.boundaries.object.ObjectBoundary;
 import superapp.boundaries.object.SuperAppObjectIdBoundary;
 import superapp.boundaries.user.UserId;
-import superapp.logic.MiniAppCommandAsyncService;
 import superapp.logic.MiniAppCommandService;
 import superapp.logic.ObjectServiceWithPagination;
-import superapp.logic.UsersService;
 
 abstract class BaseAdminTests extends BaseControllerTest {
 
@@ -102,7 +99,6 @@ abstract class BaseAdminTests extends BaseControllerTest {
 		newCommand.setInvocationTimestamp(new Date());
 		newCommand.setInvokedBy(new InvocationUser(userMiniapp.getUserId()));
 		newCommand.setCommandAttributes(details);
-		System.err.println(newCommand.toString());
 		return newCommand;
 	}
 	
@@ -113,7 +109,6 @@ abstract class BaseAdminTests extends BaseControllerTest {
 		for (int i = 0; i < num; i++) {
 			newCommand = createCommand();
 			newCommand.setCommand("command. " + i);
-			System.err.println(newCommand.toString());
 			miniapps.invokeCommand(newCommand);
 			allCommands.add(newCommand);
 		}

@@ -1,20 +1,11 @@
 package superapp.admin;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-
-import java.util.List;
 
 import org.junit.jupiter.api.Test;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort.Direction;
-import org.springframework.http.HttpStatus;
-import org.springframework.web.client.HttpClientErrorException;
 
 import jakarta.annotation.PostConstruct;
 import superapp.boundaries.command.MiniAppCommandBoundary;
-import superapp.boundaries.object.ObjectBoundary;
 
 
 public class GetSpecificCommandHistory extends BaseAdminTests{
