@@ -165,13 +165,14 @@ public class ObjectServicesDB extends GeneralService implements ObjectServiceWit
 		UserPrimaryKeyId user = new UserPrimaryKeyId(userSuperapp, email);
 		if (!isValidUserCredentials(user, UserRole.SUPERAPP_USER, this.users))
 			throw new ForbbidenException(user.getEmail(), "bind objects");
-
+		
 		ObjectPrimaryKeyId parentPk = new ObjectPrimaryKeyId(superapp, internalObjectId);
 		ObjectPrimaryKeyId childPk = converter.idToEntity(childId);
 
 		ObjectEntity parent = this.objectCrud.findById(parentPk)
 				.orElseThrow(() -> new ResourceNotFoundException(parentPk, "find parent object"));
 
+		
 		ObjectEntity child = this.objectCrud.findById(childPk)
 				.orElseThrow(() -> new ResourceNotFoundException(parentPk, "find child object"));
 
@@ -200,13 +201,12 @@ public class ObjectServicesDB extends GeneralService implements ObjectServiceWit
 
 		List<ObjectEntity> children = new ArrayList<>();
 
-		if (!user.getRole().equals(UserRole.SUPERAPP_USER.toString())) {
+		if (user.getRole().equals(UserRole.SUPERAPP_USER.toString())) {
 			children = this.objectCrud.findChildrenByObjectId(parentPk,
 					PageRequest.of(page, size, Direction.DESC, "creationTimestamp", "objectId"));
 		} else if (isMiniappUser) {
 			if (!parent.getActive())
 				throw new ResourceNotFoundException(internalObjectId, "find parent object");
-
 			children = this.objectCrud.findByObjectIdAndChildren_Active(parentPk, true,
 					PageRequest.of(page, size, Direction.DESC, "creationTimestamp", "objectId"));
 		}

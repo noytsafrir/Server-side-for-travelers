@@ -20,7 +20,7 @@ import superapp.boundaries.user.UserId;
 
 import superapp.logic.ObjectServiceWithPagination;
 
-class BaseObjectsTests extends BaseControllerTest {
+abstract class BaseObjectsTests extends BaseControllerTest {
 
 	protected String url;
 	protected String deleteUrl;

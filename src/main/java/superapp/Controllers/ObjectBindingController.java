@@ -6,23 +6,24 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import superapp.boundaries.object.ObjectBoundary;
 import superapp.boundaries.object.SuperAppObjectIdBoundary;
-import superapp.logic.ObjectService;
-import superapp.logic.ObjectServiceBinding;
+
+import superapp.logic.ObjectServiceWithPagination;
 
 
 @RestController
 public class ObjectBindingController {
-	private ObjectServiceBinding objects;
+	private ObjectServiceWithPagination objects;
 	
-	public ObjectService getObjects() {
+	public ObjectServiceWithPagination getObjects() {
 		return objects;
 	}
 	@Autowired //when you will make the instance - you should implement this class
-	public void setObjects(ObjectServiceBinding objects) {
+	public void setObjects(ObjectServiceWithPagination objects) {
 		this.objects = objects;
 	}
 
@@ -33,9 +34,11 @@ public class ObjectBindingController {
 	public void bindObject(
 			@PathVariable("superapp")String superapp , 
 			@PathVariable("internalObjectId") String internalObjectId,
+			@RequestParam(name = "userSuperapp", required = false, defaultValue = "") String userSuperapp,
+			@RequestParam(name = "userEmail", required = false, defaultValue = "") String email,
 			@RequestBody SuperAppObjectIdBoundary child){
 	
-		this.objects.bindObjectToParent(superapp, internalObjectId, child);
+		this.objects.bindObjectToParent(superapp, internalObjectId, child, userSuperapp, email);
 	}
 	
 	@RequestMapping(
@@ -44,10 +47,14 @@ public class ObjectBindingController {
 			produces = {MediaType.APPLICATION_JSON_VALUE})
 	public ObjectBoundary[] getObjectChildren(
 			@PathVariable("superapp")String superapp , 
-			@PathVariable("internalObjectId") String internalObjectId){
-		
+			@PathVariable("internalObjectId") String internalObjectId,
+			@RequestParam(name = "userSuperapp", required = false, defaultValue = "") String userSuperapp,
+			@RequestParam(name = "userEmail", required = false, defaultValue = "") String email,
+			@RequestParam(name = "size", required = false, defaultValue = "10") int size,
+			@RequestParam(name = "page", required = false, defaultValue = "0") int page){
+	
 		return this.objects
-				.getAllChildrenOfObject(superapp, internalObjectId)
+				.getAllChildrenOfObject(superapp, internalObjectId, userSuperapp, email, size, page)
 				.toArray(new ObjectBoundary[0]);
 	}
 	
@@ -57,10 +64,14 @@ public class ObjectBindingController {
 			produces = {MediaType.APPLICATION_JSON_VALUE})
 	public ObjectBoundary[] getObjectParents(
 			@PathVariable("superapp")String superapp , 
-			@PathVariable("internalObjectId") String internalObjectId){
-		
+			@PathVariable("internalObjectId") String internalObjectId,
+			@RequestParam(name = "userSuperapp", required = false, defaultValue = "") String userSuperapp,
+			@RequestParam(name = "userEmail", required = false, defaultValue = "") String email,
+			@RequestParam(name = "size", required = false, defaultValue = "10") int size,
+			@RequestParam(name = "page", required = false, defaultValue = "0") int page){
+
 		return this.objects
-				.getAllParentsOfObject(superapp, internalObjectId)
+				.getAllParentsOfObject(superapp, internalObjectId, userSuperapp, email, size, page)
 				.toArray(new ObjectBoundary[0]);
 	}
 }
