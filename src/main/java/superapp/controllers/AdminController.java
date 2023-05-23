@@ -1,4 +1,4 @@
-package superapp.Controllers;
+package superapp.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -44,7 +44,7 @@ public class AdminController {
 	public void deleteAllUsers(
 			@RequestParam(name = "userSuperapp", required = true) String userSuperapp,
 			@RequestParam(name = "userEmail", required = true) String email) {
-		this.users.deleteAllUsers(userSuperapp, email);;
+		this.users.deleteAllUsers(userSuperapp, email);
 	}
 
 	@CrossOrigin(origins = "*")
