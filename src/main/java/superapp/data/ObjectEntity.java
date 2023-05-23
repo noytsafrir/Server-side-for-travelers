@@ -6,12 +6,19 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.CompoundIndex;
+import org.springframework.data.mongodb.core.index.CompoundIndexes;
+import org.springframework.data.mongodb.core.index.GeoSpatialIndexed;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import superapp.boundaries.object.Location;
 import superapp.boundaries.user.UserId;
 
 @Document(collection = "Objects")
+@CompoundIndexes({
+    @CompoundIndex(name = "location_2dsphere", def = "{'location': '2dsphere'}")
+})
 public class ObjectEntity {
 	@Id
 	private ObjectPrimaryKeyId objectId;
@@ -19,9 +26,9 @@ public class ObjectEntity {
 	private String alias;
 	private boolean active;
 	private Date creationTimestamp;
-	private Double lat;
-	private Double lng;
-
+	
+	@GeoSpatialIndexed
+	private Location location;
 	private UserId createdBy;
 
 	private Map<String, Object> objectDetails;
@@ -35,16 +42,16 @@ public class ObjectEntity {
 	public ObjectEntity() {
 	}
 
+
 	public ObjectEntity(ObjectPrimaryKeyId objectId, String type, String alias, boolean active, Date creationTimestamp,
-			Double lat, Double lng, UserId createdBy, Map<String, Object> objectDetails, List<ObjectEntity> parents,
+			Location location, UserId createdBy, Map<String, Object> objectDetails, List<ObjectEntity> parents,
 			List<ObjectEntity> children) {
 		this.objectId = objectId;
 		this.type = type;
 		this.alias = alias;
 		this.active = active;
 		this.creationTimestamp = creationTimestamp;
-		this.lat = lat;
-		this.lng = lng;
+		this.location = location;
 		this.createdBy = createdBy;
 		this.objectDetails = objectDetails;
 		this.parents = parents;
@@ -117,25 +124,19 @@ public class ObjectEntity {
 		this.creationTimestamp = creationTimestamp;
 	}
 
-	public Double getLat() {
-		return lat;
+	public Location getLocation() {
+		return location;
 	}
-
-	public void setLat(Double lat) {
-		this.lat = lat;
+	
+	public void setLocation(Location location) {
+		this.location = location;
 	}
-
-	public Double getLng() {
-		return lng;
-	}
-
-	public void setLng(Double lng) {
-		this.lng = lng;
-	}
+	
 
 	public Map<String, Object> getObjectDetails() {
 		return objectDetails;
 	}
+
 
 	public void setObjectDetails(Map<String, Object> objectDetails) {
 		this.objectDetails = objectDetails;
@@ -152,9 +153,11 @@ public class ObjectEntity {
 	@Override
 	public String toString() {
 		return "ObjectEntity [objectId=" + objectId + ", type=" + type + ", alias=" + alias + ", active=" + active
-				+ ", creationTimestamp=" + creationTimestamp + ", lat=" + lat + ", lng=" + lng + ", createdBy="
-				+ createdBy + ", objectDetails=" + objectDetails + ", parents=" + parents + ", children=" + children
-				+ "]";
+				+ ", creationTimestamp=" + creationTimestamp + ", location=" + location + ", createdBy=" + createdBy
+				+ ", objectDetails=" + objectDetails + ", parents=" + parents + ", children=" + children + "]";
 	}
 
+	
+	
+	
 }

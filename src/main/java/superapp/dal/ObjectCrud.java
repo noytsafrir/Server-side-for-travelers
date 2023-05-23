@@ -3,6 +3,8 @@ package superapp.dal;
 import java.util.List;
 
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.geo.Distance;
+import org.springframework.data.geo.Point;
 import org.springframework.data.repository.ListCrudRepository;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
@@ -37,7 +39,7 @@ public interface ObjectCrud extends ListCrudRepository<ObjectEntity, ObjectPrima
 			@Param("type") String type,
 			Pageable pageable);
 
-	List<ObjectEntity> findAllByTypeAndActiveTrue(
+	List<ObjectEntity> findAllByActiveIsTrueAndType(
 			@Param("type") String type,
 			Pageable pageable);
 
@@ -45,22 +47,17 @@ public interface ObjectCrud extends ListCrudRepository<ObjectEntity, ObjectPrima
 			@Param("alias") String alias,
 			Pageable pageable);
 
-	List<ObjectEntity> findAllByAliasAndActiveTrue(
+	List<ObjectEntity> findAllByActiveIsTrueAndAlias(
 			String alias,
 			Pageable pageable);
 
-	List<ObjectEntity> findAllByLatBetweenAndLngBetween(
-			@Param("latMin") Double latMin,
-			@Param("latMax") Double latMax,
-			@Param("lngMin") Double lngMin,
-			@Param("lngMax") Double lngMax,
+	List<ObjectEntity> findByLocationNear(
+			@Param("location") Point location,
+			@Param("maxDistance") Distance maxDistance,
 			Pageable pageable);
-
-	List<ObjectEntity> findAllByLatBetweenAndLngBetweenAndActive(
-			@Param("latMin") Double latMin,
-			@Param("latMax") Double latMax,
-			@Param("lngMin") Double lngMin,
-			@Param("lngMax") Double lngMax,
-			@Param("active") boolean active,
+	
+	List<ObjectEntity> findByActiveIsTrueAndLocationNear(
+			@Param("location") Point location,
+			@Param("maxDistance") Distance maxDistance,
 			Pageable pageable);
 }

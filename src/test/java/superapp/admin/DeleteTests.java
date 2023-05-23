@@ -63,23 +63,4 @@ public class DeleteTests extends BaseAdminTests{
 		.isNotNull()
 		.hasSize(0);
 	}
-	
-//	
-//	public MiniAppCommandBoundary createCommand() {
-//		ObjectBoundary obj = createObject();
-//		objs.createObject(obj);
-//		MiniAppCommandBoundary newCommand = new MiniAppCommandBoundary();
-//		MiniAppCommandID commandId = new MiniAppCommandID(this.superAppName, "miniapp", "test");
-//		HashMap<String, Object> details = new HashMap<String, Object>();
-//
-//		newCommand.setCommandId(commandId);
-//		newCommand.setCommand("command");
-//		newCommand.setTargetObject(new TargetObject(obj.getObjectId()));
-//		newCommand.setInvocationTimestamp(new Date());
-//		newCommand.setInvokedBy(new InvocationUser(userMiniapp.getUserId()));
-//		newCommand.setCommandAttributes(details);
-//		System.err.println(newCommand.toString());
-//		return newCommand;
-//	}
-//	
 }

@@ -30,7 +30,7 @@ public class ObjectConvertor {
 		boundary.setActive(entity.getActive());
 		boundary.setCreationTimestamp(entity.getCreationTimestamp());
 		
-		Location location = new Location(entity.getLat(), entity.getLng());
+		Location location = new Location(entity.getLocation().getLat(), entity.getLocation().getLng());
 		boundary.setLocation(location);
 		
 		CreatedBy cb = new CreatedBy(entity.getCreatedBy());
@@ -53,11 +53,8 @@ public class ObjectConvertor {
 		entity.setAlias(obj.getAlias());
 		entity.setActive(obj.getActive());
 		entity.setCreationTimestamp(obj.getCreationTimestamp());
-		
-		entity.setLat(obj.getLocation().getLat());
-		entity.setLng(obj.getLocation().getLng());
+		entity.setLocation(new Location(obj.getLocation().getLat(),obj.getLocation().getLng()));
 		entity.setCreatedBy(obj.getCreatedBy().getUserId());
-		
 	    entity.setObjectDetails(obj.getObjectDetails());
 		
 		return entity;

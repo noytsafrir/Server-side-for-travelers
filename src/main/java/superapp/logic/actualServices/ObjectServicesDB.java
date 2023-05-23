@@ -10,9 +10,13 @@ import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort.Direction;
+import org.springframework.data.geo.Distance;
+import org.springframework.data.geo.Metrics;
+import org.springframework.data.geo.Point;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import superapp.boundaries.object.Location;
 import superapp.boundaries.object.ObjectBoundary;
 import superapp.boundaries.object.SuperAppObjectIdBoundary;
 import superapp.converters.ObjectConvertor;
@@ -101,10 +105,18 @@ public class ObjectServicesDB extends GeneralService implements ObjectServiceWit
 		if (update.getActive() != null) {
 			existing.setActive(update.getActive());
 		}
+//		if (update.getLocation() != null && update.getLocation().getLat() != null
+//				&& update.getLocation().getLng() != null) {
+//			existing.setLat(update.getLocation().getLat());
+//			existing.setLng(update.getLocation().getLng());
+//		}
+		
 		if (update.getLocation() != null && update.getLocation().getLat() != null
 				&& update.getLocation().getLng() != null) {
-			existing.setLat(update.getLocation().getLat());
-			existing.setLng(update.getLocation().getLng());
+			if(existing.getLocation() == null)
+				existing.setLocation(new Location());
+			existing.getLocation().setLat(update.getLocation().getLat());
+			existing.getLocation().setLng(update.getLocation().getLng());
 		}
 		if (update.getObjectDetails() != null) {
 			existing.setObjectDetails(update.getObjectDetails());
@@ -263,7 +275,7 @@ public class ObjectServicesDB extends GeneralService implements ObjectServiceWit
 	@Override
 	public List<ObjectBoundary> getObjectsByType(String userSuperapp, String email, String type, int size, int page) {
 		boolean isMiniappUser, isSuperappUser;
-		List<ObjectBoundary> rv = new ArrayList<>();
+		List<ObjectBoundary> objects = new ArrayList<>();
 
 		UserEntity user = getUser(new UserPrimaryKeyId(userSuperapp, email), users);
 		isMiniappUser = user.getRole().equals(UserRole.MINIAPP_USER.toString());
@@ -273,26 +285,25 @@ public class ObjectServicesDB extends GeneralService implements ObjectServiceWit
 			throw new ForbbidenException(user.getUserId().getEmail(), "find objects by type");
 
 		if (isSuperappUser) {
-			rv = objectCrud
-					.findAllByType(type, PageRequest.of(page, size, Direction.ASC, "createdTimestamp", "objectId"))
+			objects = objectCrud
+					.findAllByType(type, PageRequest.of(page, size, Direction.DESC, "createdTimestamp", "objectId"))
 					.stream()
 					.map(this.converter::toBoundary)
 					.toList();
 		} else if (isMiniappUser) {
-			rv = objectCrud
-					.findAllByTypeAndActiveTrue(type, PageRequest.of(page, size, Direction.ASC, "createdTimestamp", "objectId"))
+			objects = objectCrud
+					.findAllByActiveIsTrueAndType(type, PageRequest.of(page, size, Direction.DESC, "createdTimestamp", "objectId"))
 					.stream()
 					.map(this.converter::toBoundary)
 					.toList();
 		}
-
-		return rv;
+		return objects;
 	}
 
 	@Override
 	public List<ObjectBoundary> getObjectsByAlias(String userSuperapp, String email, String alias, int size, int page) {
 		boolean isMiniappUser, isSuperappUser;
-		List<ObjectBoundary> rv = new ArrayList<>();
+		List<ObjectBoundary> objects = new ArrayList<>();
 
 		UserEntity user = getUser(new UserPrimaryKeyId(userSuperapp, email), users);
 		isMiniappUser = user.getRole().equals(UserRole.MINIAPP_USER.toString());
@@ -302,26 +313,61 @@ public class ObjectServicesDB extends GeneralService implements ObjectServiceWit
 			throw new ForbbidenException(user.getUserId().getEmail(), "find objects by alias");
 
 		if (isSuperappUser)
-			rv = objectCrud
-					.findAllByAlias(alias, PageRequest.of(page, size, Direction.ASC, "createdTimestemp", "objectId"))
+			objects = objectCrud
+					.findAllByAlias(alias, PageRequest.of(page, size, Direction.DESC, "createdTimestemp", "objectId"))
 					.stream()
 					.map(this.converter::toBoundary)
 					.toList();
 		else if (isMiniappUser)
-			rv = objectCrud
-					.findAllByAliasAndActiveTrue(alias, PageRequest.of(page, size, Direction.ASC, "createdTimestemp", "objectId"))
+			objects = objectCrud
+					.findAllByActiveIsTrueAndAlias(alias, PageRequest.of(page, size, Direction.DESC, "createdTimestemp", "objectId"))
 					.stream()
 					.map(this.converter::toBoundary)
 					.toList();
-		return rv;
+		return objects;
 	}
 
 	@Override
-	public List<ObjectBoundary> getObjectsByLocationSquareSearch(String userSuperapp, String userEmail, double lat, double lng, double distance, int size, int page) {
-		return null;
+	public List<ObjectBoundary> getObjectsByLocationSquareSearch(String userSuperapp, String userEmail, 
+			double lat, double lng, double distance, String distanceUnits, int size, int page) {
+		boolean isMiniappUser, isSuperappUser;
+		Point location = new Point(lat, lng);
+		Distance maxDistance;
+		List<ObjectBoundary> objects = new ArrayList<>();
+		UserEntity user = getUser(new UserPrimaryKeyId(userSuperapp, userEmail), users);
+		isMiniappUser = user.getRole().equals(UserRole.MINIAPP_USER.toString());
+		isSuperappUser = user.getRole().equals(UserRole.SUPERAPP_USER.toString());
+		
+		if(!isMiniappUser && !isSuperappUser)
+			throw new ForbbidenException(user.getUserId().getEmail(), "find objects by location");
+		
+		if (distanceUnits.equalsIgnoreCase("KILOMETERS")) {
+			maxDistance = new Distance(distance, Metrics.KILOMETERS);
+		} else if (distanceUnits.equalsIgnoreCase("MILES")) {
+			maxDistance = new Distance(distance, Metrics.MILES);
+		} else if (distanceUnits.equalsIgnoreCase("NEUTRAL")) {
+			maxDistance = new Distance(distance, Metrics.NEUTRAL);
+		} else {
+		throw new InvalidInputException("could not process distance units : "+ distanceUnits); // Bad convert word
+		}
+		
+		if (isSuperappUser)
+			objects = objectCrud.findByLocationNear(location ,maxDistance,
+							PageRequest.of(page, size, Direction.DESC, "createdTimestemp", "objectId"))
+							.stream()
+							.map(this.converter::toBoundary)
+							.toList();
+		
+		else if(isMiniappUser)
+			objects = objectCrud.findByActiveIsTrueAndLocationNear(location ,maxDistance,
+					PageRequest.of(page, size, Direction.DESC, "createdTimestemp", "objectId"))
+					.stream()
+					.map(this.converter::toBoundary)
+					.toList();
+		return objects;
 	}
-
-
+	
+	
 	@Override
 	public void deleteAllObject(String userSuperapp, String email) {
 		UserPrimaryKeyId user = new UserPrimaryKeyId(userSuperapp, email);

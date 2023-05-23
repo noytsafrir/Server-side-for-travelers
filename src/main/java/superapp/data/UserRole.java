@@ -15,5 +15,4 @@ public enum UserRole {
 			return false;
 		}
 	}
-
 }

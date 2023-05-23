@@ -1,12 +1,17 @@
 package superapp.Controllers;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.geo.Distance;
 import org.springframework.data.geo.Metrics;
+import org.springframework.data.geo.Point;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import superapp.boundaries.object.ObjectBoundary;
 import superapp.boundaries.object.SuperAppObjectIdBoundary;
+import superapp.data.ObjectEntity;
+import superapp.exceptions.InvalidInputException;
 import superapp.logic.ObjectServiceWithPagination;
 
 
@@ -50,23 +55,14 @@ public class ObjectSearchController {
 	public ObjectBoundary[] getObjectsByLocationSquareSearch(@PathVariable("lat") double lat,
 															 @PathVariable("lng") double lng,
 															 @PathVariable("distance") double distance,
-															 @RequestParam(name = "units", defaultValue = "NEUTRAL") String distanceUnits, @RequestParam(name = "userSuperapp", required = true) String userSuperapp,
+															 @RequestParam(name = "units", defaultValue = "NEUTRAL") String distanceUnits,
+															 @RequestParam(name = "userSuperapp", required = true) String userSuperapp,
 															 @RequestParam(name = "userEmail", required = true) String userEmail,
 															 @RequestParam(name = "size", required = false, defaultValue = "10") int size,
 															 @RequestParam(name = "page", required = false, defaultValue = "0") int page) {
-		double distanceInMeters;
-		Distance convertedDistance = new Distance(distance, Metrics.NEUTRAL);
-
-		if (distanceUnits.equalsIgnoreCase("KILOMETERS")) {
-			convertedDistance = convertedDistance.in(Metrics.MILES);
-			distanceInMeters = distance * 1000; // Convert kilometers to meters
-		} else if (distanceUnits.equalsIgnoreCase("MILES")) {
-			distanceInMeters = distance * 1609.34; // Convert miles to meters
-		} else if (distanceUnits.equalsIgnoreCase("NEUTRAL")) {
-			distanceInMeters = distance; // Regular
-		} else {
-			throw new RuntimeException(); // Bad convert word
-		}
+		
+		return objects.getObjectsByLocationSquareSearch(userSuperapp, userEmail, lat, lng,
+				distance, distanceUnits ,size, page).toArray(new ObjectBoundary[0]);
 
 //		if (unit.equalsIgnoreCase("miles")) {
 //			// Convert miles to meters
@@ -76,8 +72,6 @@ public class ObjectSearchController {
 //			distance = distance.in(Metrics.KILOMETERS);
 //		}
 
-		return objects.getObjectsByLocationSquareSearch(userSuperapp, userEmail, lat, lng,
-				distanceInMeters, size, page).toArray(new ObjectBoundary[0]);
 	}
 
 }
