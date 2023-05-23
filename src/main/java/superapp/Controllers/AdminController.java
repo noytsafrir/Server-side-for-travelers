@@ -77,7 +77,7 @@ public class AdminController {
 			@RequestParam(name = "userEmail", required = true) String email,
 			@RequestParam(name = "size", required = false, defaultValue = "10") int size,
 			@RequestParam(name = "page", required = false, defaultValue = "0") int page) {
-		return this.users.getAllUsers().toArray(new UserBoundary[0]);
+		return this.users.getAllUsers(userSuperapp, email, size, page).toArray(new UserBoundary[0]);
 	}
 
 	@CrossOrigin(origins = "*")

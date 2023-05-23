@@ -7,10 +7,13 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import jakarta.annotation.PostConstruct;
+import superapp.boundaries.object.ObjectBoundary;
 import superapp.boundaries.user.UserBoundary;
 import superapp.boundaries.user.UserId;
 import superapp.converters.UserConverter;
@@ -116,6 +119,7 @@ public class UserServiceDB extends GeneralService implements UsersServiceNew {
 
 	@Override
 	@Transactional(readOnly = true)
+	@Deprecated
 	public List<UserBoundary> getAllUsers() {
 		List<UserEntity> entities = this.userCrud.findAll();
 		List<UserBoundary> rv = new ArrayList<>();
@@ -124,6 +128,24 @@ public class UserServiceDB extends GeneralService implements UsersServiceNew {
 		}
 		return rv;
 	}
+	
+	@Override
+	public List<UserBoundary> getAllUsers(String superapp, String email, int size, int page) {
+		boolean isAdmin;
+		List<UserBoundary> users;
+		UserEntity user = getUser(new UserPrimaryKeyId(superapp, email), userCrud);
+		isAdmin = user.getRole().equals(UserRole.ADMIN.toString());
+		
+		if(!isAdmin)
+			throw new ForbbidenException(user.getUserId().getEmail(), "get all users");
+		
+		users = this.userCrud.findAll(PageRequest.of(page, size, Direction.DESC, "role", "userId"))
+				.stream()
+				.map(this.userConverter :: toBoundary)
+				.toList();
+		return users;
+	}
+	
 
 	@Override
 	@Deprecated
@@ -133,11 +155,11 @@ public class UserServiceDB extends GeneralService implements UsersServiceNew {
 	
 	
 	@Override
-	@Transactional
 	public void deleteAllUsers(String superapp, String email) {
 		UserPrimaryKeyId user = new UserPrimaryKeyId(superapp, email);
 		if (!isValidUserCredentials(user, UserRole.ADMIN, this.userCrud))
 			throw new ForbbidenException(user.getEmail(), "delete all objects");
 		this.userCrud.deleteAll();
 	}
+
 }

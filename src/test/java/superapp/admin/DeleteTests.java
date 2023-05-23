@@ -64,16 +64,6 @@ public class DeleteTests extends BaseAdminTests{
 		.hasSize(0);
 	}
 	
-	public MiniAppCommandBoundary[] getCommandsHistory() {
-		
-		MiniAppCommandBoundary[] allCommands =
-				this.restTemplate.getForObject(
-				this.urlCommand + "?userSuperapp={userSuperapp}&userEmail={email}&size={size}&page={page}", 
-				MiniAppCommandBoundary[].class,
-				userAdmin.getUserId().getSuperapp(), 
-				userAdmin.getUserId().getEmail());
-		return allCommands;
-	}
 //	
 //	public MiniAppCommandBoundary createCommand() {
 //		ObjectBoundary obj = createObject();

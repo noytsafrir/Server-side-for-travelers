@@ -119,12 +119,24 @@ abstract class BaseAdminTests extends BaseControllerTest {
 	}
 	
 	public ObjectBoundary[] getAllObjects() {
-		ObjectBoundary[] allObjects = this.restTemplate.getForObject(
+		ObjectBoundary[] allObjects = 
+				this.restTemplate.getForObject(
 				this.baseUrl +"objects" + "?userSuperapp={userSuperapp}&userEmail={email}", 
 				ObjectBoundary[].class,
 				userSuperapp.getUserId().getSuperapp(), 
 				userSuperapp.getUserId().getEmail());
 		return allObjects;
+	}
+	
+	public MiniAppCommandBoundary[] getCommandsHistory() {
+		
+		MiniAppCommandBoundary[] allCommands =
+				this.restTemplate.getForObject(
+				this.urlCommand + "?userSuperapp={userSuperapp}&userEmail={email}&size={size}&page={page}", 
+				MiniAppCommandBoundary[].class,
+				userAdmin.getUserId().getSuperapp(), 
+				userAdmin.getUserId().getEmail(),10,0);
+		return allCommands;
 	}
 	
 }

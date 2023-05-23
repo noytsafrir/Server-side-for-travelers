@@ -147,7 +147,6 @@ public class MiniAppCommadServiceDB extends GeneralService implements MiniAppCom
 				.map(this.miniConverter::toBoundary)
 				.toList();
 	}
-
 	@Override
 	public List<MiniAppCommandBoundary> getAllMiniAppCommands(String miniAppName, String userSuperapp, String email,
 			int size, int page) {
