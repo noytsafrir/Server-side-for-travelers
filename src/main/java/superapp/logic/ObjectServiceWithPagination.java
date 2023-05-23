@@ -25,4 +25,7 @@ public interface ObjectServiceWithPagination extends ObjectServiceBinding {
 
 	public List<ObjectBoundary> getAllParentsOfObject(String superapp, String internalObjectId, String userSuperapp,
 			String email, int size, int page);
+	public List<ObjectBoundary> getObjectsByType(String userSuperapp, String email, String type, int size, int page);
+	public List<ObjectBoundary> getObjectsByAlias(String userSuperapp, String email, String alias, int size, int page);
+	public List<ObjectBoundary> getObjectsByLocationSquareSearch(String userSuperapp, String email, double lat, double lng, double distance, int size, int page);
 }

@@ -142,7 +142,8 @@ public class ObjectServicesDB extends GeneralService implements ObjectServiceWit
 	@Override
 	public List<ObjectBoundary> getAllObjects(String userSuperapp, String email, int size, int page) {
 		boolean isMiniappUser, isSuperappUser;
-		List<ObjectBoundary> rv;
+		List<ObjectBoundary> rv = new ArrayList<>();
+
 		UserEntity user = getUser(new UserPrimaryKeyId(userSuperapp, email), users);
 		isMiniappUser = user.getRole().equals(UserRole.MINIAPP_USER.toString());
 		isSuperappUser = user.getRole().equals(UserRole.SUPERAPP_USER.toString());
@@ -259,7 +260,68 @@ public class ObjectServicesDB extends GeneralService implements ObjectServiceWit
 		return parents.stream().map(this.converter::toBoundary).toList();
 	}
 
-	
+	@Override
+	public List<ObjectBoundary> getObjectsByType(String userSuperapp, String email, String type, int size, int page) {
+		boolean isMiniappUser, isSuperappUser;
+		List<ObjectBoundary> rv = new ArrayList<>();
+
+		UserEntity user = getUser(new UserPrimaryKeyId(userSuperapp, email), users);
+		isMiniappUser = user.getRole().equals(UserRole.MINIAPP_USER.toString());
+		isSuperappUser = user.getRole().equals(UserRole.SUPERAPP_USER.toString());
+
+		if (!isMiniappUser && !isSuperappUser)
+			throw new ForbbidenException(user.getUserId().getEmail(), "find objects by type");
+
+		if (isSuperappUser) {
+			rv = objectCrud
+					.findAllByType(type, PageRequest.of(page, size, Direction.ASC, "createdTimestamp", "objectId"))
+					.stream()
+					.map(this.converter::toBoundary)
+					.toList();
+		} else if (isMiniappUser) {
+			rv = objectCrud
+					.findAllByTypeAndActiveTrue(type, PageRequest.of(page, size, Direction.ASC, "createdTimestamp", "objectId"))
+					.stream()
+					.map(this.converter::toBoundary)
+					.toList();
+		}
+
+		return rv;
+	}
+
+	@Override
+	public List<ObjectBoundary> getObjectsByAlias(String userSuperapp, String email, String alias, int size, int page) {
+		boolean isMiniappUser, isSuperappUser;
+		List<ObjectBoundary> rv = new ArrayList<>();
+
+		UserEntity user = getUser(new UserPrimaryKeyId(userSuperapp, email), users);
+		isMiniappUser = user.getRole().equals(UserRole.MINIAPP_USER.toString());
+		isSuperappUser = user.getRole().equals(UserRole.SUPERAPP_USER.toString());
+
+		if (!isMiniappUser && !isSuperappUser)
+			throw new ForbbidenException(user.getUserId().getEmail(), "find objects by alias");
+
+		if (isSuperappUser)
+			rv = objectCrud
+					.findAllByAlias(alias, PageRequest.of(page, size, Direction.ASC, "createdTimestemp", "objectId"))
+					.stream()
+					.map(this.converter::toBoundary)
+					.toList();
+		else if (isMiniappUser)
+			rv = objectCrud
+					.findAllByAliasAndActiveTrue(alias, PageRequest.of(page, size, Direction.ASC, "createdTimestemp", "objectId"))
+					.stream()
+					.map(this.converter::toBoundary)
+					.toList();
+		return rv;
+	}
+
+	@Override
+	public List<ObjectBoundary> getObjectsByLocationSquareSearch(String userSuperapp, String userEmail, double lat, double lng, double distance, int size, int page) {
+		return null;
+	}
+
+
 	@Override
 	public void deleteAllObject(String userSuperapp, String email) {
 		UserPrimaryKeyId user = new UserPrimaryKeyId(userSuperapp, email);
