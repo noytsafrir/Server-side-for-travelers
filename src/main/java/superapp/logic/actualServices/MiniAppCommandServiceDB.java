@@ -19,7 +19,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.annotation.PostConstruct;
 import superapp.boundaries.command.InvocationUser;
 import superapp.boundaries.command.MiniAppCommandBoundary;
-import superapp.boundaries.command.MiniAppCommandID;
 import superapp.boundaries.command.TargetObject;
 import superapp.converters.MiniAppCommandConverter;
 import superapp.dal.MiniAppCommandCrud;
@@ -42,34 +41,34 @@ import superapp.utils.Validator;
 
 
 @Service
-public class MiniAppCommadServiceDB extends GeneralService implements MiniAppCommandAsyncService {
-	private MiniAppCommandCrud miniCrud;
-    private ObjectCrud objects;
-    private UserCrud users;
-	private MiniAppCommandConverter miniConverter;
+public class MiniAppCommandServiceDB extends GeneralService implements MiniAppCommandAsyncService {
+	private MiniAppCommandCrud commandsCrud;
+    private ObjectCrud objectCrud;
+    private UserCrud userCrud;
+	private MiniAppCommandConverter commandConverter;
 	private String superAppName;
 	private JmsTemplate jmsTemplate;
 	private ObjectMapper jackson;
 
 
 	@Autowired
-	public void setMiniCrud(MiniAppCommandCrud miniCrud) {
-		this.miniCrud = miniCrud;
+	public void setCommandsCrud(MiniAppCommandCrud commandsCrud) {
+		this.commandsCrud = commandsCrud;
 	}
 
 	@Autowired
-	public void setObjects(ObjectCrud objects) {
-		this.objects = objects;
+	public void setObjectCrud(ObjectCrud objectCrud) {
+		this.objectCrud = objectCrud;
 	}
 
 	@Autowired
-	public void setUsers(UserCrud users) {
-		this.users = users;
+	public void setUserCrud(UserCrud userCrud) {
+		this.userCrud = userCrud;
 	}
 
 	@Autowired
-	public void setMiniConverter(MiniAppCommandConverter miniConverter) {
-		this.miniConverter = miniConverter;
+	public void setCommandConverter(MiniAppCommandConverter commandConverter) {
+		this.commandConverter = commandConverter;
 	}
 	
 	@Autowired
@@ -90,40 +89,19 @@ public class MiniAppCommadServiceDB extends GeneralService implements MiniAppCom
 	
 	@Override
 	public Object invokeCommand(MiniAppCommandBoundary command) {
-		// Check command validity and throw appropriate exception if not valid:
-		checkInvokedCommand(command, UserRole.MINIAPP_USER);
+		// Check if command boundary is valid and initialize it with id and timestamp
+		checkAndInitCommand(command);
 
-		command.setInvocationTimestamp(new Date());
-		command.getCommandId().setSuperapp(superAppName);
-		command.getCommandId().setInternalCommandId(UUID.randomUUID().toString());
-		MiniAppCommandPrimaryKeyId id = new MiniAppCommandPrimaryKeyId(command.getCommandId().getSuperapp(),
-				command.getCommandId().getMiniapp(), command.getCommandId().getInternalCommandId());
-		
-		Optional<MiniAppCommandEntity> entity = miniCrud.findById(id);
-		if (entity.isPresent()) {
-			throw new ResourceAlreadyExistException(id, "invoke command");
-		}
-		
-		MiniAppCommandEntity newEntity = miniConverter.toEntity(command);
-		miniCrud.save(newEntity);
+		MiniAppCommandEntity newEntity = commandConverter.toEntity(command);
+		commandsCrud.save(newEntity);
 		return newEntity;
 	}
 
 	// TODO: write this function (async logic)
 	@Override
 	public Object invokeCommandAsync(MiniAppCommandBoundary command) {
-		command.setInvocationTimestamp(new Date());
-		command.getCommandId().setSuperapp(superAppName);
-		command.getCommandId().setInternalCommandId(UUID.randomUUID().toString());
-		
-		if (command.getCommandId() == null) {
-			MiniAppCommandID id;
-			id = new MiniAppCommandID();
-			command.setCommandId(id);
-		}
-		if (command.getCommandAttributes() == null) {
-			command.setCommandAttributes(new HashMap<>());
-		}
+		// Check if command boundary is valid and initialize it with id and timestamp
+		checkAndInitCommand(command);
 
 		command.getCommandAttributes().put("status", "waiting...");
 
@@ -139,33 +117,33 @@ public class MiniAppCommadServiceDB extends GeneralService implements MiniAppCom
 	@Override
 	public List<MiniAppCommandBoundary> getAllCommands(String userSuperapp, String email, int size, int page) {
 		UserPrimaryKeyId user = new UserPrimaryKeyId(userSuperapp, email);
-		if (!isValidUserCredentials(user, UserRole.ADMIN, this.users))
+		if (!isValidUserCredentials(user, UserRole.ADMIN, this.userCrud))
 			throw new ForbbidenException(user.getEmail(), "get all miniapp commands");
 
-		return this.miniCrud.findAll(PageRequest.of(page, size, Direction.DESC, "invocationTimestamp", "commandId"))
+		return this.commandsCrud.findAll(PageRequest.of(page, size, Direction.DESC, "invocationTimestamp", "commandId"))
 				.stream()
-				.map(this.miniConverter::toBoundary)
+				.map(this.commandConverter::toBoundary)
 				.toList();
 	}
 	@Override
 	public List<MiniAppCommandBoundary> getAllMiniAppCommands(String miniAppName, String userSuperapp, String email,
 			int size, int page) {
 		UserPrimaryKeyId user = new UserPrimaryKeyId(userSuperapp, email);
-		if (!isValidUserCredentials(user, UserRole.ADMIN, this.users))
+		if (!isValidUserCredentials(user, UserRole.ADMIN, this.userCrud))
 			throw new ForbbidenException(user.getEmail(), "get all miniapp commands");
 
-		return this.miniCrud.findAllByCommandID_Miniapp(miniAppName,PageRequest.of(page, size, Direction.DESC, "invocationTimestamp", "commandId"))
+		return this.commandsCrud.findAllByCommandID_Miniapp(miniAppName,PageRequest.of(page, size, Direction.DESC, "invocationTimestamp", "commandId"))
 				.stream()
-				.map(this.miniConverter::toBoundary)
+				.map(this.commandConverter::toBoundary)
 				.toList();
 	}
 	
 	@Override
 	public void deleteAllCommands(String superapp, String email) {	
 		UserPrimaryKeyId user = new UserPrimaryKeyId(superapp, email);
-		if (!isValidUserCredentials(user, UserRole.ADMIN, this.users))
+		if (!isValidUserCredentials(user, UserRole.ADMIN, this.userCrud))
 			throw new ForbbidenException(user.getEmail(), "delete all miniapp commands");
-		this.miniCrud.deleteAll();
+		this.commandsCrud.deleteAll();
 	}
 	
 	@Deprecated
@@ -186,9 +164,9 @@ public class MiniAppCommadServiceDB extends GeneralService implements MiniAppCom
 		throw new DeprecatedException(LocalDate.of(2023, 5, 22));
 	}
 	
-    private void checkInvokedCommand(MiniAppCommandBoundary command, UserRole userRole){
+    private void checkInvokedCommand(MiniAppCommandBoundary command){
 		if (command == null)
-			throw new InvalidInputException(command, "command", "invoke command");
+			throw new InvalidInputException(null, "command", "invoke command");
 		
 		if (command.getCommandId() == null)
 			throw new InvalidInputException(command.getCommandId(), "command id", "invoke command");
@@ -215,7 +193,7 @@ public class MiniAppCommadServiceDB extends GeneralService implements MiniAppCom
 			throw new InvalidInputException(invokedBy.getUserId().getEmail(), "user email", "invoke command");
 
        UserPrimaryKeyId user = new UserPrimaryKeyId(invokedBy.getUserId().getSuperapp(), invokedBy.getUserId().getEmail());
-       if(!isValidUserCredentials(user, userRole, this.users))
+       if(!isValidUserCredentials(user, UserRole.MINIAPP_USER, this.userCrud))
             throw new ForbbidenException(user.getEmail(), "invoke command");
 
         TargetObject targetObject = command.getTargetObject();
@@ -230,12 +208,28 @@ public class MiniAppCommadServiceDB extends GeneralService implements MiniAppCom
 
         ObjectPrimaryKeyId objId = new ObjectPrimaryKeyId(	targetObject.getObjectId().getSuperapp(),
         													targetObject.getObjectId().getInternalObjectId());
-        Optional<ObjectEntity> objectE = this.objects.findById(objId);
+        Optional<ObjectEntity> objectE = this.objectCrud.findById(objId);
         if(objectE.isEmpty() || !objectE.get().getActive())
             throw new ResourceNotFoundException(objId, "invoke command");
     }
 
+	private void checkAndInitCommand(MiniAppCommandBoundary command) {
+		// Check command validity and throw appropriate exception if not valid:
+		checkInvokedCommand(command);
 
+		command.setInvocationTimestamp(new Date());
+		command.getCommandId().setSuperapp(superAppName);
+		command.getCommandId().setInternalCommandId(UUID.randomUUID().toString());
+		MiniAppCommandPrimaryKeyId id = new MiniAppCommandPrimaryKeyId(command.getCommandId().getSuperapp(),
+				command.getCommandId().getMiniapp(), command.getCommandId().getInternalCommandId());
 
+		Optional<MiniAppCommandEntity> entity = commandsCrud.findById(id);
+		if (entity.isPresent()) {
+			throw new ResourceAlreadyExistException(id, "invoke command");
+		}
 
+		if (command.getCommandAttributes() == null) {
+			command.setCommandAttributes(new HashMap<>());
+		}
+	}
 }

@@ -20,7 +20,6 @@ public class MiniappCommandController {
 	private MiniAppCommandAsyncService service;
 
 	@Autowired
-
 	public void setService(MiniAppCommandAsyncService service) {
 		this.service = service;
 	}
@@ -37,10 +36,6 @@ public class MiniappCommandController {
 		MiniAppCommandID cId = new MiniAppCommandID();
 		cId.setMiniapp(miniApp);
 		command.setCommandId(cId);
-		
-		System.err.println("command = " + command);
-		System.err.println("async = " + async);
-		
 		if (async)
 			return service.invokeCommandAsync(command);
 		else
