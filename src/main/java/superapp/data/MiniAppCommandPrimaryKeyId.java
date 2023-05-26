@@ -2,9 +2,7 @@ package superapp.data;
 
 import java.util.Objects;
 
-import superapp.utils.ResourceIdentifier;
-
-public class MiniAppCommandPrimaryKeyId implements ResourceIdentifier{
+public class MiniAppCommandPrimaryKeyId {
 	private String superapp;
 	private String miniapp;
 	private String internalCommandId;

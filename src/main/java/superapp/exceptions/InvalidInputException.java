@@ -3,8 +3,6 @@ package superapp.exceptions;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
-import superapp.utils.BoundaryObject;
-
 
 @ResponseStatus(code = HttpStatus.UNPROCESSABLE_ENTITY)
 public class InvalidInputException extends RuntimeException {
@@ -25,10 +23,10 @@ public class InvalidInputException extends RuntimeException {
 		super(message, cause);
 	}
 	
-	public InvalidInputException(BoundaryObject obj, String operation) {
+	public InvalidInputException(Object obj, String operation) {
 		super("Could not " + operation + " because invalid input: " + obj);
 	}
-	public InvalidInputException(String resourceType, BoundaryObject obj) {
+	public InvalidInputException(String resourceType, Object obj) {
 		super(resourceType + "input is invalid: " + obj);
 	}
 	

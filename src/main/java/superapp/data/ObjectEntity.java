@@ -157,7 +157,4 @@ public class ObjectEntity {
 				+ ", objectDetails=" + objectDetails + ", parents=" + parents + ", children=" + children + "]";
 	}
 
-	
-	
-	
 }

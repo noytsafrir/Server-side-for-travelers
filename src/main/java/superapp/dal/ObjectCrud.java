@@ -9,6 +9,7 @@ import org.springframework.data.repository.ListCrudRepository;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
 
+import superapp.boundaries.user.UserId;
 import superapp.data.ObjectEntity;
 import superapp.data.ObjectPrimaryKeyId;
 
@@ -59,5 +60,9 @@ public interface ObjectCrud extends ListCrudRepository<ObjectEntity, ObjectPrima
 	List<ObjectEntity> findByActiveIsTrueAndLocationNear(
 			@Param("location") Point location,
 			@Param("maxDistance") Distance maxDistance,
+			Pageable pageable);
+
+	List<ObjectEntity> findByCreatedBy(
+			@Param("userId") UserId userId,
 			Pageable pageable);
 }

@@ -3,8 +3,6 @@ package superapp.exceptions;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
-import superapp.utils.ResourceIdentifier;
-
 
 @ResponseStatus(code = HttpStatus.NOT_FOUND)
 public class ResourceNotFoundException extends RuntimeException {
@@ -25,7 +23,7 @@ public class ResourceNotFoundException extends RuntimeException {
 		super(message, cause);
 	}
 	
-	public ResourceNotFoundException(ResourceIdentifier id) {
+	public ResourceNotFoundException(Object id) {
 		super(id + " does not exist");
 	}
 	
@@ -33,7 +31,7 @@ public class ResourceNotFoundException extends RuntimeException {
 		super("Could not " + operation + " because " + id + " does not exist");
 	}
 	
-	public ResourceNotFoundException(String resourceType, ResourceIdentifier id) {
+	public ResourceNotFoundException(String resourceType, Object id) {
 		super(resourceType + " " + id + " does not exist");
 	}
 	

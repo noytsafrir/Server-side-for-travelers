@@ -3,8 +3,6 @@ package superapp.exceptions;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
-import superapp.utils.ResourceIdentifier;
-
 
 @ResponseStatus(code = HttpStatus.CONFLICT)
 public class ResourceAlreadyExistException extends RuntimeException {
@@ -25,14 +23,14 @@ public class ResourceAlreadyExistException extends RuntimeException {
 		super(message, cause);
 	}
 	
-	public ResourceAlreadyExistException(ResourceIdentifier id, String operation) {
+	public ResourceAlreadyExistException(Object id, String operation) {
 		super("Could not " + operation + " because " + id + " already exist");
 	}
-	public ResourceAlreadyExistException(String resourceType, ResourceIdentifier id) {
+	public ResourceAlreadyExistException(String resourceType, Object id) {
 		super(resourceType + " " + id + " already exist");
 	}
 	
-	public ResourceAlreadyExistException(ResourceIdentifier id, String resourceType, String operation) {
+	public ResourceAlreadyExistException(Object id, String resourceType, String operation) {
 		super("Could not " + operation + " because " + resourceType + " " + id + " already exist");
 	}
 

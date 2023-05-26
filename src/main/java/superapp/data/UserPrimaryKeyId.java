@@ -2,9 +2,7 @@ package superapp.data;
 
 import java.util.Objects;
 
-import superapp.utils.ResourceIdentifier;
-
-public class UserPrimaryKeyId implements ResourceIdentifier{
+public class UserPrimaryKeyId {
 	private String superapp;
 	private String email;
 	

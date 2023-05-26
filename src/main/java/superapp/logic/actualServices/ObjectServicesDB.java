@@ -143,10 +143,10 @@ public class ObjectServicesDB extends GeneralService implements ObjectServiceWit
 		
 		ObjectPrimaryKeyId pkid = new ObjectPrimaryKeyId(ObjectSuperapp, internalObjectId);
 		ObjectEntity entity = this.objectCrud.findById(pkid)
-				.orElseThrow(() -> new ResourceNotFoundException(internalObjectId, "find object"));
+				.orElseThrow(() -> new ResourceNotFoundException(pkid, "find object"));
 		
 		if (isMiniappUser && !entity.getActive())
-			throw new ResourceNotFoundException(internalObjectId, "find object");
+			throw new ResourceNotFoundException(pkid, "find object");
 		
 		return this.converter.toBoundary(entity);
 	}
@@ -225,7 +225,7 @@ public class ObjectServicesDB extends GeneralService implements ObjectServiceWit
 			
 		} else if (isMiniappUser) {
 			if (!parent.getActive())
-				throw new ResourceNotFoundException(internalObjectId, "find parent object");
+				throw new ResourceNotFoundException(parentPk, "find parent object");
 			children = this.objectCrud.findAllByActiveIsTrueAndParents_objectId(parent,
 					PageRequest.of(page, size, Direction.DESC, "creationTimestamp", "objectId"));
 		}
@@ -255,7 +255,7 @@ public class ObjectServicesDB extends GeneralService implements ObjectServiceWit
 		List<ObjectEntity> parents = new ArrayList<>();
 		
 		if (isMiniappUser && !child.getActive()) 
-			throw new ResourceNotFoundException(internalObjectId, "find child object");
+			throw new ResourceNotFoundException(childPk, "find child object");
 		else
 				
 		if (isSuperappUser) {
@@ -263,7 +263,7 @@ public class ObjectServicesDB extends GeneralService implements ObjectServiceWit
 					PageRequest.of(page, size, Direction.DESC, "creationTimestamp", "objectId"));
 		} else if (isMiniappUser) {
 			if (!child.getActive())
-				throw new ResourceNotFoundException(internalObjectId, "find child object");
+				throw new ResourceNotFoundException(childPk, "find child object");
 
 			parents = this.objectCrud.findAllByActiveIsTrueAndChildren_objectId(child,
 					PageRequest.of(page, size, Direction.DESC, "creationTimestamp", "objectId"));

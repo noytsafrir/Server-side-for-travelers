@@ -92,6 +92,7 @@ public class MiniAppCommandServiceDB extends GeneralService implements MiniAppCo
 		// Check if command boundary is valid and initialize it with id and timestamp
 		checkAndInitCommand(command);
 
+
 		MiniAppCommandEntity newEntity = commandConverter.toEntity(command);
 		commandsCrud.save(newEntity);
 		return newEntity;

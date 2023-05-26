@@ -2,9 +2,7 @@ package superapp.boundaries.user;
 
 import java.util.Objects;
 
-import superapp.utils.ResourceIdentifier;
-
-public class UserId implements ResourceIdentifier{
+public class UserId {
 	private String superapp;
 	private String email;
 	

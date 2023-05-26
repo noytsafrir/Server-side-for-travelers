@@ -1,8 +1,6 @@
 package superapp.boundaries.user;
 
-import superapp.utils.BoundaryObject;
-
-public class NewUserBoundary implements BoundaryObject {
+public class NewUserBoundary {
 
 	private String email;
 	private String role;

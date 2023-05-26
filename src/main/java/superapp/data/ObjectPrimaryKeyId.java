@@ -2,9 +2,7 @@ package superapp.data;
 
 import java.util.Objects;
 
-import superapp.utils.ResourceIdentifier;
-
-public class ObjectPrimaryKeyId implements ResourceIdentifier {
+public class ObjectPrimaryKeyId {
 	private String superapp;
 	private String internalObjectId;
 	
