@@ -20,7 +20,10 @@ public class ObjectSearchController {
 		this.objects = objects;
 	}
 
-	@RequestMapping(method = RequestMethod.GET, path = "/superapp/objects/search/byType/{type}", produces = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(
+			method = RequestMethod.GET, 
+			path = "/superapp/objects/search/byType/{type}", 
+			produces = MediaType.APPLICATION_JSON_VALUE)
 	public ObjectBoundary[] getObjectsByType(@PathVariable("type") String type,
 											 @RequestParam(name = "userSuperapp", required = true) String userSuperapp,
 											 @RequestParam(name = "userEmail", required = true) String userEmail,
@@ -31,7 +34,10 @@ public class ObjectSearchController {
 				.toArray(new ObjectBoundary[0]);
 	}
 
-	@RequestMapping(method = RequestMethod.GET, path = "/superapp/objects/search/byAlias/{alias}", produces = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(
+			method = RequestMethod.GET, 
+			path = "/superapp/objects/search/byAlias/{alias}", 
+			produces = MediaType.APPLICATION_JSON_VALUE)
 	public ObjectBoundary[] getObjectsByAlias(@PathVariable("alias") String alias,
 											  @RequestParam(name = "userSuperapp", required = true) String userSuperapp,
 											  @RequestParam(name = "userEmail", required = true) String userEmail,
@@ -42,8 +48,10 @@ public class ObjectSearchController {
 				.toArray(new ObjectBoundary[0]);
 	}
 
-	@RequestMapping(path = { "/superapp/objects/search/byLocation/{lat}/{lng}/{distance}" }, method = {
-			RequestMethod.GET }, produces = { MediaType.APPLICATION_JSON_VALUE })
+	@RequestMapping(
+			path = { "/superapp/objects/search/byLocation/{lat}/{lng}/{distance}" }, 
+			method = { RequestMethod.GET }, 
+			produces = { MediaType.APPLICATION_JSON_VALUE })
 	public ObjectBoundary[] getObjectsByLocationSquareSearch(@PathVariable("lat") double lat,
 															 @PathVariable("lng") double lng,
 															 @PathVariable("distance") double distance,
@@ -53,16 +61,8 @@ public class ObjectSearchController {
 															 @RequestParam(name = "size", required = false, defaultValue = "10") int size,
 															 @RequestParam(name = "page", required = false, defaultValue = "0") int page) {
 		
-		return objects.getObjectsByLocationSquareSearch(userSuperapp, userEmail, lat, lng,
+		return objects.getObjectsByLocationSearch(userSuperapp, userEmail, lat, lng,
 				distance, distanceUnits ,size, page).toArray(new ObjectBoundary[0]);
-
-//		if (unit.equalsIgnoreCase("miles")) {
-//			// Convert miles to meters
-//			distance = distance.in(Metrics.MILES);
-//		} else if (unit.equalsIgnoreCase("kilometers")) {
-//			// Convert kilometers to meters
-//			distance = distance.in(Metrics.KILOMETERS);
-//		}
 
 	}
 

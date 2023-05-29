@@ -328,7 +328,7 @@ public class ObjectServicesDB extends GeneralService implements ObjectServiceWit
 	}
 
 	@Override
-	public List<ObjectBoundary> getObjectsByLocationSquareSearch(String userSuperapp, String userEmail, 
+	public List<ObjectBoundary> getObjectsByLocationSearch(String userSuperapp, String userEmail, 
 			double lat, double lng, double distance, String distanceUnits, int size, int page) {
 		boolean isMiniappUser, isSuperappUser;
 		Point location = new Point(lat, lng);

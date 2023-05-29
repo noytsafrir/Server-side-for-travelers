@@ -36,33 +36,33 @@ public interface ObjectCrud extends ListCrudRepository<ObjectEntity, ObjectPrima
 			@Param("objectId") ObjectEntity object,
 			Pageable pageable);
 
-	List<ObjectEntity> findAllByType(
+	public List<ObjectEntity> findAllByType(
 			@Param("type") String type,
 			Pageable pageable);
 
-	List<ObjectEntity> findAllByActiveIsTrueAndType(
+	public List<ObjectEntity> findAllByActiveIsTrueAndType(
 			@Param("type") String type,
 			Pageable pageable);
 
-	List<ObjectEntity> findAllByAlias(
+	public List<ObjectEntity> findAllByAlias(
 			@Param("alias") String alias,
 			Pageable pageable);
 
-	List<ObjectEntity> findAllByActiveIsTrueAndAlias(
+	public List<ObjectEntity> findAllByActiveIsTrueAndAlias(
 			String alias,
 			Pageable pageable);
 
-	List<ObjectEntity> findByLocationNear(
+	public List<ObjectEntity> findByLocationNear(
 			@Param("location") Point location,
 			@Param("maxDistance") Distance maxDistance,
 			Pageable pageable);
 	
-	List<ObjectEntity> findByActiveIsTrueAndLocationNear(
+	public List<ObjectEntity> findByActiveIsTrueAndLocationNear(
 			@Param("location") Point location,
 			@Param("maxDistance") Distance maxDistance,
 			Pageable pageable);
 
-	List<ObjectEntity> findByCreatedBy(
+	public List<ObjectEntity> findAllByCreatedBy(
 			@Param("userId") UserId userId,
 			Pageable pageable);
 }

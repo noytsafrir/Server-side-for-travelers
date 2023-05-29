@@ -92,11 +92,35 @@ public class MiniAppCommandServiceDB extends GeneralService implements MiniAppCo
 		// Check if command boundary is valid and initialize it with id and timestamp
 		checkAndInitCommand(command);
 
-
 		MiniAppCommandEntity newEntity = commandConverter.toEntity(command);
 		commandsCrud.save(newEntity);
+		
+//		String commandOwner = command.getCommandId().getMiniapp();
+//		String theCommand = command.getCommand();
+//		
+//		switch(commandOwner) {
+//		case "TimeToTravel":
+//		{
+//			switch(theCommand) {
+//			
+//			}
+////			return getAllByCreatedBy();
+//		}
+//			break;
+//		case "TravelAngel":
+//			
+//			break;
+//			
+//		default:
+//		
+//		}
+		
 		return newEntity;
 	}
+	
+	
+	//TODO: create the function to get all objects by user
+	
 
 	// TODO: write this function (async logic)
 	@Override
@@ -147,23 +171,6 @@ public class MiniAppCommandServiceDB extends GeneralService implements MiniAppCo
 		this.commandsCrud.deleteAll();
 	}
 	
-	@Deprecated
-	@Override
-	public List<MiniAppCommandBoundary> getAllCommands() {
-		throw new DeprecatedException(LocalDate.of(2023, 5, 22));
-	}
-
-	@Deprecated
-	@Override
-	public List<MiniAppCommandBoundary> getAllMiniAppCommands(String miniAppName) {
-		throw new DeprecatedException(LocalDate.of(2023, 5, 22));
-	}
-	
-	@Deprecated
-	@Override
-	public void deleteAllCommands() {
-		throw new DeprecatedException(LocalDate.of(2023, 5, 22));
-	}
 	
     private void checkInvokedCommand(MiniAppCommandBoundary command){
 		if (command == null)
@@ -232,5 +239,28 @@ public class MiniAppCommandServiceDB extends GeneralService implements MiniAppCo
 		if (command.getCommandAttributes() == null) {
 			command.setCommandAttributes(new HashMap<>());
 		}
+	}
+	
+	
+	
+	
+	
+	
+	@Deprecated
+	@Override
+	public List<MiniAppCommandBoundary> getAllCommands() {
+		throw new DeprecatedException(LocalDate.of(2023, 5, 22));
+	}
+
+	@Deprecated
+	@Override
+	public List<MiniAppCommandBoundary> getAllMiniAppCommands(String miniAppName) {
+		throw new DeprecatedException(LocalDate.of(2023, 5, 22));
+	}
+	
+	@Deprecated
+	@Override
+	public void deleteAllCommands() {
+		throw new DeprecatedException(LocalDate.of(2023, 5, 22));
 	}
 }

@@ -83,9 +83,6 @@ public class OpenStreetMapService implements CommandLineRunner {
 
         System.err.println("openstreetmap start");
         osmObjects = retrievePOIs(32.109333, 34.855499, 5000, "tourism", "viewpoint");
-//        osmObjects
-//                .stream()
-//                        .map(convertor::toObjectBoundary);
 
 
 
