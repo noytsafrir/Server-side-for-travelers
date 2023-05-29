@@ -7,8 +7,11 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.ApplicationContext;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.jms.core.JmsTemplate;
@@ -37,6 +40,7 @@ import superapp.exceptions.ResourceAlreadyExistException;
 import superapp.exceptions.ResourceNotFoundException;
 import superapp.logic.GeneralService;
 import superapp.logic.MiniAppCommandAsyncService;
+import superapp.logic.commands.MiniappInterface;
 import superapp.utils.Validator;
 
 
@@ -49,7 +53,18 @@ public class MiniAppCommandServiceDB extends GeneralService implements MiniAppCo
 	private String superAppName;
 	private JmsTemplate jmsTemplate;
 	private ObjectMapper jackson;
-
+	private Log logger = LogFactory.getLog(MiniAppCommandServiceDB.class);
+	private ApplicationContext applicationContext;
+	
+	@PostConstruct
+	public void init() {
+		this.jackson = new ObjectMapper();
+	}
+	
+	@Autowired
+	public void setApplicationContext(ApplicationContext applicationContext) {
+		this.applicationContext = applicationContext;
+	}
 
 	@Autowired
 	public void setCommandsCrud(MiniAppCommandCrud commandsCrud) {
@@ -77,50 +92,47 @@ public class MiniAppCommandServiceDB extends GeneralService implements MiniAppCo
 		this.jmsTemplate.setDeliveryDelay(10000L);
 	}
 
-	@PostConstruct
-	public void init() {
-		this.jackson = new ObjectMapper();
-	}
-	
+
 	@Value("${spring.application.name:defaultValue}")
 	public void setSuperAppName(String superAppName) {
 		this.superAppName = superAppName;
 	}
 	
 	@Override
-	public Object invokeCommand(MiniAppCommandBoundary command) {
+	public Object invokeCommand(MiniAppCommandBoundary miniappCommand) {
 		// Check if command boundary is valid and initialize it with id and timestamp
-		checkAndInitCommand(command);
-
-		MiniAppCommandEntity newEntity = commandConverter.toEntity(command);
+		checkAndInitCommand(miniappCommand);
+		
+		MiniAppCommandEntity newEntity = commandConverter.toEntity(miniappCommand);
 		commandsCrud.save(newEntity);
 		
-//		String commandOwner = command.getCommandId().getMiniapp();
-//		String theCommand = command.getCommand();
-//		
-//		switch(commandOwner) {
-//		case "TimeToTravel":
-//		{
-//			switch(theCommand) {
-//			
-//			}
-////			return getAllByCreatedBy();
-//		}
-//			break;
-//		case "TravelAngel":
-//			
-//			break;
-//			
-//		default:
-//		
-//		}
+		String commandString = miniappCommand.getCommand();
 		
-		return newEntity;
-	}
-	
-	
-	//TODO: create the function to get all objects by user
-	
+		MiniappInterface command= null;
+		Object result= null;
+		try {
+			command = this.applicationContext.getBean(commandString, MiniappInterface.class);
+			result = command.activateCommand(miniappCommand);
+			System.err.println("************** "+ result);
+		}catch (Exception e) {
+			this.logger.warn("The command " + commandString + " is not found\n" +e.getMessage() );
+			//TODO: choose what to do when we get string that is not found
+//			command = this.defaultGame;
+		}
+		return result;
+		
+//	    String commandString = miniappCommand.getCommand();
+//	    MiniappInterface commandImplementation = commandImplementations.get(commandString);
+//	    if (commandImplementation != null) {
+//	        Object result = commandImplementation.activateCommand(miniappCommand);
+//			this.logger.trace("The command to invoke is : " + commandString);
+//	        return result;
+//	    } else {
+//
+//			this.logger.trace("The command " + commandString + " is not found");
+//	        throw new UnsupportedOperationException("Command not supported: " + commandString);
+//	    }
+	}	
 
 	// TODO: write this function (async logic)
 	@Override

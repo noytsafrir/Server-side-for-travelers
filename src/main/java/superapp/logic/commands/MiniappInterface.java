@@ -1,4 +1,4 @@
-package superapp.miniapps;
+package superapp.logic.commands;
 
 import superapp.boundaries.command.MiniAppCommandBoundary;
 
