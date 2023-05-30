@@ -11,15 +11,18 @@ import superapp.boundaries.command.MiniAppCommandBoundary;
 import superapp.boundaries.user.UserId;
 import superapp.converters.ObjectConvertor;
 import superapp.dal.ObjectCrud;
+import superapp.data.ObjectEntity;
+import superapp.data.ObjectPrimaryKeyId;
 import superapp.exceptions.InvalidInputException;
+import superapp.exceptions.ResourceNotFoundException;
 import superapp.logic.actualServices.MiniAppCommandServiceDB;
 import superapp.logic.commands.MiniappInterface;
 
-@Component("timeToTravel_findMyPoints")
-public class FindMyPoints implements MiniappInterface{
+@Component("timeToTravel_ratePoint")
+public class RatePoint implements MiniappInterface{
 	private ObjectCrud objectCrud;
 	private ObjectConvertor converter;
-	private Log logger = LogFactory.getLog(FindMyPoints.class);
+	private Log logger = LogFactory.getLog(RatePoint.class);
 
 	
 	@Autowired
@@ -37,14 +40,24 @@ public class FindMyPoints implements MiniappInterface{
 	public Object activateCommand(MiniAppCommandBoundary miniappCommandBoundary) {
 		UserId userId = miniappCommandBoundary.getInvokedBy().getUserId();
 		String command = miniappCommandBoundary.getCommand();
-
-		if(command.equals("timeToTravel_findMyPoints")) {
+		
+		if(command.equals("timeToTravel_ratePoint")) {
 			this.logger.trace("The command to invoke is : " + command);
-			return objectCrud
-					.findAllByCreatedBy(userId,PageRequest.of(0, 10, Direction.DESC, "createdTimestamp", "objectId"))
-					.stream()
-					.map(this.converter::toBoundary)
-					.toList();
+			ObjectPrimaryKeyId pkid = converter.idToEntity(miniappCommandBoundary.getTargetObject().getObjectId());
+			ObjectEntity entity = this.objectCrud.findById(pkid)
+					.orElseThrow(() -> new ResourceNotFoundException(pkid, "find object"));
+			this.logger.warn("**********"+ miniappCommandBoundary.getCommandAttributes());
+			this.logger.warn("##########"+ entity.getObjectDetails());
+
+			Integer count = (Integer)entity.getObjectDetails().get("ratingCount") + 1;
+			entity.getObjectDetails().put("ratingCount",count);
+			Double rateFromUser = (Double) miniappCommandBoundary.getCommandAttributes().get("rate");
+			Double totalRating = ((Double)entity.getObjectDetails().get("totalRating") + rateFromUser);
+			Double newRate = totalRating / count;
+			entity.getObjectDetails().put("rating",newRate);
+			entity.getObjectDetails().put("totalRating",totalRating);
+			objectCrud.save(entity);
+			return converter.toBoundary(entity);
 		}
 		else {
 			this.logger.warn("The command " + command + " is not found");

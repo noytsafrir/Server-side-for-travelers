@@ -1,9 +1,5 @@
 package superapp.data;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 
 public class PointOfInterest {
 
@@ -11,7 +7,8 @@ public class PointOfInterest {
 
 	private String description;
 	private double rating;
-
+	private double totalRating;
+	private int ratingCount;
 	private String image;
 
 	public PointOfInterest() {}
@@ -47,4 +44,21 @@ public class PointOfInterest {
 	public void setImage(String image) {
 		this.image = image;
 	}
+	
+	public int getRatingCount() {
+		return ratingCount;
+	}
+
+	public void setRatingCount(int ratingCount) {
+		this.ratingCount = ratingCount;
+	}
+
+	public double getTotalRating() {
+		return totalRating;
+	}
+
+	public void setTotalRating(double totalRating) {
+		this.totalRating = totalRating;
+	}
+	
 }
