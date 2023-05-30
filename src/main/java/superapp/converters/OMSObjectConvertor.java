@@ -64,7 +64,7 @@ public class OMSObjectConvertor {
 			PointOfInterest poi = new PointOfInterest();
 			poi.setType(osm.getTags().getOrDefault(category, "NA").toString());
 			poi.setDescription(osm.getTags().getOrDefault("description", "NA").toString());
-			poi.setImage(osm.getTags().getOrDefault("image", defaultImage).toString());
+			poi.setImage(osm.getTags().getOrDefault("image", "").toString());
 
 			Map<String, Object> poiMap = objectMapper.convertValue(poi, Map.class);
 			boundary.setObjectDetails(new HashMap<>(poiMap));

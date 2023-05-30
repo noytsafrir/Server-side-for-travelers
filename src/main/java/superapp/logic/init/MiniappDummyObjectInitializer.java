@@ -1,5 +1,6 @@
 package superapp.logic.init;
 
+import java.util.HashMap;
 import java.util.List;
 
 import jakarta.annotation.PostConstruct;
@@ -91,6 +92,10 @@ public class MiniappDummyObjectInitializer implements CommandLineRunner {
 		object.setAlias("dummyObject");
 		object.setLocation(new Location(0.0, 0.0));
 		object.setActive(true);
+
+		object.setObjectDetails(new HashMap<>());
+//		object.
+
 
 		object = objectService.createObject(object);
 		this.logger.trace("Dummy object created: " + object.toString());
