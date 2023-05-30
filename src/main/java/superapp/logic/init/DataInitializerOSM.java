@@ -102,6 +102,7 @@ public class DataInitializerOSM implements CommandLineRunner{
 
 	@Override
 	public void run(String... args) throws Exception {
+		logger.info("Initializing OSM data");
 		objectService.deleteObjectsByType(this.typeOSM);
 		getTourism();
 		getAmenity();

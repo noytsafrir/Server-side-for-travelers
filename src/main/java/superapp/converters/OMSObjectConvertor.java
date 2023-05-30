@@ -27,6 +27,8 @@ public class OMSObjectConvertor {
 	private String typeOSM;
 	private String detailsOSM;
 
+	private String defaultImage;
+
 	private Log logger = LogFactory.getLog(OMSObjectConvertor.class);
 
 	@PostConstruct
@@ -44,6 +46,11 @@ public class OMSObjectConvertor {
 		this.detailsOSM = detailsOSM;
 	}
 
+	@Value("${osm.object.defaultImage}")
+	public void setDefaultImage(String defaultImage) {
+		this.defaultImage = defaultImage;
+	}
+
 	public ObjectBoundary toObjectBoundary(OSMObjectBoundary osm, String category, boolean active, UserId userId) {
 		{
 			ObjectBoundary boundary = new ObjectBoundary();
@@ -57,7 +64,7 @@ public class OMSObjectConvertor {
 			PointOfInterest poi = new PointOfInterest();
 			poi.setType(osm.getTags().getOrDefault(category, "NA").toString());
 			poi.setDescription(osm.getTags().getOrDefault("description", "NA").toString());
-			poi.setImage(osm.getTags().getOrDefault("image", "").toString());
+			poi.setImage(osm.getTags().getOrDefault("image", defaultImage).toString());
 
 			Map<String, Object> poiMap = objectMapper.convertValue(poi, Map.class);
 			boundary.setObjectDetails(new HashMap<>(poiMap));

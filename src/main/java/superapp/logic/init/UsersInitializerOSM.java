@@ -14,7 +14,7 @@ import superapp.exceptions.ResourceNotFoundException;
 import superapp.logic.UsersService;
 
 @Component
-@Profile("InitializerOSM")
+@Profile("UserInitializerOSM")
 public class UsersInitializerOSM implements CommandLineRunner{
 	private UsersService usersService;
 	private Log logger = LogFactory.getLog(UsersInitializerOSM.class);

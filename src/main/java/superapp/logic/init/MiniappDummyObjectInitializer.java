@@ -14,13 +14,19 @@ import org.springframework.stereotype.Component;
 import superapp.boundaries.object.CreatedBy;
 import superapp.boundaries.object.Location;
 import superapp.boundaries.object.ObjectBoundary;
+import superapp.boundaries.user.UserBoundary;
 import superapp.boundaries.user.UserId;
+import superapp.data.UserRole;
+import superapp.exceptions.ResourceNotFoundException;
 import superapp.logic.ObjectServiceWithPagination;
+import superapp.logic.UsersService;
 
 @Component
 @Profile("MiniappDummyObjectInitializer")
 public class MiniappDummyObjectInitializer implements CommandLineRunner {
 	private ObjectServiceWithPagination objectService;
+	private UsersService usersService;
+
 	private Log logger = LogFactory.getLog(MiniappDummyObjectInitializer.class);
 
 	private String dummyObjectType;
@@ -34,6 +40,11 @@ public class MiniappDummyObjectInitializer implements CommandLineRunner {
 	public MiniappDummyObjectInitializer(ObjectServiceWithPagination objectService) {
 		super();
 		this.objectService = objectService;
+	}
+
+	@Autowired
+	public void setUsersService(UsersService usersService) {
+		this.usersService = usersService;
 	}
 
 	@Value("${miniapp.command.targetObject.type}")
@@ -62,6 +73,8 @@ public class MiniappDummyObjectInitializer implements CommandLineRunner {
 	}
 
 	public void getObjectOrCreate() {
+		loginOrCreateDummyObject();
+
 		List<ObjectBoundary> dummyObjects =  objectService.getObjectsByType(this.superAppName, this.email, this.dummyObjectType, 1, 0);
 		if (dummyObjects.size() == 0) {
 			createDummyObject();
@@ -81,6 +94,19 @@ public class MiniappDummyObjectInitializer implements CommandLineRunner {
 
 		object = objectService.createObject(object);
 		this.logger.trace("Dummy object created: " + object.toString());
+	}
+
+	public void loginOrCreateDummyObject() {
+		UserBoundary userDummyObject = null;
+		try {
+			userDummyObject = usersService.login(this.superAppName, this.email);
+			this.logger.trace("DummyObject user already exist: " + userDummyObject.toString());
+		} catch (ResourceNotFoundException e) {
+			UserId id = new UserId(this.superAppName, this.email);
+			userDummyObject = new UserBoundary(id, UserRole.SUPERAPP_USER.toString(), "DummyObject internal user", "NA");
+			userDummyObject = usersService.createUser(userDummyObject);
+			this.logger.trace("DummyObject user created: " + userDummyObject.toString());
+		}
 	}
 
 }
