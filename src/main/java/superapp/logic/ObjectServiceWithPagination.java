@@ -10,7 +10,7 @@ public interface ObjectServiceWithPagination extends ObjectServiceBinding {
 	public ObjectBoundary updateObject(String superapp, String internalObjectId, ObjectBoundary update,
 			String userSuperapp, String email);
 
-	public ObjectBoundary getSpecsificObject(String ObjectSuperapp, String internalObjectId, String userSuperapp,
+	public ObjectBoundary getSpecificObject(String ObjectSuperapp, String internalObjectId, String userSuperapp,
 			String email);
 
 	public List<ObjectBoundary> getAllObjects(String userSuperapp, String email, int size, int page);

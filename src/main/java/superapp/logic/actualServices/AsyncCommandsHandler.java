@@ -29,9 +29,7 @@ public class AsyncCommandsHandler {
 		try {
 			MiniAppCommandBoundary commandBoundary = this.jackson.readValue(json, MiniAppCommandBoundary.class);
 
-			if (commandBoundary.getCommandAttributes() == null) {
-				commandBoundary.setCommandAttributes(new HashMap<>());
-			}
+			this.handleCommand(json);
 
 			commandBoundary.getCommandAttributes().put("status", "remote-is-done");
 
@@ -43,5 +41,13 @@ public class AsyncCommandsHandler {
 		}
 	}
 
-
+	private void handleCommand(String json) {
+		System.err.println("Doing something...");
+		try {
+			Thread.sleep(2000);
+		} catch (Exception e) {
+			throw new RuntimeException();
+		}
+		System.err.println("Did something!");
+	}
 }

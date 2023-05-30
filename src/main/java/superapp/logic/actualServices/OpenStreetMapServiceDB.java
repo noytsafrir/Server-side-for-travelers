@@ -104,9 +104,7 @@ public class OpenStreetMapServiceDB implements OpenStreetMapService {
             }
         }
 
-        logger.info("Retrieved " + rv.size() + " POIs from OpenStreetMap");
+        logger.info("Retrieved " + rv.size() + " POIs from OpenStreetMap with tag " + category + "=" + type);
         return rv;
     }
-
-
 }

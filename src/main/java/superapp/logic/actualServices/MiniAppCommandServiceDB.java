@@ -47,20 +47,20 @@ import superapp.utils.Validator;
 @Service
 public class MiniAppCommandServiceDB extends GeneralService implements MiniAppCommandAsyncService {
 	private MiniAppCommandCrud commandsCrud;
-    private ObjectCrud objectCrud;
-    private UserCrud userCrud;
+	private ObjectCrud objectCrud;
+	private UserCrud userCrud;
 	private MiniAppCommandConverter commandConverter;
 	private String superAppName;
 	private JmsTemplate jmsTemplate;
 	private ObjectMapper jackson;
 	private Log logger = LogFactory.getLog(MiniAppCommandServiceDB.class);
 	private ApplicationContext applicationContext;
-	
+
 	@PostConstruct
 	public void init() {
 		this.jackson = new ObjectMapper();
 	}
-	
+
 	@Autowired
 	public void setApplicationContext(ApplicationContext applicationContext) {
 		this.applicationContext = applicationContext;
@@ -85,7 +85,7 @@ public class MiniAppCommandServiceDB extends GeneralService implements MiniAppCo
 	public void setCommandConverter(MiniAppCommandConverter commandConverter) {
 		this.commandConverter = commandConverter;
 	}
-	
+
 	@Autowired
 	public void setJmsTemplate(JmsTemplate jmsTemplate) {
 		this.jmsTemplate = jmsTemplate;
@@ -97,42 +97,34 @@ public class MiniAppCommandServiceDB extends GeneralService implements MiniAppCo
 	public void setSuperAppName(String superAppName) {
 		this.superAppName = superAppName;
 	}
-	
+
 	@Override
 	public Object invokeCommand(MiniAppCommandBoundary miniappCommand) {
 		// Check if command boundary is valid and initialize it with id and timestamp
+		logger.trace("invokeCommand method is called with command: " + miniappCommand.getCommand());
 		checkAndInitCommand(miniappCommand);
-		
+
 		MiniAppCommandEntity newEntity = commandConverter.toEntity(miniappCommand);
 		commandsCrud.save(newEntity);
-		
+
+		logger.debug("The command is saved in the DB with id: " + newEntity.getCommandID());
+
 		String commandString = miniappCommand.getCommand();
-		
+
 		MiniappInterface command= null;
 		Object result= null;
 		try {
+			logger.trace("The command to invoke is : " + commandString);
 			command = this.applicationContext.getBean(commandString, MiniappInterface.class);
 			result = command.activateCommand(miniappCommand);
-			System.err.println("************** "+ result);
 		}catch (Exception e) {
-			this.logger.warn("The command " + commandString + " is not found\n" +e.getMessage() );
-			//TODO: choose what to do when we get string that is not found
-//			command = this.defaultGame;
+			this.logger.warn("The command " + commandString + " is not found" +e.getMessage() );
+			throw new InvalidInputException("command", (Object) commandString);
 		}
+
+		logger.trace("The command " + commandString + " is invoked successfully");
 		return result;
-		
-//	    String commandString = miniappCommand.getCommand();
-//	    MiniappInterface commandImplementation = commandImplementations.get(commandString);
-//	    if (commandImplementation != null) {
-//	        Object result = commandImplementation.activateCommand(miniappCommand);
-//			this.logger.trace("The command to invoke is : " + commandString);
-//	        return result;
-//	    } else {
-//
-//			this.logger.trace("The command " + commandString + " is not found");
-//	        throw new UnsupportedOperationException("Command not supported: " + commandString);
-//	    }
-	}	
+	}
 
 	// TODO: write this function (async logic)
 	@Override
@@ -153,9 +145,12 @@ public class MiniAppCommandServiceDB extends GeneralService implements MiniAppCo
 
 	@Override
 	public List<MiniAppCommandBoundary> getAllCommands(String userSuperapp, String email, int size, int page) {
+		logger.trace("getAllCommands method is called");
 		UserPrimaryKeyId user = new UserPrimaryKeyId(userSuperapp, email);
-		if (!isValidUserCredentials(user, UserRole.ADMIN, this.userCrud))
+		if (!isValidUserCredentials(user, UserRole.ADMIN, this.userCrud)) {
+			logger.warn("The user " + user.getEmail() + " is not authorized to get all commands");
 			throw new ForbbidenException(user.getEmail(), "get all miniapp commands");
+		}
 
 		return this.commandsCrud.findAll(PageRequest.of(page, size, Direction.DESC, "invocationTimestamp", "commandId"))
 				.stream()
@@ -164,74 +159,102 @@ public class MiniAppCommandServiceDB extends GeneralService implements MiniAppCo
 	}
 	@Override
 	public List<MiniAppCommandBoundary> getAllMiniAppCommands(String miniAppName, String userSuperapp, String email,
-			int size, int page) {
+															  int size, int page) {
+		logger.trace("getAllMiniAppCommands method is called with miniapp name: " + miniAppName);
 		UserPrimaryKeyId user = new UserPrimaryKeyId(userSuperapp, email);
-		if (!isValidUserCredentials(user, UserRole.ADMIN, this.userCrud))
+		if (!isValidUserCredentials(user, UserRole.ADMIN, this.userCrud)) {
+			logger.warn("The user " + user.getEmail() + " is not authorized to get all commands");
 			throw new ForbbidenException(user.getEmail(), "get all miniapp commands");
+		}
 
 		return this.commandsCrud.findAllByCommandID_Miniapp(miniAppName,PageRequest.of(page, size, Direction.DESC, "invocationTimestamp", "commandId"))
 				.stream()
 				.map(this.commandConverter::toBoundary)
 				.toList();
 	}
-	
+
 	@Override
-	public void deleteAllCommands(String superapp, String email) {	
+	public void deleteAllCommands(String superapp, String email) {
+		logger.trace("deleteAllCommands method is called with superapp: " + superapp + " and email: " + email);
 		UserPrimaryKeyId user = new UserPrimaryKeyId(superapp, email);
-		if (!isValidUserCredentials(user, UserRole.ADMIN, this.userCrud))
+		if (!isValidUserCredentials(user, UserRole.ADMIN, this.userCrud)) {
+			logger.warn("The user " + user.getEmail() + " is not authorized to delete all commands");
 			throw new ForbbidenException(user.getEmail(), "delete all miniapp commands");
+		}
 		this.commandsCrud.deleteAll();
+		logger.info("All commands are deleted");
 	}
-	
-	
-    private void checkInvokedCommand(MiniAppCommandBoundary command){
-		if (command == null)
+
+
+	private void checkInvokedCommand(MiniAppCommandBoundary command){
+		if (command == null) {
+			logger.warn("command is null");
 			throw new InvalidInputException(null, "command", "invoke command");
-		
-		if (command.getCommandId() == null)
+		}
+
+		if (command.getCommandId() == null) {
+			logger.warn("command id is null");
 			throw new InvalidInputException(command.getCommandId(), "command id", "invoke command");
-		
-		if (command.getCommandId().getMiniapp() == null || command.getCommandId().getMiniapp().isBlank())
+		}
+
+		if (command.getCommandId().getMiniapp() == null || command.getCommandId().getMiniapp().isBlank()) {
+			logger.warn("command miniapp is null or empty");
 			throw new InvalidInputException(command.getCommandId().getMiniapp(), "miniapp", "invoke command");
-		
-		if (command.getCommandAttributes() == null)
+		}
+
+		if (command.getCommandAttributes() == null) {
+			logger.warn("command attributes is null");
 			throw new InvalidInputException(command.getCommandAttributes(), "command attributes", "invoke command");
-				
-        if (command.getCommand() == null || command.getCommand().isBlank())
+		}
+
+		if (command.getCommand() == null || command.getCommand().isBlank()) {
+			logger.warn("command string is null or empty");
 			throw new InvalidInputException(command, "command string", "invoke command");
+		}
 
-        InvocationUser invokedBy = command.getInvokedBy();
-        if (invokedBy == null || invokedBy.getUserId() == null)
+		InvocationUser invokedBy = command.getInvokedBy();
+		if (invokedBy == null || invokedBy.getUserId() == null) {
+			logger.warn("invokedBy is null or userId is null");
 			throw new InvalidInputException(invokedBy, "user data", "invoke command");
-        
-        if (invokedBy.getUserId().getSuperapp() == null || invokedBy.getUserId().getSuperapp().isBlank())
+		}
+
+		if (invokedBy.getUserId().getSuperapp() == null || invokedBy.getUserId().getSuperapp().isBlank()) {
+			logger.warn("invokedBy superapp is null or empty");
 			throw new InvalidInputException(invokedBy.getUserId().getSuperapp(), "user superapp", "invoke command");
-        
-        if (invokedBy.getUserId().getEmail() == null ||
-        	invokedBy.getUserId().getEmail().isBlank() ||
-        	!Validator.isValidEmail(invokedBy.getUserId().getEmail()))
+		}
+
+		if (invokedBy.getUserId().getEmail() == null ||
+				invokedBy.getUserId().getEmail().isBlank() ||
+				!Validator.isValidEmail(invokedBy.getUserId().getEmail())) {
+			logger.warn("invokedBy email is null or empty or invalid");
 			throw new InvalidInputException(invokedBy.getUserId().getEmail(), "user email", "invoke command");
+		}
 
-       UserPrimaryKeyId user = new UserPrimaryKeyId(invokedBy.getUserId().getSuperapp(), invokedBy.getUserId().getEmail());
-       if(!isValidUserCredentials(user, UserRole.MINIAPP_USER, this.userCrud))
-            throw new ForbbidenException(user.getEmail(), "invoke command");
+		UserPrimaryKeyId user = new UserPrimaryKeyId(invokedBy.getUserId().getSuperapp(), invokedBy.getUserId().getEmail());
+		if(!isValidUserCredentials(user, UserRole.MINIAPP_USER, this.userCrud)) {
+			logger.warn("user " + user + " is not authorized to invoke command");
+			throw new ForbbidenException(user.getEmail(), "invoke command");
+		}
 
-        TargetObject targetObject = command.getTargetObject();
-        if (targetObject == null ||
-                targetObject.getObjectId() == null ||
-                targetObject.getObjectId().getSuperapp() == null ||
-                targetObject.getObjectId().getInternalObjectId() == null ||
-                targetObject.getObjectId().getSuperapp().isBlank() ||
-                targetObject.getObjectId().getInternalObjectId().isBlank()) {
+		TargetObject targetObject = command.getTargetObject();
+		if (targetObject == null ||
+				targetObject.getObjectId() == null ||
+				targetObject.getObjectId().getSuperapp() == null ||
+				targetObject.getObjectId().getInternalObjectId() == null ||
+				targetObject.getObjectId().getSuperapp().isBlank() ||
+				targetObject.getObjectId().getInternalObjectId().isBlank()) {
+			logger.warn("target object is null or invalid");
 			throw new InvalidInputException(command, "target object", "invoke command");
-        }
+		}
 
-        ObjectPrimaryKeyId objId = new ObjectPrimaryKeyId(	targetObject.getObjectId().getSuperapp(),
-        													targetObject.getObjectId().getInternalObjectId());
-        Optional<ObjectEntity> objectE = this.objectCrud.findById(objId);
-        if(objectE.isEmpty() || !objectE.get().getActive())
-            throw new ResourceNotFoundException(objId, "invoke command");
-    }
+		ObjectPrimaryKeyId objId = new ObjectPrimaryKeyId(	targetObject.getObjectId().getSuperapp(),
+				targetObject.getObjectId().getInternalObjectId());
+		Optional<ObjectEntity> objectE = this.objectCrud.findById(objId);
+		if(objectE.isEmpty() || !objectE.get().getActive()) {
+			logger.warn("object not found or not active");
+			throw new ResourceNotFoundException(objId, "invoke command");
+		}
+	}
 
 	private void checkAndInitCommand(MiniAppCommandBoundary command) {
 		// Check command validity and throw appropriate exception if not valid:
@@ -243,8 +266,11 @@ public class MiniAppCommandServiceDB extends GeneralService implements MiniAppCo
 		MiniAppCommandPrimaryKeyId id = new MiniAppCommandPrimaryKeyId(command.getCommandId().getSuperapp(),
 				command.getCommandId().getMiniapp(), command.getCommandId().getInternalCommandId());
 
+		logger.trace("command id set successfully to: " + id);
+
 		Optional<MiniAppCommandEntity> entity = commandsCrud.findById(id);
 		if (entity.isPresent()) {
+			logger.warn("command already exists");
 			throw new ResourceAlreadyExistException(id, "invoke command");
 		}
 
@@ -264,7 +290,7 @@ public class MiniAppCommandServiceDB extends GeneralService implements MiniAppCo
 	public List<MiniAppCommandBoundary> getAllMiniAppCommands(String miniAppName) {
 		throw new DeprecatedException(LocalDate.of(2023, 5, 22));
 	}
-	
+
 	@Deprecated
 	@Override
 	public void deleteAllCommands() {

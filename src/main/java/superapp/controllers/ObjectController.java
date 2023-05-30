@@ -51,7 +51,7 @@ public class ObjectController {
 			@PathVariable("internalObjectId") String internalObjectId,
 			@RequestParam(name = "userSuperapp", required = true) String userSuperapp,
 			@RequestParam(name = "userEmail", required = true) String email) {
-		return this.objects.getSpecsificObject(superapp, internalObjectId, userSuperapp, email);
+		return this.objects.getSpecificObject(superapp, internalObjectId, userSuperapp, email);
 	}
 
 	@CrossOrigin(origins = "*")
