@@ -9,31 +9,12 @@ public class PointOfInterest {
 
 	private String type;
 
-	private String privateOrPublic;
-
+	private String description;
 	private double rating;
 
 	private String image;
 
-	private Map<String, Object> details;
-
 	public PointOfInterest() {}
-
-	public PointOfInterest(String type, String privateOrPublic, double rating, String image) {
-		this.type = type;
-		this.privateOrPublic = privateOrPublic;
-		this.rating = rating;
-		this.image = image;
-		this.details = new HashMap<>();
-	}
-
-	public PointOfInterest(String type, String privateOrPublic, double rating, String image, Map<String, Object> details) {
-		this.type = type;
-		this.privateOrPublic = privateOrPublic;
-		this.rating = rating;
-		this.image = image;
-		this.details = details;
-	}
 
 	public String getType() {
 		return type;
@@ -43,12 +24,12 @@ public class PointOfInterest {
 		this.type = type;
 	}
 
-	public String isPrivateOrPublic() {
-		return privateOrPublic;
+	public String getDescription() {
+		return description;
 	}
 
-	public void setPrivateOrPublic(String privateOrPublic) {
-		this.privateOrPublic = privateOrPublic;
+	public void setDescription(String description) {
+		this.description = description;
 	}
 
 	public double getRating() {
@@ -59,23 +40,11 @@ public class PointOfInterest {
 		this.rating = rating;
 	}
 
-	public String getPrivateOrPublic() {
-		return privateOrPublic;
-	}
-
 	public String getImage() {
 		return image;
 	}
 
 	public void setImage(String image) {
 		this.image = image;
-	}
-
-	public Map<String, Object> getDetails() {
-		return details;
-	}
-
-	public void setDetails(Map<String, Object> details) {
-		this.details = details;
 	}
 }

@@ -34,4 +34,7 @@ public interface ObjectServiceWithPagination extends ObjectServiceBinding {
 	
 	public List<ObjectBoundary> getObjectsByLocationSearch(String userSuperapp, String email, 
 			double lat, double lng, double distance,String distanceUnits, int size, int page);
+
+	public void deleteObjectsByType(String type);
+
 }

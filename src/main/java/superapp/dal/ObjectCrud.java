@@ -65,4 +65,7 @@ public interface ObjectCrud extends ListCrudRepository<ObjectEntity, ObjectPrima
 	public List<ObjectEntity> findAllByCreatedBy(
 			@Param("userId") UserId userId,
 			Pageable pageable);
+
+	public void deleteAllByType(
+			@Param("type") String type);
 }

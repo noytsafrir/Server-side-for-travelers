@@ -7,6 +7,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort.Direction;
@@ -41,6 +43,8 @@ public class ObjectServicesDB extends GeneralService implements ObjectServiceWit
 	private ObjectCrud objectCrud;
 	private UserCrud users;
 	private ObjectConvertor converter;
+
+	private Log logger = LogFactory.getLog(MiniAppCommandServiceDB.class);
 
 	@Autowired // put in the parameter an instance
 	public void setObjectCrud(ObjectCrud oc) {
@@ -366,7 +370,8 @@ public class ObjectServicesDB extends GeneralService implements ObjectServiceWit
 					.toList();
 		return objects;
 	}
-	
+
+
 	
 	@Override
 	public void deleteAllObject(String userSuperapp, String email) {
@@ -375,7 +380,11 @@ public class ObjectServicesDB extends GeneralService implements ObjectServiceWit
 			throw new ForbbidenException(user.getEmail(), "delete all objects");
 		this.objectCrud.deleteAll();
 	}
-	
+	@Override
+	public void deleteObjectsByType(String type) {
+		this.logger.info("delete all objects by type: " + type);
+		this.objectCrud.deleteAllByType(type);
+	}
 	
 	@Deprecated
 	@Override

@@ -252,12 +252,7 @@ public class MiniAppCommandServiceDB extends GeneralService implements MiniAppCo
 			command.setCommandAttributes(new HashMap<>());
 		}
 	}
-	
-	
-	
-	
-	
-	
+
 	@Deprecated
 	@Override
 	public List<MiniAppCommandBoundary> getAllCommands() {
