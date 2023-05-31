@@ -53,7 +53,7 @@ public class MiniAppCommandServiceDB extends GeneralService implements MiniAppCo
 	private String superAppName;
 	private JmsTemplate jmsTemplate;
 	private ObjectMapper jackson;
-	private Log logger = LogFactory.getLog(MiniAppCommandServiceDB.class);
+	private final Log logger = LogFactory.getLog(MiniAppCommandServiceDB.class);
 	private ApplicationContext applicationContext;
 
 	@PostConstruct
@@ -111,15 +111,15 @@ public class MiniAppCommandServiceDB extends GeneralService implements MiniAppCo
 
 		String commandString = miniappCommand.getCommand();
 
-		MiniappInterface command= null;
-		Object result= null;
+		MiniappInterface command;
+		Object result;
 		try {
 			logger.trace("The command to invoke is : " + commandString);
 			command = this.applicationContext.getBean(commandString, MiniappInterface.class);
 			result = command.activateCommand(miniappCommand);
 		}catch (Exception e) {
 			this.logger.warn("The command " + commandString + " is not found" +e.getMessage() );
-			throw new InvalidInputException("command", (Object) commandString);
+			throw new InvalidInputException("command", commandString);
 		}
 
 		logger.trace("The command " + commandString + " is invoked successfully");

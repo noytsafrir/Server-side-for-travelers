@@ -3,26 +3,22 @@ package superapp.logic.commands.TimeToTravel;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Component;
 
 import superapp.boundaries.command.MiniAppCommandBoundary;
-import superapp.boundaries.user.UserId;
 import superapp.converters.ObjectConvertor;
 import superapp.dal.ObjectCrud;
 import superapp.data.ObjectEntity;
 import superapp.data.ObjectPrimaryKeyId;
 import superapp.exceptions.InvalidInputException;
 import superapp.exceptions.ResourceNotFoundException;
-import superapp.logic.actualServices.MiniAppCommandServiceDB;
 import superapp.logic.commands.MiniappInterface;
 
 @Component("timeToTravel_ratePoint")
 public class RatePoint implements MiniappInterface{
 	private ObjectCrud objectCrud;
 	private ObjectConvertor converter;
-	private Log logger = LogFactory.getLog(RatePoint.class);
+	private final Log logger = LogFactory.getLog(RatePoint.class);
 
 	
 	@Autowired
@@ -38,7 +34,6 @@ public class RatePoint implements MiniappInterface{
 
 	@Override
 	public Object activateCommand(MiniAppCommandBoundary miniappCommandBoundary) {
-		UserId userId = miniappCommandBoundary.getInvokedBy().getUserId();
 		String command = miniappCommandBoundary.getCommand();
 		
 		if(command.equals("timeToTravel_ratePoint")) {
@@ -61,7 +56,7 @@ public class RatePoint implements MiniappInterface{
 		}
 		else {
 			this.logger.warn("The command " + command + " is not found");
-			throw new InvalidInputException("command ", (Object)command);
+			throw new InvalidInputException("command ", command);
 		}
 	}
 }

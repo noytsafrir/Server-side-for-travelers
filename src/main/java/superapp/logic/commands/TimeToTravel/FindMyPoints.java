@@ -12,14 +12,13 @@ import superapp.boundaries.user.UserId;
 import superapp.converters.ObjectConvertor;
 import superapp.dal.ObjectCrud;
 import superapp.exceptions.InvalidInputException;
-import superapp.logic.actualServices.MiniAppCommandServiceDB;
 import superapp.logic.commands.MiniappInterface;
 
 @Component("timeToTravel_findMyPoints")
 public class FindMyPoints implements MiniappInterface{
 	private ObjectCrud objectCrud;
 	private ObjectConvertor converter;
-	private Log logger = LogFactory.getLog(FindMyPoints.class);
+	private final Log logger = LogFactory.getLog(FindMyPoints.class);
 
 	
 	@Autowired
@@ -48,7 +47,7 @@ public class FindMyPoints implements MiniappInterface{
 		}
 		else {
 			this.logger.warn("The command " + command + " is not found");
-			throw new InvalidInputException("command ", (Object)command);
+			throw new InvalidInputException("command ", command);
 		}
 	}
 }

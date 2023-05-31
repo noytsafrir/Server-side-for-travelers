@@ -29,6 +29,10 @@ public class InvalidInputException extends RuntimeException {
 	public InvalidInputException(String resourceType, Object obj) {
 		super(resourceType + "input is invalid: " + obj);
 	}
+
+	public InvalidInputException(String resourceType, String obj) {
+		super(resourceType + "input is invalid: " + obj);
+	}
 	
 	public InvalidInputException(Object obj, String resourceType, String operation) {
 		super("Could not " + operation + " because " + resourceType + " input is invalid: " + obj);
