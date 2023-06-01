@@ -1,6 +1,7 @@
 package superapp.logic.actualServices;
 
-import java.util.HashMap;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jms.annotation.JmsListener;
 import org.springframework.stereotype.Component;
@@ -10,44 +11,40 @@ import superapp.boundaries.command.MiniAppCommandBoundary;
 import superapp.converters.MiniAppCommandConverter;
 import superapp.dal.MiniAppCommandCrud;
 import superapp.data.MiniAppCommandEntity;
+import superapp.logic.MiniAppCommandAsyncService;
 
 @Component
 public class AsyncCommandsHandler {
 	private ObjectMapper jackson;
 	private MiniAppCommandConverter commandConverter;
 	private MiniAppCommandCrud commandCrud;
+	private MiniAppCommandAsyncService commandService;
+	private final Log logger = LogFactory.getLog(MiniAppCommandServiceDB.class);
+
 
 	@Autowired
-	public AsyncCommandsHandler(MiniAppCommandConverter converter,	MiniAppCommandCrud miniAppCommandCrud) {
+	public AsyncCommandsHandler(MiniAppCommandConverter converter,	MiniAppCommandCrud miniAppCommandCrud, MiniAppCommandAsyncService commandService) {
 		this.jackson = new ObjectMapper();
 		this.commandConverter = converter;
 		this.commandCrud = miniAppCommandCrud;
+		this.commandService = commandService;
 	}
 
 	@JmsListener(destination = "asyncCommandsQueue")
 	public void handleCommandsFromQueue(String json) {
+		logger.debug("handleCommandsFromQueue: " + json);
 		try {
 			MiniAppCommandBoundary commandBoundary = this.jackson.readValue(json, MiniAppCommandBoundary.class);
 
-			this.handleCommand(json);
-
+			commandService.handleCommand(commandBoundary);
 			commandBoundary.getCommandAttributes().put("status", "remote-is-done");
 
+			logger.trace("Async handle command is done: " + commandBoundary);
 			MiniAppCommandEntity commandEntity = commandConverter.toEntity(commandBoundary);
 			commandCrud.save(commandEntity);
-
+			logger.trace("command saved: " + commandEntity);
 		} catch (Exception e) {
-			e.printStackTrace(System.err);
+			logger.warn("Failed to handle command from queue: " + json);
 		}
-	}
-
-	private void handleCommand(String json) {
-		System.err.println("Doing something...");
-		try {
-			Thread.sleep(2000);
-		} catch (Exception e) {
-			throw new RuntimeException();
-		}
-		System.err.println("Did something!");
 	}
 }

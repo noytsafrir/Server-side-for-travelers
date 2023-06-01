@@ -48,7 +48,6 @@ public class DataInitializerOSM implements CommandLineRunner{
 		add("fast_food");
 		add("cafe");
 		add("restaurant");
-		add("fountain");
 		add("water_point");}};
 	private final static ArrayList<String> waterValues = new ArrayList<String>() {{
 		add("lake");}};

@@ -110,9 +110,37 @@ public class MiniAppCommandServiceDB extends GeneralService implements MiniAppCo
 		logger.debug("The command is saved in the DB with id: " + newEntity.getCommandID());
 
 		String commandString = miniappCommand.getCommand();
+		Object result = handleCommand(miniappCommand);
+
+		logger.trace("The command " + commandString + " is invoked successfully");
+		return result;
+	}
+
+	@Override
+	public Object invokeCommandAsync(MiniAppCommandBoundary command) {
+		// Check if command boundary is valid and initialize it with id and timestamp
+		logger.trace("invokeCommandAsync method is called with command: " + command.getCommand());
+		checkAndInitCommand(command);
+
+		command.getCommandAttributes().put("status", "waiting...");
+		try {
+			String json = this.jackson.writeValueAsString(command);
+			this.jmsTemplate.convertAndSend("asyncCommandsQueue", json);
+			logger.debug("The command " + command.getCommand() + " is sent to the queue");
+			return command;
+		}catch (Exception e) {
+			logger.warn("The command " + command.getCommand() + " is not sent to the queue");
+			throw new RuntimeException(e);
+		}
+	}
+
+	@Override
+	public Object handleCommand(MiniAppCommandBoundary miniappCommand) {
+		String commandString = miniappCommand.getCommand();
 
 		MiniappInterface command;
 		Object result;
+
 		try {
 			logger.trace("The command to invoke is : " + commandString);
 			command = this.applicationContext.getBean(commandString, MiniappInterface.class);
@@ -122,25 +150,7 @@ public class MiniAppCommandServiceDB extends GeneralService implements MiniAppCo
 			throw new InvalidInputException("command", commandString);
 		}
 
-		logger.trace("The command " + commandString + " is invoked successfully");
 		return result;
-	}
-
-	// TODO: write this function (async logic)
-	@Override
-	public Object invokeCommandAsync(MiniAppCommandBoundary command) {
-		// Check if command boundary is valid and initialize it with id and timestamp
-		checkAndInitCommand(command);
-
-		command.getCommandAttributes().put("status", "waiting...");
-
-		try {
-			String json = this.jackson.writeValueAsString(command);
-			this.jmsTemplate.convertAndSend("asyncCommandsQueue", json);
-			return command;
-		}catch (Exception e) {
-			throw new RuntimeException(e);
-		}
 	}
 
 	@Override

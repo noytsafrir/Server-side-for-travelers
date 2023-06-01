@@ -2,8 +2,6 @@
 ----------------------------------------------------------------------------------------------------------------------------
 # Superapp DB - MongoDB Installation and Setup Guide 
 
-This readme file provides instructions for installing and setting up MongoDB on your computer. Please follow the steps below:
-
 ## Prerequisites
 
 Before starting, ensure that the following prerequisites are met:
