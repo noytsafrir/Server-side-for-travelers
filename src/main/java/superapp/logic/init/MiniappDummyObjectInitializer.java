@@ -94,8 +94,6 @@ public class MiniappDummyObjectInitializer implements CommandLineRunner {
 		object.setActive(true);
 
 		object.setObjectDetails(new HashMap<>());
-//		object.
-
 
 		object = objectService.createObject(object);
 		this.logger.trace("Dummy object created: " + object.toString());
