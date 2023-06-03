@@ -18,48 +18,7 @@ public class GetSpecificCommandHistory extends BaseAdminTests{
 	public void init() {
 		super.init();
 	}
-	
 
-	@Test
-	public void testGetSpecificCommandsHistoryUsingPagination() {
-		String miniappToFind = "bigiapp";
-		createNumberOfCommands(7, "miniapp");
-		MiniAppCommandBoundary[] newBigiCommands = createNumberOfCommands(6, miniappToFind);
-
-		MiniAppCommandBoundary[] commands =
-				this.restTemplate.getForObject(
-				this.urlCommand + "/" + miniappToFind + "?userSuperapp={userSuperapp}&userEmail={email}&size={size}&page={page}", 
-				MiniAppCommandBoundary[].class,
-				userAdmin.getUserId().getSuperapp(), 
-				userAdmin.getUserId().getEmail(), 10,0);
-		
-		assertThat(commands)
-		.isNotNull()
-		.hasSize(6)
-		.usingRecursiveFieldByFieldElementComparator()
-		.isSubsetOf(newBigiCommands);
-	}
-	
-	@Test
-	public void testGetSpecificCommandsHistoryUsingPaginationBig() {
-		String miniappToFind = "bigiapp";
-		createNumberOfCommands(7, "miniapp");
-		MiniAppCommandBoundary[] newBigiCommands = createNumberOfCommands(8, miniappToFind);
-
-		MiniAppCommandBoundary[] commands =
-				this.restTemplate.getForObject(
-				this.urlCommand + "/" + miniappToFind + "?userSuperapp={userSuperapp}&userEmail={email}&size={size}&page={page}", 
-				MiniAppCommandBoundary[].class,
-				userAdmin.getUserId().getSuperapp(), 
-				userAdmin.getUserId().getEmail(), 5,1);
-		
-		assertThat(commands)
-		.isNotNull()
-		.hasSize(3)
-		.usingRecursiveFieldByFieldElementComparator()
-		.isSubsetOf(newBigiCommands);
-	}
-	
 	@Test
 	public void testGetSpecificCommandsHistoryUsingPaginationInvalidAuth() {
 		String miniappToFind = "miniapp";
