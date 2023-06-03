@@ -60,6 +60,7 @@ public class OpenStreetMapServiceDB implements OpenStreetMapService {
         List<ObjectBoundary> objectBoundaries = retrievePOIs(latitude, longitude, radiusInMeters, category, type)
                 .stream()
                 .map(osmObject -> convertor.toObjectBoundary(osmObject, category, true, userId))
+                .filter(objectBoundary -> !objectBoundary.getObjectDetails().get("image").toString().isBlank())
                 .toList();
 
         objectBoundaries.forEach(objectBoundary -> {
