@@ -1,3 +1,27 @@
+# Project Overview
+ The project consists of a server-side component called "SuperApp" and two client applications known as "MiniApps".
+* An Android MiniApp is designed for browsing and exploring points of interest.
+* A Vue MiniApp for exploring path angles.
+ 
+Both MiniApps communicate with the SuperApp server to retrieve data.
+
+## Travelers superapp 
+### SPRING BOOT & REST API
+* The server is a spring boot application that provides a REST API for the MiniApps to consume.
+### OpenStreetMap API 
+* The server integrates with the OpenStreetMap (OSM) API to retrieve data related to points of interest and other geographical information. For more information about the OSM API, see the [OSM API documentation](https://wiki.openstreetmap.org/wiki/API_v0.6).
+* The integration with OSM and the usage in the server are done through `OpenStreetMapService.java` interface while using `OMSObjectConvertor` to convert the data to the superapp objects.
+* A predefined user is used to access the OSM API and the objects can be filtered in the DB by a specific **type**. Both The userEmail and the type are stored in the `application.properties` file.
+### Initializers
+* The server uses `UsersInitializerOSM.java` to initialize the user for OSM logic in the DB.
+* The server uses `DataInitializerOSM.java` to initialize the OSM objects data in the DB. The data retrieved is from a predefined search parameters defined in the `application.properties` file and based on a hardcoded list of categories.
+* The server uses `MiniappDummyObjectInitializer.java` to initialize the dummy object data in the DB. The object is used by the miniapp app when invoking a command that does not require a specific object, and it should be known to the clients. The object can be asked by a specific type and created by a predefined user. Both can be configured in the `application.properties` file.
+
+## Android MiniApp Features
+* The Android MiniApp is a native Android application that allows users to add and explore points of interest.
+* Users can upload images of points of interest. The images are stored in a **Firebase** server and url to the image is stored in the superapp DB.
+* Users can select location of a point on the map using **Google Maps** integrate within the app.
+* Miniapp - Superapp communication is done through REST API using **Retrofit** library.
 
 ----------------------------------------------------------------------------------------------------------------------------
 # Superapp DB - MongoDB Installation and Setup Guide 
@@ -44,17 +68,8 @@ Before starting, ensure that the following prerequisites are met:
 
 4. Test the connection by executing a basic command, such as `db.version()` or `db.stats()`. If the command returns the expected output, MongoDB is installed and functioning properly.
 
-## Additional Resources
-
-- [MongoDB Documentation](https://docs.mongodb.com/)
-- [MongoDB University](https://university.mongodb.com/) (Provides free online courses on MongoDB)
-
-If you encounter any issues during the installation process or have any further questions, please consult the official MongoDB documentation or seek assistance from the MongoDB community.
-
 ----------------------------------------------------------------------------------------------------------------------------
-# TimeToTravel Miniapp - Android Studio Project
-
-This readme file provides step-by-step instructions for your teacher to install and run your Android Studio project. Please follow the instructions below:
+# TimeToTravel Miniapp - Android Studio Installation and Setup Guide
 
 ## Prerequisites
 
@@ -173,3 +188,48 @@ replace `YOUR_SERVER_IP` with the IP address you obtained in the previous sectio
 4. Save the changes to the `RetrofitClient.java` file.
 
 ----------------------------------------------------------------------------------------------------------------------------
+
+# Path Angles Miniapp - Vue Installation and Setup Guide
+
+first of all, make sure that server is running!
+
+## Installation
+
+### Node.js
+
+1. Download Node.js from the official website: [https://nodejs.org](https://nodejs.org)
+2. Follow the installation instructions for your operating system.
+
+### Visual Studio Code
+
+1. Download Visual Studio Code from the official website: [https://code.visualstudio.com](https://code.visualstudio.com)
+2. Follow the installation instructions for your operating system.
+
+### Vue.js 3, Vue Router, and Axios
+
+1. Open a terminal or command prompt.
+2. Run the following commands to install Vue CLI globally, Vue Router, and Axios:
+
+```shell
+npm install -g @vue/cli
+npm install vue-router
+npm install axios
+```
+
+* **Getting Started** - 
+Open a terminal or command prompt.
+Navigate to your project directory.
+Run the following command to install project dependencies:
+
+```shell
+npm install
+ ```
+
+* **Development** - 
+Run the following command to start the development server:
+
+```shell
+npm run dev
+ ```
+
+* Open your web browser and visit the provided URL to see the project in development mode.
